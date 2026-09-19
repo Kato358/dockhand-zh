@@ -2521,9 +2521,11 @@ export async function startStack(
 	const containers = await getStackContainers(stackName, envId);
 	const operation = containers.length > 0 ? 'start' : 'up';
 
-	if (operation === 'up') {
-		await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`);
-	}
+	// Resolve secret-provider values for BOTH operations: `docker compose start`
+	// parses and interpolates the compose file too, so a stack with required
+	// provider secrets (${VAR:?required}) fails to start without them - e.g. the
+	// post-backup restart of a stopped stack (#1579).
+	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`);
 
 	const startResult = await executeComposeCommand(
 		operation,
@@ -2560,6 +2562,11 @@ export async function stopStack(
 	// file with the panel vars missing and errors (#1313). Matches startStack/deployStack.
 	// sourceType is plumbed through from requireComposeFile to avoid a redundant DB lookup.
 	const isGitStack = result.sourceType === 'git';
+
+	// `docker compose stop` interpolates the compose file too, so a stack with required
+	// provider secrets (${VAR:?required}) fails to stop without them - e.g. the
+	// stop-during-backup path (#1579).
+	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`);
 
 	const composeResult = await executeComposeCommand(
 		'stop',
@@ -2613,10 +2620,14 @@ export async function restartStack(
 
 	let composeResult: StackOperationResult;
 
+	// Resolve secret-provider values up front: every restart mode ends in a compose
+	// command (up/start/restart) that interpolates the compose file, so a stack with
+	// required provider secrets (${VAR:?required}) fails without them (#1579).
+	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`);
+
 	if (mode === 'recreate') {
 		// Stop first, then bring up with --force-recreate to ensure new container IDs
 		await executeComposeCommand('stop', opts, result.content!, result.nonSecretVars, result.secretVars, onLine);
-		await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`);
 		composeResult = await executeComposeCommand('up', { ...opts, forceRecreate: true }, result.content!, result.nonSecretVars, result.secretVars, onLine);
 	} else if (mode === 'ordered') {
 		// Stop everything, then start in depends_on order (compose start honors the
@@ -2653,6 +2664,11 @@ export async function downStack(
 	// useOverrideFile for git stacks — same reason as stopStack (#1313).
 	// sourceType is plumbed through from requireComposeFile to avoid a redundant DB lookup.
 	const isGitStack = result.sourceType === 'git';
+
+	// `docker compose down` interpolates the compose file too, so a stack with required
+	// provider secrets (${VAR:?required}) fails to come down without them (#1579).
+	// bestEffort: an unreachable provider must not block tearing a stack down.
+	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`, true);
 
 	const composeResult = await executeComposeCommand(
 		'down',
@@ -2754,8 +2770,22 @@ export async function removeStack(
 
 		// If compose file exists, run docker compose down first
 		if (composeResult.success) {
-			const envVars = await getNonSecretEnvVarsAsRecord(stackName, envId);
-			const secretVars = await getSecretEnvVarsAsRecord(stackName, envId);
+			// `docker compose down` interpolates the compose file, so a stack with
+			// required provider secrets (${VAR:?required}) needs them resolved to come
+			// down (#1579). bestEffort: an unreachable provider must not block removal.
+			// suggestedEnvPath covers custom-path stacks whose stored envPath is null but
+			// have a real sibling .env (the selector/refs may live only there).
+			const resolved = await resolveProviderVarsBestEffort(
+				stackName,
+				envId,
+				await getNonSecretEnvVarsAsRecord(stackName, envId),
+				await getSecretEnvVarsAsRecord(stackName, envId),
+				composeResult.envPath ?? composeResult.suggestedEnvPath,
+				`[Stack:${stackName}]`,
+				true
+			);
+			const envVars = resolved.nonSecretVars;
+			const secretVars = resolved.secretVars;
 
 			// Stack removal cleanup (#1162): the agent deletes ONLY what Dockhand
 			// explicitly lists. The list is the local staging dir contents — exactly
@@ -3734,6 +3764,49 @@ async function resolveProviderEnvVars(
 }
 
 /**
+ * Resolve the bound provider's secrets over a raw (nonSecretVars, secretVars) pair.
+ * Returns the merged vars. bestEffort=true (tear-down paths) logs and returns the
+ * inputs unchanged if the provider is unreachable, so a down/remove is never blocked
+ * by a dead provider. The single source of truth both the compose-result helper and
+ * removeStack use, so envPath derivation cannot drift between them.
+ */
+async function resolveProviderVarsBestEffort(
+	stackName: string,
+	envId: number | null | undefined,
+	nonSecretVars: Record<string, string>,
+	secretVars: Record<string, string>,
+	envPath: string | null | undefined,
+	logPrefix: string,
+	bestEffort = false
+): Promise<{ nonSecretVars: Record<string, string>; secretVars: Record<string, string> }> {
+	let envFileContent: string | undefined;
+	if (envPath && existsSync(envPath)) {
+		try {
+			envFileContent = readFileSync(envPath, 'utf-8');
+		} catch (err) {
+			console.warn(`${logPrefix} Failed to read .env at ${envPath}:`, err);
+		}
+	}
+
+	try {
+		const source = await getStackSource(stackName, envId ?? undefined);
+		const resolved = await resolveProviderEnvVars(
+			{ ...nonSecretVars },
+			{ ...secretVars },
+			logPrefix,
+			source?.secretProviderId,
+			envFileContent,
+			{ stackName, envId: envId ?? undefined }
+		);
+		return { nonSecretVars: resolved.dbNonSecretVars, secretVars: resolved.secretVars };
+	} catch (err) {
+		if (!bestEffort) throw err;
+		console.warn(`${logPrefix} Provider secret resolution failed, proceeding without provider secrets:`, err);
+		return { nonSecretVars, secretVars };
+	}
+}
+
+/**
  * Resolve the bound provider's secrets for a compose result produced by
  * requireComposeFile(). Mutates result.secretVars / result.nonSecretVars in
  * place so callers can pass the result through to executeComposeCommand
@@ -3743,30 +3816,19 @@ async function applyProviderSecretsToComposeResult(
 	result: RequireComposeResult,
 	stackName: string,
 	envId: number | null | undefined,
-	logPrefix: string
+	logPrefix: string,
+	// Tear-down paths (down/remove) pass bestEffort: a provider that is unreachable
+	// must not block bringing a stack down, so a resolve error is logged and the
+	// compose command proceeds with whatever vars are on disk/DB.
+	bestEffort = false
 ): Promise<void> {
 	if (!result.success || !result.secretVars || !result.nonSecretVars) return;
 
-	let envFileContent: string | undefined;
-	if (result.envPath && existsSync(result.envPath)) {
-		try {
-			envFileContent = readFileSync(result.envPath, 'utf-8');
-		} catch (err) {
-			console.warn(`${logPrefix} Failed to read .env at ${result.envPath}:`, err);
-		}
-	}
-
-	const source = await getStackSource(stackName, envId ?? undefined);
-	const { dbNonSecretVars, secretVars } = await resolveProviderEnvVars(
-		{ ...result.nonSecretVars },
-		{ ...result.secretVars },
-		logPrefix,
-		source?.secretProviderId,
-		envFileContent,
-		{ stackName, envId: envId ?? undefined }
+	const resolved = await resolveProviderVarsBestEffort(
+		stackName, envId, result.nonSecretVars, result.secretVars, result.envPath, logPrefix, bestEffort
 	);
-	result.nonSecretVars = dbNonSecretVars;
-	result.secretVars = secretVars;
+	result.nonSecretVars = resolved.nonSecretVars;
+	result.secretVars = resolved.secretVars;
 }
 
 // =============================================================================

@@ -5,7 +5,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import { RefreshCw, LayoutGrid, Loader2, Server, Tags, Square, RectangleVertical, Rows3, LayoutTemplate, Maximize2, Plus, Lock, LockOpen, List, Search, Plug, Route, UndoDot } from 'lucide-svelte';
+	import { RefreshCw, LayoutGrid, Loader2, Server, Tags, Square, RectangleVertical, Rows3, LayoutTemplate, Maximize2, Plus, Lock, LockOpen, List, Plug, Route, UndoDot } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import PageHeader from '$lib/components/PageHeader.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
@@ -21,7 +21,7 @@
 	import type { EnvironmentStats } from './api/dashboard/stats/+server';
 	import { getLabelColor, getLabelBgColor } from '$lib/utils/label-colors';
 	import { labelColorOverrides } from '$lib/stores/label-colors';
-	import { Input } from '$lib/components/ui/input';
+	import { SearchInput } from '$lib/components/ui/search-input';
 	import MultiSelectFilter from '$lib/components/MultiSelectFilter.svelte';
 	import { appSettings } from '$lib/stores/settings';
 
@@ -1058,16 +1058,7 @@
 			<!-- List view filters (search + connection type) -->
 			{#if viewMode === 'list'}
 				<div class="flex items-center gap-2 mr-2">
-					<div class="relative">
-						<Search class="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-						<Input
-							type="text"
-							placeholder="Search environments..."
-							bind:value={listSearchQuery}
-							onkeydown={(e) => e.key === 'Escape' && (listSearchQuery = '')}
-							class="pl-8 h-8 w-52 text-sm"
-						/>
-					</div>
+					<SearchInput bind:value={listSearchQuery} placeholder="Search environments..." class="h-8 w-52 text-sm" />
 					<MultiSelectFilter
 						bind:value={listConnectionFilter}
 						options={connectionOptions}

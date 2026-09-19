@@ -23,6 +23,7 @@
 	import FilesystemBrowser from './FilesystemBrowser.svelte';
 	import IconPickerModal from './IconPickerModal.svelte';
 	import StackIcon from '$lib/components/StackIcon.svelte';
+	import StackTagsSection from '$lib/components/StackTagsSection.svelte';
 	import PathBarItem from './PathBarItem.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Badge } from '$lib/components/ui/badge';
@@ -2293,6 +2294,14 @@
 					</div>
 				</div>
 			{:else}
+				<!-- Tags (edit mode: stack has a stable name+env key) -->
+				{#if mode === 'edit' && stackName}
+					<div class="px-6 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center gap-2 flex-wrap">
+						<Label class="text-xs text-zinc-500 dark:text-zinc-400">Tags</Label>
+						<StackTagsSection {stackName} envId={$currentEnvironment?.id ?? null} />
+					</div>
+				{/if}
+
 				<!-- Stack name and location inputs (create mode only) -->
 				{#if mode === 'create'}
 					<div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700">
