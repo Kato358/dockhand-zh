@@ -111,7 +111,7 @@ export const POST: RequestHandler = async ({ params, url, request, cookies }) =>
 
 	const path = url.searchParams.get('path');
 	const envId = url.searchParams.get('env');
-	const envIdNum = envId ? parseInt(envId) : undefined;
+	const envIdNum = envId ? Number.parseInt(envId) : undefined;
 
 	// Permission check with environment context
 	if (auth.authEnabled && !await auth.can('containers', 'exec', envIdNum)) {
@@ -166,14 +166,14 @@ export const POST: RequestHandler = async ({ params, url, request, cookies }) =>
 					params.id,
 					path,
 					tar,
-					envId ? parseInt(envId) : undefined
+					envId ? Number.parseInt(envId) : undefined
 				);
 
 				// chown the uploaded file to the requested (or container-default) owner.
 				if (owner) {
 					const targetPath = path.endsWith('/') ? `${path}${file.name}` : `${path}/${file.name}`;
 					try {
-						await chownContainerPath(params.id, targetPath, owner, true, envId ? parseInt(envId) : undefined);
+						await chownContainerPath(params.id, targetPath, owner, true, envId ? Number.parseInt(envId) : undefined);
 					} catch (e) {
 						console.warn('Failed to set ownership on', targetPath, e);
 					}

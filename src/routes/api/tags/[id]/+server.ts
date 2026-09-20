@@ -21,7 +21,7 @@ export const PUT: RequestHandler = async ({ params, request, cookies }) => {
 	if (auth.authEnabled && !auth.isAdmin) {
 		return json({ error: 'Only an administrator can manage the tag catalog' }, { status: 403 });
 	}
-	const tagId = parseInt(params.id, 10);
+	const tagId = Number.parseInt(params.id, 10);
 	if (Number.isNaN(tagId)) return json({ error: 'Invalid tag id' }, { status: 400 });
 
 	const body = await request.json().catch(() => ({}));
@@ -61,7 +61,7 @@ export const DELETE: RequestHandler = async ({ params, cookies }) => {
 	if (auth.authEnabled && !auth.isAdmin) {
 		return json({ error: 'Only an administrator can manage the tag catalog' }, { status: 403 });
 	}
-	const tagId = parseInt(params.id, 10);
+	const tagId = Number.parseInt(params.id, 10);
 	if (Number.isNaN(tagId)) return json({ error: 'Invalid tag id' }, { status: 400 });
 	await deleteTag(tagId);
 	return json({ success: true });

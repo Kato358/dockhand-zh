@@ -57,8 +57,8 @@ export function calculateCpuPercent(stats: DockerStatsPayload | null | undefined
 		// Wall-clock formula (matches Docker CLI / Portainer for Windows containers):
 		// possIntervals = num_procs * elapsed-milliseconds; cpu% = cpuDelta / (possIntervals * 100).
 		// read/preread are RFC3339 timestamps. No system_cpu_usage exists on Windows.
-		const readMs = stats.read ? new Date(stats.read).getTime() : NaN;
-		const prereadMs = stats.preread ? new Date(stats.preread).getTime() : NaN;
+		const readMs = stats.read ? new Date(stats.read).getTime() : Number.NaN;
+		const prereadMs = stats.preread ? new Date(stats.preread).getTime() : Number.NaN;
 		const possIntervals = (stats.num_procs ?? 0) * (readMs - prereadMs);
 		if (Number.isFinite(possIntervals) && possIntervals > 0 && cpuDelta > 0) {
 			return cpuDelta / (possIntervals * 100);

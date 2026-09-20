@@ -1823,34 +1823,36 @@
 				throw new Error((typeof rawEnvError.error === 'string' ? rawEnvError.error : rawEnvError.message) || 'Failed to save environment file');
 			}
 
-			// Save only secrets to DB (non-secrets are in the .env file written above)
+			// Save secrets to DB (non-secrets live in the .env file written above). Run this
+			// UNCONDITIONALLY: the PUT replaces the stack's DB rows with exactly the current
+			// secrets, so emptying the env clears stale rows too. Skipping it when there were
+			// no tracked secrets left old DB rows behind, which the deploy then re-injected -
+			// the "emptied env still applies" bug.
 			const secretVars = prepared.variables.filter(v => v.isSecret);
-			if (secretVars.length > 0 || hadExistingDbVars) {
-				const envResponse = await fetch(
-					appendEnvParam(`/api/stacks/${encodeURIComponent(stackName)}/env`, envId),
-					{
-						method: 'PUT',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({
-							variables: secretVars.map(v => ({
-								key: v.key.trim(),
-								value: v.value,
-								isSecret: true
-							}))
-						})
-					}
-				);
-
-				if (!envResponse.ok) {
-					// Log but don't fail - DB stores secret values
-					console.warn('Failed to save secret variables to database');
+			const envResponse = await fetch(
+				appendEnvParam(`/api/stacks/${encodeURIComponent(stackName)}/env`, envId),
+				{
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						variables: secretVars.map(v => ({
+							key: v.key.trim(),
+							value: v.value,
+							isSecret: true
+						}))
+					})
 				}
+			);
 
-				hadExistingDbVars = secretVars.length > 0;
-				existingSecretKeys = new Set(
-					secretVars.filter(v => v.key.trim()).map(v => v.key.trim())
-				);
+			if (!envResponse.ok) {
+				// Log but don't fail - DB stores secret values
+				console.warn('Failed to save secret variables to database');
 			}
+
+			hadExistingDbVars = secretVars.length > 0;
+			existingSecretKeys = new Set(
+				secretVars.filter(v => v.key.trim()).map(v => v.key.trim())
+			);
 
 			if (restart) startOutput(`Redeploying ${stackName}`);
 

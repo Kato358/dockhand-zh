@@ -7,8 +7,10 @@
 
 export function extractPath(input: RequestInfo | URL, origin: string): string | null {
 	try {
-		const url =
-			typeof input === 'string' ? input : input instanceof Request ? input.url : String(input);
+		let url: string;
+		if (typeof input === 'string') url = input;
+		else if (input instanceof Request) url = input.url;
+		else url = String(input);
 		return new URL(url, origin).pathname;
 	} catch {
 		return null;

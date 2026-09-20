@@ -26,7 +26,7 @@ export function demuxDockerStream(
 			return options?.separateStreams ? { stdout: raw, stderr: '' } : raw;
 		}
 
-		const payload = buffer.slice(offset + 8, offset + 8 + frameSize).toString('utf-8');
+		const payload = buffer.subarray(offset + 8, offset + 8 + frameSize).toString('utf-8');
 
 		if (streamType === 1) {
 			stdout.push(payload);

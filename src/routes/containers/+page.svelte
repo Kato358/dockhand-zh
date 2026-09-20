@@ -1561,7 +1561,10 @@
 				defaultIcon={Box}
 			/>
 			<TagFilter tags={tagCatalog} bind:selected={tagFilter} bind:mode={tagFilterMode} bind:groupBy={groupByTag} bind:showTags={showTags} bind:showBands={showBands} />
-			<div class="flex gap-2">
+			<!-- Action buttons: scroll horizontally on narrow screens (mobile) instead of
+			     clipping the overflow. min-w-0 lets the row shrink below its content so
+			     overflow-x can kick in; shrink-0 keeps each button its natural size. -->
+			<div class="flex gap-2 overflow-x-auto min-w-0 max-w-full [&>*]:shrink-0">
 				{#if $canAccess('containers', 'create')}
 				<Button size="sm" variant="secondary" onclick={() => (showCreateModal = true)}>
 					<Plus class="w-3.5 h-3.5" />
@@ -2648,7 +2651,7 @@
 <EditContainerModal
 	bind:open={showEditModal}
 	containerId={editContainerId}
-	onClose={() => (showEditModal = false)}
+	onClose={() => { showEditModal = false; loadTags(envId); }}
 	onSuccess={fetchContainers}
 	onIconChanged={() => loadIconOverrides(envId)}
 />

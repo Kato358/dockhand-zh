@@ -13,7 +13,7 @@ export interface Rgb {
 // Returns null for anything else (e.g. "transparent", named colours, empty).
 export function parseRgb(color: string | null | undefined): Rgb | null {
 	if (!color) return null;
-	const m = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+	const m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i.exec(color);
 	if (!m) return null;
 	return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]) };
 }

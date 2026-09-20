@@ -16149,7 +16149,7 @@
         "tags": [
           "icons"
         ],
-        "summary": "Get a selfh.st app icon (raw SVG), fetched once from the CDN and cached on disk",
+        "summary": "Get a selfh.st app icon, fetched once from the CDN and cached on disk",
         "parameters": [
           {
             "name": "ref",
@@ -16163,7 +16163,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Raw image/svg+xml body (the icon, or a neutral placeholder if it can't be resolved), Cache-Control public max-age=604800"
+            "description": "Raw image body (image/svg+xml, image/webp, or image/png; a neutral SVG placeholder if it can't be resolved), Cache-Control public max-age=604800"
           },
           "400": {
             "description": "The ref is not a valid selfh.st reference"
@@ -16177,7 +16177,7 @@
             "bearerAuth": []
           }
         ],
-        "description": "Proxies an icon from the selfh.st collection so the browser never contacts an external CDN directly. The first request for a given ref fetches the SVG from jsdelivr and caches it under DATA_DIR; later requests are served locally. Icons are CC BY 4.0 (selfh.st). When the icon can't be resolved it returns a neutral placeholder SVG (200) rather than a 404, so a grid of icons doesn't read as probing to a WAF."
+        "description": "Proxies an icon from the selfh.st collection so the browser never contacts an external CDN directly. The first request for a given ref fetches it from jsdelivr in the first available format (SVG, else WebP, else PNG - about 16% of the collection has no SVG) and caches it under DATA_DIR; later requests are served locally. Icons are CC BY 4.0 (selfh.st). When the icon can't be resolved in any format it returns a neutral placeholder SVG (200) rather than a 404, so a grid of icons doesn't read as probing to a WAF."
       }
     },
     "/api/icons/selfhst/batch": {
@@ -16190,7 +16190,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "icons maps each resolved reference to a data:image/svg+xml base64 URI; unresolvable refs are omitted.",
+            "description": "icons maps each resolved reference to a data: base64 URI in the format available (svg/webp/png); unresolvable refs are omitted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16225,7 +16225,7 @@
             "bearerAuth": []
           }
         ],
-        "description": "Takes a list of selfh.st icon references and returns each resolved icon as a data:image/svg+xml URI, keyed by reference. Unresolvable or invalid refs are omitted rather than returned as errors. Each icon is fetched from the CDN once and cached on disk, same as the single-icon endpoint.",
+        "description": "Takes a list of selfh.st icon references and returns each resolved icon as a data: URI (image/svg+xml, image/webp, or image/png depending on the format available), keyed by reference. Unresolvable or invalid refs are omitted rather than returned as errors. Each icon is fetched from the CDN once and cached on disk, same as the single-icon endpoint.",
         "requestBody": {
           "required": true,
           "content": {

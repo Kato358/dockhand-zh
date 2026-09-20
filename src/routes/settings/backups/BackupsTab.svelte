@@ -917,9 +917,9 @@
 												<Table.Cell class="cursor-pointer font-mono text-xs text-muted-foreground py-1" style="padding-left:8px" onclick={() => { snapshotBrowseDestId = browseDestId; snapshotBrowseId = snap.id; snapshotBrowseName = group.name; snapshotBrowseOpen = true; }}>{snap.shortId}</Table.Cell>
 												<Table.Cell class="text-xs py-1" style="padding-left:8px">{formatDateTime(snap.time)} <span class="text-muted-foreground opacity-60">({formatRelativeTime(snap.time)})</span></Table.Cell>
 												<Table.Cell class="text-right py-1">
-													<span class="inline-flex p-1 rounded hover:bg-muted transition-colors text-muted-foreground" title="Browse snapshot content">
+													<button type="button" class="inline-flex p-1 rounded hover:bg-muted transition-colors text-muted-foreground" title="Browse snapshot content" onclick={(e) => { e.stopPropagation(); snapshotBrowseDestId = browseDestId; snapshotBrowseId = snap.id; snapshotBrowseName = group.name; snapshotBrowseOpen = true; }}>
 														<FolderOpen class="w-3.5 h-3.5" />
-													</span>
+													</button>
 												</Table.Cell>
 											</Table.Row>
 										{/each}

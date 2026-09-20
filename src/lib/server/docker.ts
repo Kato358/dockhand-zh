@@ -2366,8 +2366,8 @@ export async function createContainerFromMetadata(
 	envId?: number | null,
 	log?: (msg: string) => void
 ): Promise<{ Id: string }> {
-	const config = { ...metadata.config } || {};
-	const hostConfig = { ...metadata.hostConfig } || {};
+	const config = { ...metadata.config };
+	const hostConfig = { ...metadata.hostConfig };
 	const networks: Record<string, any> = metadata.networkSettings?.Networks || {};
 
 	const networkMode = hostConfig.NetworkMode || '';

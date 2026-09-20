@@ -3354,7 +3354,10 @@ export async function getContainerTagIds(containerName: string, environmentId: n
 export async function getContainerTagsMap(environmentId: number | null): Promise<Record<string, number[]>> {
 	const rows = await db.select().from(containerTags).where(envClause(containerTags.environmentId, environmentId));
 	const map: Record<string, number[]> = {};
-	for (const r of rows) (map[r.containerName] ??= []).push(r.tagId);
+	for (const r of rows) {
+		map[r.containerName] ??= [];
+		map[r.containerName].push(r.tagId);
+	}
 	return map;
 }
 
@@ -3379,7 +3382,10 @@ export async function getStackTagIds(stackName: string, environmentId: number | 
 export async function getStackTagsMap(environmentId: number | null): Promise<Record<string, number[]>> {
 	const rows = await db.select().from(stackTags).where(envClause(stackTags.environmentId, environmentId));
 	const map: Record<string, number[]> = {};
-	for (const r of rows) (map[r.stackName] ??= []).push(r.tagId);
+	for (const r of rows) {
+		map[r.stackName] ??= [];
+		map[r.stackName].push(r.tagId);
+	}
 	return map;
 }
 

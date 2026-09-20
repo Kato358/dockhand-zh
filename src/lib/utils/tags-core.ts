@@ -90,7 +90,7 @@ export function matchesTagFilter(
 	mode: TagFilterMode = 'all'
 ): boolean {
 	if (!filterTagIds.length) return true;
-	if (!itemTagIds || !itemTagIds.length) return false;
+	if (!itemTagIds?.length) return false;
 	const have = new Set(itemTagIds);
 	return mode === 'any'
 		? filterTagIds.some((id) => have.has(id))

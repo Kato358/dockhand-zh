@@ -34,7 +34,7 @@
 	}
 
 	// --- selfh.st tab (lazy) ---
-	interface SelfhstEntry { Name: string; Reference: string; SVG: string }
+	interface SelfhstEntry { Name: string; Reference: string; SVG: string; WebP?: string; PNG?: string }
 	let manifest = $state<SelfhstEntry[]>([]);
 	let manifestLoading = $state(false);
 	let manifestError = $state('');
@@ -48,8 +48,8 @@
 			const res = await fetch('/api/icons/selfhst-manifest');
 			if (!res.ok) throw new Error(`manifest ${res.status}`);
 			const all = (await res.json()) as SelfhstEntry[];
-			// Only SVG-capable entries (that's what our proxy serves).
-			manifest = all.filter((e) => e.SVG === 'Yes' && e.Reference);
+			// Any entry our proxy can serve: SVG, else WebP, else PNG.
+			manifest = all.filter((e) => e.Reference && (e.SVG === 'Yes' || e.WebP === 'Yes' || e.PNG === 'Yes'));
 		} catch (e) {
 			manifestError = 'Could not load the selfh.st icon list. Check the server has internet access.';
 		} finally {

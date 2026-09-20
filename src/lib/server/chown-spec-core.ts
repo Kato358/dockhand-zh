@@ -7,7 +7,7 @@
 
 // A single user or group token: a numeric id, or a name (letters, digits, and the
 // usual account punctuation `_ - .`, starting with a letter/digit/underscore).
-const TOKEN = /^[A-Za-z0-9_][A-Za-z0-9_.-]*$/;
+const TOKEN = /^\w[A-Za-z0-9_.-]*$/;
 
 export interface ChownSpec {
 	/** The exact `owner[:group]` string to pass to chown. */

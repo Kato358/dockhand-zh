@@ -5,6 +5,10 @@
     "comingSoon": true,
     "changes": [
       { "type": "feature", "text": "tag containers and stacks, then filter and group the grid by tag (#781, #870)" },
+      { "type": "fix", "text": "removing all of a stack's environment variables no longer leaves stale entries (#1598)" },
+      { "type": "fix", "text": "templates with duplicate names no longer stop the templates page from rendering" },
+      { "type": "fix", "text": "the container toolbar no longer clips its buttons on mobile (#1586)" },
+      { "type": "fix", "text": "use webp or png for selfh.st icons that have no svg (#1596)" },
       { "type": "fix", "text": "don't report a newer version tag that resolves to the image you already run (#1572)" },
       { "type": "fix", "text": "fix vulnerability scans failing on the containerd image store (#1569, #1350)" },
       { "type": "fix", "text": "show CPU and memory for containers on Windows Docker hosts (#1574)" },

@@ -3003,6 +3003,7 @@
 		editingStackName = '';
 		stackModalReadonly = false;
 		stackModalGitInfo = null;
+		loadTags(envId);
 	}}
 	onSuccess={fetchStacks}
 />
@@ -3017,6 +3018,7 @@
 	onClose={() => {
 		showGitModal = false;
 		editingGitStack = null;
+		loadTags(envId);
 	}}
 	onSaved={fetchStacks}
 />

@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ params, url, cookies, request }) =>
 	const auth = await authorize(cookies);
 
 	const envId = url.searchParams.get('env');
-	const envIdNum = envId ? parseInt(envId) : undefined;
+	const envIdNum = envId ? Number.parseInt(envId) : undefined;
 
 	if (auth.authEnabled && !await auth.can('containers', 'exec', envIdNum)) {
 		return json({ error: 'Permission denied' }, { status: 403 });

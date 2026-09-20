@@ -20,12 +20,12 @@ export interface PaletteItem {
 export type DefaultCaps = Record<string, number>;
 
 function escapeRegExp(s: string): string {
-	return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	return s.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 }
 
 /** The word-boundary matcher for a query: `q` starts a word (^, space, -, _, /). */
 export function wordBoundaryRegex(q: string): RegExp {
-	return new RegExp(`(^|[\\s\\-_/])${escapeRegExp(q)}`);
+	return new RegExp(String.raw`(^|[\s\-_/])` + escapeRegExp(q));
 }
 
 /**
