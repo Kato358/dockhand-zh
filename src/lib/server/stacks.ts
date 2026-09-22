@@ -2565,8 +2565,9 @@ export async function stopStack(
 
 	// `docker compose stop` interpolates the compose file too, so a stack with required
 	// provider secrets (${VAR:?required}) fails to stop without them - e.g. the
-	// stop-during-backup path (#1579).
-	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`);
+	// stop-during-backup path (#1579). bestEffort: stopping a stack must not be blocked
+	// by an unreachable provider, so a resolve failure falls back to on-disk/DB vars.
+	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`, true);
 
 	const composeResult = await executeComposeCommand(
 		'stop',
@@ -2622,8 +2623,10 @@ export async function restartStack(
 
 	// Resolve secret-provider values up front: every restart mode ends in a compose
 	// command (up/start/restart) that interpolates the compose file, so a stack with
-	// required provider secrets (${VAR:?required}) fails without them (#1579).
-	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`);
+	// required provider secrets (${VAR:?required}) fails without them (#1579). bestEffort:
+	// restarting a running stack must not be blocked by an unreachable provider, so a
+	// resolve failure falls back to on-disk/DB vars rather than aborting the restart.
+	await applyProviderSecretsToComposeResult(result, stackName, envId, `[Stack:${stackName}]`, true);
 
 	if (mode === 'recreate') {
 		// Stop first, then bring up with --force-recreate to ensure new container IDs
@@ -2934,17 +2937,31 @@ export async function removeStack(
 		// "Remove stack" (deleteFiles=false) leaves the compose/.env/data on disk; "Remove
 		// stack + files" (default) deletes them.
 		if (stackDir && deleteFiles) {
-			try {
-				rmSync(stackDir, { recursive: true, force: true });
-			} catch (err: any) {
-				console.error(`Failed to delete stack directory: ${err.message}`);
-				cleanupErrors.push(`directory: ${err.message}`);
+			// The local `docker compose down` we just ran had this dir as its cwd
+			// (executeComposeCommand spawns with cwd: composeFileDir), so on a direct
+			// env the dir can be transiently busy the instant the process exits -
+			// rmSync then leaves it (EBUSY/ENOTEMPTY) or existsSync is still true.
+			// Retry a few times with a short backoff so the just-exited compose child
+			// releases its cwd/fds. Hawser envs run compose on the agent, so they
+			// never hit this.
+			let lastErr = '';
+			for (let attempt = 0; attempt < 5; attempt++) {
+				try {
+					rmSync(stackDir, { recursive: true, force: true });
+				} catch (err: any) {
+					lastErr = err.message;
+				}
+				if (!existsSync(stackDir)) { lastErr = ''; break; }
+				lastErr = lastErr || 'Directory still exists after deletion attempt';
+				await new Promise((r) => setTimeout(r, 200));
 			}
-			// Verify deletion succeeded (rmSync with force:true may not throw on some failures)
-			if (existsSync(stackDir)) {
-				const verifyErr = 'Directory still exists after deletion attempt';
-				console.error(`Failed to delete stack directory: ${verifyErr}`);
-				cleanupErrors.push(`directory: ${verifyErr}`);
+			if (lastErr) {
+				console.error(`Failed to delete stack directory: ${lastErr}`);
+				// A residual dir under Dockhand's own stacks tree blocks nothing when the
+				// caller forced removal: the containers are gone and a same-name recreate
+				// re-clones over it (syncGitStack rmSyncs the path first). So it is a
+				// warning under force, and only a hard failure (blocks recreate) otherwise.
+				cleanupErrors.push(`${force ? 'directory-warning' : 'directory'}: ${lastErr}`);
 			}
 		}
 
@@ -3765,10 +3782,11 @@ async function resolveProviderEnvVars(
 
 /**
  * Resolve the bound provider's secrets over a raw (nonSecretVars, secretVars) pair.
- * Returns the merged vars. bestEffort=true (tear-down paths) logs and returns the
- * inputs unchanged if the provider is unreachable, so a down/remove is never blocked
- * by a dead provider. The single source of truth both the compose-result helper and
- * removeStack use, so envPath derivation cannot drift between them.
+ * Returns the merged vars. bestEffort=true (lifecycle paths that must not be blocked by
+ * an unreachable provider: stop/restart/down/remove) logs and returns the inputs
+ * unchanged if the provider is down, so the op falls back to the on-disk/DB vars. The
+ * single source of truth both the compose-result helper and removeStack use, so envPath
+ * derivation cannot drift between them.
  */
 async function resolveProviderVarsBestEffort(
 	stackName: string,
@@ -3817,9 +3835,9 @@ async function applyProviderSecretsToComposeResult(
 	stackName: string,
 	envId: number | null | undefined,
 	logPrefix: string,
-	// Tear-down paths (down/remove) pass bestEffort: a provider that is unreachable
-	// must not block bringing a stack down, so a resolve error is logged and the
-	// compose command proceeds with whatever vars are on disk/DB.
+	// Lifecycle paths that must not be blocked by an unreachable provider (stop/restart/
+	// down/remove) pass bestEffort: a resolve error is logged and the compose command
+	// proceeds with whatever vars are on disk/DB. Deploy paths (start/up) keep the throw.
 	bestEffort = false
 ): Promise<void> {
 	if (!result.success || !result.secretVars || !result.nonSecretVars) return;
