@@ -185,10 +185,16 @@
 	const COLLAPSED_GROUPS_KEY = 'dockhand-containers-collapsed-groups';
 	const SHOW_TAGS_KEY = 'dockhand-containers-show-tags';
 	const SHOW_BANDS_KEY = 'dockhand-containers-group-bands';
+	const INLINE_TAG_EDIT_KEY = 'dockhand-containers-inline-tag-editing';
+	const TAG_SETTINGS_EXPANDED_KEY = 'dockhand-containers-tag-settings-expanded';
 	// Show tag chips on rows (default true - only '0' hides them).
 	let showTags = $state(typeof window === 'undefined' || localStorage.getItem(SHOW_TAGS_KEY) !== '0');
 	// Coloured group bands (default true - only '0' hides them).
 	let showBands = $state(typeof window === 'undefined' || localStorage.getItem(SHOW_BANDS_KEY) !== '0');
+	// Show a tag-edit button on each row (default true - only '0' hides it).
+	let inlineTagEditing = $state(typeof window === 'undefined' || localStorage.getItem(INLINE_TAG_EDIT_KEY) !== '0');
+	// Tag-settings section open/closed (default open - only '0' collapses it).
+	let tagSettingsExpanded = $state(typeof window === 'undefined' || localStorage.getItem(TAG_SETTINGS_EXPANDED_KEY) !== '0');
 	$effect(() => {
 		if (typeof window === 'undefined') return;
 		localStorage.setItem(SHOW_TAGS_KEY, showTags ? '1' : '0');
@@ -196,6 +202,14 @@
 	$effect(() => {
 		if (typeof window === 'undefined') return;
 		localStorage.setItem(SHOW_BANDS_KEY, showBands ? '1' : '0');
+	});
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		localStorage.setItem(INLINE_TAG_EDIT_KEY, inlineTagEditing ? '1' : '0');
+	});
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		localStorage.setItem(TAG_SETTINGS_EXPANDED_KEY, tagSettingsExpanded ? '1' : '0');
 	});
 	let groupByTag = $state(typeof window !== 'undefined' && localStorage.getItem(GROUP_BY_TAG_KEY) === '1');
 	let collapsedGroups = $state<Set<string>>(loadCollapsedGroups());
@@ -1560,7 +1574,7 @@
 				width="w-44"
 				defaultIcon={Box}
 			/>
-			<TagFilter tags={tagCatalog} bind:selected={tagFilter} bind:mode={tagFilterMode} bind:groupBy={groupByTag} bind:showTags={showTags} bind:showBands={showBands} />
+			<TagFilter tags={tagCatalog} bind:selected={tagFilter} bind:mode={tagFilterMode} bind:groupBy={groupByTag} bind:showTags={showTags} bind:showBands={showBands} bind:inlineEditing={inlineTagEditing} bind:settingsExpanded={tagSettingsExpanded} />
 			<!-- Action buttons: scroll horizontally on narrow screens (mobile) instead of
 			     clipping the overflow. min-w-0 lets the row shrink below its content so
 			     overflow-x can kick in; shrink-0 keeps each button its natural size. -->
@@ -1908,7 +1922,7 @@
 								</Tooltip.Root>
 							{/if}
 							{#if showTags}<TagChips tags={tagsFor(container.name)} />{/if}
-							{#if $appSettings.inlineTagEditing && $canAccess('containers', 'edit')}
+							{#if inlineTagEditing && $canAccess('containers', 'edit')}
 								<span onclick={(e) => e.stopPropagation()} role="presentation">
 									<TagEditPopover
 										catalog={tagCatalog}

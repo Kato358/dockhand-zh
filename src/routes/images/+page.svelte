@@ -21,7 +21,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Select from '$lib/components/ui/select';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { Trash2, Upload, RefreshCw, Play, Layers, Server, ShieldCheck, ShieldAlert, Shield, ShieldQuestion, CheckSquare, Square, Tag, Check, XCircle, Icon, AlertTriangle, X, Images, Copy, Download, ChevronRight, ChevronDown, Loader2, ArrowUp, ArrowDown, ArrowUpDown, CircleDashed, CircleDot, Circle, Filter, FileJson, FileSpreadsheet, ShieldPlus } from 'lucide-svelte';
+	import { Trash2, Upload, RefreshCw, Play, Layers, Server, ShieldCheck, ShieldAlert, Shield, ShieldQuestion, CheckSquare, SquareMinus, Square, Tag, Check, XCircle, Icon, AlertTriangle, X, Images, Copy, Download, ChevronRight, ChevronDown, Loader2, ArrowUp, ArrowDown, ArrowUpDown, CircleDashed, CircleDot, Circle, Filter, FileJson, FileSpreadsheet, ShieldPlus } from 'lucide-svelte';
 	import { broom, whale } from '@lucide/lab';
 	import { formatBytes } from '$lib/utils/format';
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -1245,7 +1245,7 @@
 						{#if allSelected}
 							<CheckSquare class="w-3.5 h-3.5 text-muted-foreground" />
 						{:else if someSelected}
-							<CheckSquare class="w-3.5 h-3.5 text-muted-foreground" />
+							<SquareMinus class="w-3.5 h-3.5 text-muted-foreground" />
 						{:else}
 							<Square class="w-3.5 h-3.5 text-muted-foreground" />
 						{/if}

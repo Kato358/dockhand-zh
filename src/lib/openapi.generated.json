@@ -24265,9 +24265,6 @@
                   "editorIndentGuides": {
                     "type": "boolean"
                   },
-                  "inlineTagEditing": {
-                    "type": "boolean"
-                  },
                   "coloredActionButtons": {
                     "type": "boolean"
                   },
@@ -24438,7 +24435,6 @@
               "example": {
                 "animateIcons": true,
                 "editorIndentGuides": true,
-                "inlineTagEditing": true,
                 "coloredActionButtons": true,
                 "lightTheme": "string",
                 "darkTheme": "string",

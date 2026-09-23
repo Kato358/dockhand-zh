@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
 	import { onMount, onDestroy } from 'svelte';
 	import type { Snippet } from 'svelte';
-	import { CheckSquare, Square as SquareIcon, ArrowUp, ArrowDown, ArrowUpDown, ChevronDown, ChevronRight } from 'lucide-svelte';
+	import { CheckSquare, SquareMinus, Square as SquareIcon, ArrowUp, ArrowDown, ArrowUpDown, ChevronDown, ChevronRight } from 'lucide-svelte';
 	import { columnResize } from '$lib/actions/column-resize';
 	import { gridPreferencesStore } from '$lib/stores/grid-preferences';
 	import { getAllColumnConfigs } from '$lib/config/grid-columns';
@@ -810,7 +810,7 @@
 							{#if allSelected}
 								<CheckSquare class="w-3.5 h-3.5 text-muted-foreground" />
 							{:else if someSelected}
-								<CheckSquare class="w-3.5 h-3.5 text-muted-foreground" />
+								<SquareMinus class="w-3.5 h-3.5 text-muted-foreground" />
 							{:else}
 								<SquareIcon class="w-3.5 h-3.5 text-muted-foreground" />
 							{/if}

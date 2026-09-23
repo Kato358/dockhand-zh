@@ -28,7 +28,6 @@
 	let confirmDestructive = $derived($appSettings.confirmDestructive);
 	let showStoppedContainers = $derived($appSettings.showStoppedContainers);
 	let highlightUpdates = $derived($appSettings.highlightUpdates);
-	let inlineTagEditing = $derived($appSettings.inlineTagEditing);
 	let compactPorts = $derived($appSettings.compactPorts);
 	let showExposedPorts = $derived($appSettings.showExposedPorts);
 	let showGitCommitHash = $derived($appSettings.showGitCommitHash);
@@ -436,28 +435,6 @@ services:
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Inline tag editing in grids</Label>
-									<Tooltip.Root>
-										<Tooltip.Trigger>
-											<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
-										</Tooltip.Trigger>
-										<Tooltip.Content side="top" class="w-96 max-w-[90vw]">
-											<p>Tags can always be managed in the <strong>Labels and tags</strong> settings tab and in a container's or stack's edit dialog. This only controls the extra tag button on the list rows.</p>
-										</Tooltip.Content>
-									</Tooltip.Root>
-									<TogglePill
-										checked={inlineTagEditing}
-										onchange={(checked) => {
-											appSettings.setInlineTagEditing(checked);
-											toast.success(checked ? 'Inline tag editing enabled' : 'Inline tag editing disabled');
-										}}
-										disabled={!$canAccess('settings', 'edit')}
-									/>
-								</div>
-								<p class="text-xs text-muted-foreground">Show a tag button on container and stack rows to tag them directly</p>
-							</div>
-							<div class="space-y-1">
-								<div class="flex items-center gap-3">
 									<Label>Show changelog links</Label>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
@@ -594,54 +571,6 @@ services:
 								</div>
 								<p class="text-xs text-muted-foreground">Show URLs inferred from Traefik and Pangolin labels alongside dockhand.url</p>
 							</div>
-							<!-- Time + date format on one row to save vertical space. -->
-							<div class="space-y-1">
-								<div class="flex items-center gap-x-6 gap-y-3">
-									<div class="flex items-center gap-3">
-										<Label>Time format</Label>
-										<ToggleSwitch
-											value={timeFormat}
-											leftValue="24h"
-											rightValue="12h"
-											onchange={(newFormat) => {
-												appSettings.setTimeFormat(newFormat as '12h' | '24h');
-												toast.success(`Time format set to ${newFormat === '12h' ? '12-hour (AM/PM)' : '24-hour'}`);
-											}}
-											disabled={!$canAccess('settings', 'edit')}
-										/>
-									</div>
-									<div class="flex items-center gap-3">
-										<Label>Date format</Label>
-										<Select.Root
-											type="single"
-											value={dateFormat}
-											onValueChange={(value) => {
-												if (value) {
-													appSettings.setDateFormat(value as DateFormat);
-													toast.success(`Date format set to ${value}`);
-												}
-											}}
-											disabled={!$canAccess('settings', 'edit')}
-										>
-											<Select.Trigger class="w-[180px]">
-												<Calendar class="w-4 h-4 mr-2" />
-												<span>{dateFormat}</span>
-											</Select.Trigger>
-											<Select.Content>
-												{#each dateFormatOptions as option}
-													<Select.Item value={option.value}>
-														<div class="flex items-center justify-between w-full gap-4">
-															<span>{option.label}</span>
-															<span class="text-xs text-muted-foreground">{option.example}</span>
-														</div>
-													</Select.Item>
-												{/each}
-											</Select.Content>
-										</Select.Root>
-									</div>
-								</div>
-								<p class="text-xs text-muted-foreground">How timestamps and dates are displayed throughout the app</p>
-							</div>
 						</div>
 						<!-- Right column: Theme settings (always shown, with hint when auth enabled) -->
 						<div class="space-y-4">
@@ -665,6 +594,60 @@ services:
 							{/if}
 						</div>
 					</div>
+				<!-- Time + date format span the full card width, two columns, so they get
+				     room instead of crowding inside the narrow settings column. -->
+				<div class="mt-4 border-t pt-4">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+						<div class="space-y-1">
+							<div class="flex items-center gap-3">
+								<Label>Time format</Label>
+								<ToggleSwitch
+									value={timeFormat}
+									leftValue="24h"
+									rightValue="12h"
+									onchange={(newFormat) => {
+										appSettings.setTimeFormat(newFormat as '12h' | '24h');
+										toast.success(`Time format set to ${newFormat === '12h' ? '12-hour (AM/PM)' : '24-hour'}`);
+									}}
+									disabled={!$canAccess('settings', 'edit')}
+								/>
+							</div>
+							<p class="text-xs text-muted-foreground">Clock display used throughout the app</p>
+						</div>
+						<div class="space-y-1">
+							<div class="flex items-center gap-3">
+								<Label>Date format</Label>
+								<Select.Root
+									type="single"
+									value={dateFormat}
+									onValueChange={(value) => {
+										if (value) {
+											appSettings.setDateFormat(value as DateFormat);
+											toast.success(`Date format set to ${value}`);
+										}
+									}}
+									disabled={!$canAccess('settings', 'edit')}
+								>
+									<Select.Trigger class="w-[180px]">
+										<Calendar class="w-4 h-4 mr-2" />
+										<span>{dateFormat}</span>
+									</Select.Trigger>
+									<Select.Content>
+										{#each dateFormatOptions as option}
+											<Select.Item value={option.value}>
+												<div class="flex items-center justify-between w-full gap-4">
+													<span>{option.label}</span>
+													<span class="text-xs text-muted-foreground">{option.example}</span>
+												</div>
+											</Select.Item>
+										{/each}
+									</Select.Content>
+								</Select.Root>
+							</div>
+							<p class="text-xs text-muted-foreground">Date display used throughout the app</p>
+						</div>
+					</div>
+				</div>
 				<!-- Editor theme spans the full card width so the live preview isn't cramped. -->
 				{#if !$authStore.authEnabled || globalThemeLoaded}
 					<div class="mt-4 border-t pt-4">

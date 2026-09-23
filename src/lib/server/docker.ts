@@ -943,6 +943,17 @@ export async function dockerFetch(
 			(finalOptions as RequestInit & { duplex?: string }).duplex = 'half';
 		}
 
+		// A streaming response (logs follow, events, backup helper progress) can stay
+		// quiet longer than undici's 300s bodyTimeout, which would abort it as an
+		// unhandled UND_ERR_BODY_TIMEOUT. Route these through a dispatcher whose bodyTimeout
+		// is disabled; they are bounded by their own AbortController (fired on container
+		// exit) instead. headersTimeout stays at undici's default so a pre-header stall
+		// is still capped.
+		if (streaming) {
+			const { getStreamingDispatcher } = await import('./dns-dispatcher');
+			(finalOptions as RequestInit & { dispatcher?: unknown }).dispatcher = getStreamingDispatcher();
+		}
+
 		try {
 			const response = await fetch(url, finalOptions);
 			const elapsed = Date.now() - startTime;
@@ -5486,9 +5497,12 @@ async function streamLocalStderr(
 	onStdout?: (data: string) => void
 ): Promise<void> {
 	const wantStdout = onStdout ? 'true' : 'false';
+	// Pass the caller's abort signal to the fetch itself, not only to the reader below:
+	// with no body timeout on the streaming dispatcher, a fetch that stalls BEFORE the
+	// response arrives has no other bound, so container-exit must be able to cancel it.
 	const response = await dockerFetch(
 		`/containers/${containerId}/logs?stdout=${wantStdout}&stderr=true&follow=true`,
-		{ streaming: true },
+		{ streaming: true, signal },
 		envId
 	);
 

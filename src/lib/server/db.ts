@@ -4120,7 +4120,10 @@ export async function getContainerEvents(filters: ContainerEventFilters = {}): P
 		.from(containerEvents)
 		.leftJoin(environments, eq(containerEvents.environmentId, environments.id))
 		.where(whereClause)
-		.orderBy(desc(containerEvents.timestamp))
+		// id is the tie-breaker: timestamp alone is not unique (a burst of events shares
+		// a timestamp), and offset pagination over a non-unique sort is non-deterministic,
+		// so a row can repeat or vanish across pages.
+		.orderBy(desc(containerEvents.timestamp), desc(containerEvents.id))
 		.limit(limit)
 		.offset(offset);
 

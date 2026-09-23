@@ -23,7 +23,6 @@ export interface AppSettings {
 	confirmDestructive: boolean;
 	showStoppedContainers: boolean;
 	highlightUpdates: boolean;
-	inlineTagEditing: boolean;
 	showGitCommitHash: boolean;
 	timeFormat: TimeFormat;
 	dateFormat: DateFormat;
@@ -72,7 +71,6 @@ const DEFAULT_SETTINGS: AppSettings = {
 	confirmDestructive: true,
 	showStoppedContainers: true,
 	highlightUpdates: true,
-	inlineTagEditing: false,
 	showGitCommitHash: false,
 	timeFormat: '24h',
 	dateFormat: 'DD.MM.YYYY',
@@ -166,7 +164,6 @@ function createSettingsStore() {
 					confirmDestructive: settings.confirmDestructive ?? DEFAULT_SETTINGS.confirmDestructive,
 					showStoppedContainers: settings.showStoppedContainers ?? DEFAULT_SETTINGS.showStoppedContainers,
 					highlightUpdates: settings.highlightUpdates ?? DEFAULT_SETTINGS.highlightUpdates,
-					inlineTagEditing: settings.inlineTagEditing ?? DEFAULT_SETTINGS.inlineTagEditing,
 					showGitCommitHash: settings.showGitCommitHash ?? DEFAULT_SETTINGS.showGitCommitHash,
 					timeFormat: settings.timeFormat ?? DEFAULT_SETTINGS.timeFormat,
 					dateFormat: settings.dateFormat ?? DEFAULT_SETTINGS.dateFormat,
@@ -230,7 +227,6 @@ function createSettingsStore() {
 					confirmDestructive: updatedSettings.confirmDestructive ?? DEFAULT_SETTINGS.confirmDestructive,
 					showStoppedContainers: updatedSettings.showStoppedContainers ?? DEFAULT_SETTINGS.showStoppedContainers,
 					highlightUpdates: updatedSettings.highlightUpdates ?? DEFAULT_SETTINGS.highlightUpdates,
-					inlineTagEditing: updatedSettings.inlineTagEditing ?? DEFAULT_SETTINGS.inlineTagEditing,
 					showGitCommitHash: updatedSettings.showGitCommitHash ?? DEFAULT_SETTINGS.showGitCommitHash,
 					timeFormat: updatedSettings.timeFormat ?? DEFAULT_SETTINGS.timeFormat,
 					dateFormat: updatedSettings.dateFormat ?? DEFAULT_SETTINGS.dateFormat,
@@ -322,13 +318,6 @@ function createSettingsStore() {
 			update((current) => {
 				const newSettings = { ...current, highlightUpdates: value };
 				saveSettings({ highlightUpdates: value });
-				return newSettings;
-			});
-		},
-		setInlineTagEditing: (value: boolean) => {
-			update((current) => {
-				const newSettings = { ...current, inlineTagEditing: value };
-				saveSettings({ inlineTagEditing: value });
 				return newSettings;
 			});
 		},

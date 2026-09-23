@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Input } from '$lib/components/ui/input';
 	import { Check, Tag as TagIcon } from 'lucide-svelte';
@@ -19,13 +20,30 @@
 	}
 	let { open = $bindable(false), catalog, selected, onCreate, onApply, allowCreate = false }: Props = $props();
 
+	// The heavy Popover.Root (bits-ui floating-ui context + portal) is only mounted once
+	// the user actually opens this row's editor. Before that each row renders a plain
+	// button, so toggling "inline tag editing" across a big grid mounts N cheap buttons
+	// instead of N popovers - the difference between instant and multi-second. Once
+	// mounted the Root stays (only this row's, not all N), so re-opens are normal.
+	let activated = $state(open);
+	// Mount the Root first, THEN open on the next microtask: bits-ui positions the content
+	// against a trigger that is already in the DOM, so opening after mount is reliable.
+	async function activate() {
+		activated = true;
+		await tick();
+		open = true;
+	}
+	// A parent that drives `open` (rare) still forces the Root to mount.
+	$effect(() => { if (open) activated = true; });
+
 	let query = $state('');
 	let newColor = $state<TagColor>('blue');
 	let newIcon = $state<string | null>(null);
 	let iconSearch = $state('');
 	let creating = $state(false);
 
-	const allIconNames = Object.keys(iconMap);
+	// Gated on activated so an un-opened row (the common case on a big grid) does no work.
+	const allIconNames = $derived(activated ? Object.keys(iconMap) : []);
 	const iconResults = $derived(
 		iconSearch.trim()
 			? allIconNames.filter((n) => n.toLowerCase().includes(iconSearch.trim().toLowerCase()))
@@ -66,6 +84,13 @@
 	}
 </script>
 
+{#if !activated}
+	<!-- Cheap placeholder: no Popover.Root until the user opens this row's editor. -->
+	<button type="button" title="Edit tags" onclick={activate}
+		class="inline-flex h-4 w-4 items-center justify-center rounded text-muted-foreground/60 hover:text-foreground">
+		<TagIcon class="h-3 w-3" />
+	</button>
+{:else}
 <Popover.Root bind:open>
 	<Popover.Trigger>
 		{#snippet child({ props })}
@@ -139,3 +164,4 @@
 		</div>
 	</Popover.Content>
 </Popover.Root>
+{/if}

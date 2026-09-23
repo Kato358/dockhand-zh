@@ -4,6 +4,8 @@
     "date": "2026-09-22",
     "comingSoon": true,
     "changes": [
+      { "type": "fix", "text": "select-all checkbox shows a partial state, not a full tick, for a partial selection (#1605)" },
+      { "type": "fix", "text": "a long backup no longer crashes the app when its log stream goes quiet (#1610)" },
       { "type": "feature", "text": "tag containers and stacks, then filter and group the grid by tag (#781, #870)" },
       { "type": "fix", "text": "removing all of a stack's environment variables no longer leaves stale entries (#1598)" },
       { "type": "fix", "text": "templates with duplicate names no longer stop the templates page from rendering" },

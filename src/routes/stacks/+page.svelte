@@ -118,10 +118,16 @@
 	// Group-by-tag: partition rows by their unique tag COMBINATION. Persisted per browser.
 	const SHOW_TAGS_KEY = 'dockhand-stacks-show-tags';
 	const SHOW_BANDS_KEY = 'dockhand-stacks-group-bands';
+	const INLINE_TAG_EDIT_KEY = 'dockhand-stacks-inline-tag-editing';
+	const TAG_SETTINGS_EXPANDED_KEY = 'dockhand-stacks-tag-settings-expanded';
 	// Show tag chips on rows (default true - only '0' hides them).
 	let showTags = $state(typeof window === 'undefined' || localStorage.getItem(SHOW_TAGS_KEY) !== '0');
 	// Coloured group bands (default true - only '0' hides them).
 	let showBands = $state(typeof window === 'undefined' || localStorage.getItem(SHOW_BANDS_KEY) !== '0');
+	// Show a tag-edit button on each row (default true - only '0' hides it).
+	let inlineTagEditing = $state(typeof window === 'undefined' || localStorage.getItem(INLINE_TAG_EDIT_KEY) !== '0');
+	// Tag-settings section open/closed (default open - only '0' collapses it).
+	let tagSettingsExpanded = $state(typeof window === 'undefined' || localStorage.getItem(TAG_SETTINGS_EXPANDED_KEY) !== '0');
 	$effect(() => {
 		if (typeof window === 'undefined') return;
 		localStorage.setItem(SHOW_TAGS_KEY, showTags ? '1' : '0');
@@ -129,6 +135,14 @@
 	$effect(() => {
 		if (typeof window === 'undefined') return;
 		localStorage.setItem(SHOW_BANDS_KEY, showBands ? '1' : '0');
+	});
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		localStorage.setItem(INLINE_TAG_EDIT_KEY, inlineTagEditing ? '1' : '0');
+	});
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		localStorage.setItem(TAG_SETTINGS_EXPANDED_KEY, tagSettingsExpanded ? '1' : '0');
 	});
 	const GROUP_BY_TAG_KEY = 'dockhand-stacks-group-by-tag';
 	const COLLAPSED_GROUPS_KEY = 'dockhand-stacks-collapsed-groups';
@@ -1724,7 +1738,7 @@
 				width="w-44"
 				defaultIcon={Layers}
 			/>
-			<TagFilter tags={tagCatalog} bind:selected={tagFilter} bind:mode={tagFilterMode} bind:groupBy={groupByTag} bind:showTags={showTags} bind:showBands={showBands} />
+			<TagFilter tags={tagCatalog} bind:selected={tagFilter} bind:mode={tagFilterMode} bind:groupBy={groupByTag} bind:showTags={showTags} bind:showBands={showBands} bind:inlineEditing={inlineTagEditing} bind:settingsExpanded={tagSettingsExpanded} />
 			<Button size="sm" variant="outline" onclick={fetchStacks}>
 				<RefreshCw class="w-3.5 h-3.5" />
 				Refresh
@@ -2056,7 +2070,7 @@
 						</Tooltip.Root>
 					{/if}
 					{#if showTags}<TagChips tags={tagsFor(stack.name)} />{/if}
-					{#if $appSettings.inlineTagEditing && $canAccess('stacks', 'edit')}
+					{#if inlineTagEditing && $canAccess('stacks', 'edit')}
 						<span onclick={(e) => e.stopPropagation()} role="presentation">
 							<TagEditPopover
 								catalog={tagCatalog}
