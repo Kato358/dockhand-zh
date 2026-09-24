@@ -96,7 +96,7 @@
 			}
 		} catch (error) {
 			console.error('Failed to fetch users:', error);
-			toast.error('Failed to fetch users');
+			toast.error('获取用户失败');
 		} finally {
 			usersLoading = false;
 		}
@@ -129,9 +129,9 @@
 				const data = await response.json();
 				await fetchUsers();
 				if (data.authDisabled) {
-					toast.success('User deleted. Authentication has been disabled.');
+					toast.success('用户已删除。身份验证已禁用。');
 				} else {
-					toast.success('User deleted');
+					toast.success('用户已删除');
 				}
 				showLastAdminWarning = false;
 				lastAdminDeleteUserId = null;
@@ -143,15 +143,15 @@
 					lastAdminDeleteUserId = userId;
 					showLastAdminWarning = true;
 				} else {
-					toast.error(data.error || 'Failed to delete user');
+					toast.error(data.error || '删除用户失败');
 				}
 			} else {
 				const data = await response.json();
-				toast.error(data.error || 'Failed to delete user');
+				toast.error(data.error || '删除用户失败');
 			}
 		} catch (error) {
 			console.error('Failed to delete user:', error);
-			toast.error('Failed to delete user');
+			toast.error('删除用户失败');
 		} finally {
 			confirmDeleteUserId = null;
 		}
@@ -180,7 +180,7 @@
 	// Get provider display info
 	function getProviderInfo(user: LocalUser): { icon: typeof KeyRound; label: string; class: string; sortKey: string } {
 		if (!user.isSso) {
-			return { icon: KeyRound, label: 'Local', class: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30', sortKey: 'local' };
+			return { icon: KeyRound, label: '本地', class: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30', sortKey: 'local' };
 		}
 		const providerParts = user.authProvider?.split(':') || [];
 		const providerType = providerParts[0]?.toLowerCase() || 'sso';
@@ -254,16 +254,12 @@
 			<div class="flex items-center justify-between">
 				<div>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Users class="w-4 h-4" />
-						Users
-					</Card.Title>
-					<p class="text-xs text-muted-foreground mt-1">Manage user accounts for local authentication, SSO, and LDAP.</p>
+						<Users class="w-4 h-4" />用户</Card.Title>
+					<p class="text-xs text-muted-foreground mt-1">管理本地身份验证、SSO 和 LDAP 的用户帐户。</p>
 				</div>
 				{#if $canAccess('users', 'create')}
 					<Button size="sm" onclick={() => openUserModal(null)}>
-						<UserPlus class="w-4 h-4" />
-						Add user
-					</Button>
+						<UserPlus class="w-4 h-4" />添加用户</Button>
 				{/if}
 			</div>
 		</Card.Header>
@@ -275,13 +271,13 @@
 			{:else if localUsers.length === 0}
 				<EmptyState
 					icon={Users}
-					title="No users configured"
-					description="Create the first user to enable login"
+					title="未配置用户"
+					description="创建第一个用户以启用登录"
 				/>
 			{:else}
 				<!-- Filter bar -->
 				<div class="flex items-center gap-2 mb-3">
-					<SearchInput bind:value={searchQuery} placeholder="Search users..." class="h-8 text-sm" containerClass="flex-1 max-w-xs" />
+					<SearchInput bind:value={searchQuery} placeholder="搜索用户…" class="h-8 text-sm" containerClass="flex-1 max-w-xs" />
 					<div class="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
 						<span>{filteredAndSortedUsers.length} of {localUsers.length} users</span>
 					</div>
@@ -321,7 +317,7 @@
 								</th>
 								<th class="text-left py-1.5 px-3 font-medium w-[8%]">MFA</th>
 								{#if $licenseStore.isEnterprise}
-									<th class="text-left py-1.5 px-3 font-medium w-[25%]">Roles</th>
+									<th class="text-left py-1.5 px-3 font-medium w-[25%]">角色</th>
 								{/if}
 								<th class="text-left py-1.5 px-3 font-medium w-[15%]">
 									<button
@@ -356,7 +352,7 @@
 											<div class="flex items-center gap-1.5">
 												<span class="font-medium">{user.username}</span>
 												{#if !user.isActive}
-													<Badge variant="destructive" class="text-2xs px-1 py-0 h-4">Disabled</Badge>
+													<Badge variant="destructive" class="text-2xs px-1 py-0 h-4">已禁用</Badge>
 												{/if}
 											</div>
 										</div>
@@ -369,9 +365,7 @@
 									<td class="py-2 px-3">
 										{#if user.mfaEnabled}
 											<Badge variant="outline" class="text-2xs px-1.5 py-0 h-4 gap-1 rounded-sm bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/30">
-												<Shield class="w-2.5 h-2.5" />
-												Enabled
-											</Badge>
+												<Shield class="w-2.5 h-2.5" />已启用</Badge>
 										{:else}
 											<span class="text-muted-foreground">—</span>
 										{/if}
@@ -420,7 +414,7 @@
 											{#if $canAccess('users', 'delete')}
 												<ConfirmPopover
 													open={confirmDeleteUserId === user.id}
-													action="Delete"
+													action="删除"
 													itemType="user"
 													itemName={user.username}
 													onConfirm={() => deleteLocalUser(user.id)}
@@ -464,19 +458,14 @@
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2 text-destructive">
-				<AlertTriangle class="w-5 h-5" />
-				Delete last admin?
-			</Dialog.Title>
-			<Dialog.Description class="text-left">
-				This is the only admin account. Deleting it will <strong>disable authentication</strong> and allow anyone to access Dockhand without logging in.
+				<AlertTriangle class="w-5 h-5" />删除最后一个管理员？</Dialog.Title>
+			<Dialog.Description class="text-left">这是唯一的管理员帐户。删除它将<strong>disable authentication</strong> and allow anyone to access Dockhand without logging in.
 			</Dialog.Description>
 		</Dialog.Header>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={cancelLastAdminDelete}>Cancel</Button>
+			<Button variant="outline" onclick={cancelLastAdminDelete}>取消</Button>
 			<Button variant="destructive" onclick={confirmLastAdminDelete}>
-				<Trash2 class="w-4 h-4" />
-				Delete and disable auth
-			</Button>
+				<Trash2 class="w-4 h-4" />删除并禁用身份验证</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

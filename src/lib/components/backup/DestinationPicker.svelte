@@ -37,7 +37,7 @@
 		value = $bindable(),
 		env,
 		triggerClass = 'h-9 w-full',
-		placeholder = 'Select repository...'
+		placeholder = '选择仓库…'
 	}: Props = $props();
 
 	const selected = $derived(destinations.find((d) => d.id === value));
@@ -68,7 +68,7 @@
 					<DIcon class="w-4 h-4 text-muted-foreground" />
 					{dest.name}
 					{#if localOnRemote}
-						<span class="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-400" title="A local-path repo only works if this environment's Docker daemon is on the same host as Dockhand.">needs same host</span>
+						<span class="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-400" title="只有当此环境的 Docker 守护程序与 Dockhand 位于同一主机上时，本地路径仓库才能正常工作。">needs same host</span>
 					{/if}
 				</span>
 			</Select.Item>

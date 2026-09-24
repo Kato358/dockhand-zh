@@ -44,9 +44,9 @@
 
 	function getAuthLabel(authType: string) {
 		switch (authType) {
-			case 'ssh': return 'SSH Key';
-			case 'password': return 'Password';
-			default: return 'None';
+			case 'ssh': return 'SSH密钥';
+			case 'password': return '密码';
+			default: return '无';
 		}
 	}
 
@@ -448,11 +448,11 @@
 	async function populateEnvVars() {
 		// Validate we have repository info
 		if (formRepoMode === 'existing' && !formRepositoryId) {
-			toast.error('Please select a repository first');
+			toast.error('请先选择一个仓库。');
 			return;
 		}
 		if (formRepoMode === 'new' && !formNewRepoUrl.trim()) {
-			toast.error('Please enter a repository URL first');
+			toast.error('请先输入仓库 URL。');
 			return;
 		}
 
@@ -482,8 +482,8 @@
 			const data = await response.json();
 
 			if (!response.ok) {
-				toast.error('Failed to load env variables', {
-					description: data.error || 'Unknown error'
+				toast.error('加载环境变量失败', {
+					description: data.error || '未知错误'
 				});
 				return;
 			}
@@ -492,8 +492,8 @@
 			const count = Object.keys(vars).length;
 
 			if (count === 0) {
-				toast.info('No environment variables found', {
-					description: 'No .env files found in the repository. You can still add variables manually.'
+				toast.info('未找到环境变量', {
+					description: '仓库中未找到 .env 文件。您仍然可以手动添加变量。'
 				});
 				return;
 			}
@@ -505,12 +505,12 @@
 			fileEnvVars = vars;
 			envVars = mergeGitStackEnvVars(vars, envVars.filter((v) => v.key.trim()));
 
-			toast.success(`Loaded ${count} variable${count === 1 ? '' : 's'}`, {
-				description: 'You can now customize values before deploying'
+			toast.success(`已加载 ${count} 变量`, {
+				description: '您现在可以在部署前自定义这些值。'
 			});
 		} catch (e) {
 			console.error('Failed to populate env vars:', e);
-			toast.error('Failed to load env variables');
+			toast.error('加载环境变量失败');
 		} finally {
 			populatingEnvVars = false;
 		}
@@ -786,7 +786,7 @@
 			if (!response.ok) {
 				if (deployAfterSave) {
 					// A pre-deploy failure (e.g. git sync) streams no lines, so surface
-					// the error text in the window instead of "No logs available".
+					// the error text in the window instead of "没有可用的日志".
 					if (outputLines.length === 0 && data.error) outputLines = String(data.error).split('\n');
 					outputRunning = false;
 					outputOk = false;
@@ -810,8 +810,8 @@
 				outputMs = Date.now() - outputStartedAt;
 			}
 			if (deployResult && !deployResult.success) {
-				toast.error('Deployment failed', {
-					description: deployResult.error || 'Unknown error'
+				toast.error('部署失败', {
+					description: deployResult.error || '未知错误'
 				});
 				deploysReloadKey++; // the failed run is recorded; refresh the Deploys tab
 				onSaved(); // Still refresh the list to show the new stack
@@ -888,7 +888,7 @@
 					{#if gitStack}
 						<button
 							type="button"
-							title="Change stack icon"
+							title="更改编排图标"
 							onclick={() => (showIconPicker = true)}
 							class="p-1.5 rounded-md bg-zinc-200 dark:bg-zinc-700 hover:ring-2 hover:ring-primary transition-shadow"
 						>
@@ -905,7 +905,7 @@
 					{/if}
 					<div>
 						<Dialog.Title class="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
-							{gitStack ? 'Edit git stack' : 'Deploy from Git'}
+							{gitStack ? '编辑 Git 编排' : 'Deploy from Git'}
 						</Dialog.Title>
 						<Dialog.Description class="text-xs text-zinc-500 dark:text-zinc-400">
 							{gitStack ? 'Update git stack settings' : 'Deploy a compose stack from a Git repository'}
@@ -933,8 +933,7 @@
 					class="relative -mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors {activeTab === 'settings' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
 					onclick={() => (activeTab = 'settings')}
 				>
-					<Settings2 class="h-3.5 w-3.5" /> Settings
-				</button>
+					<Settings2 class="h-3.5 w-3.5" />设置</button>
 				<button
 					type="button"
 					class="relative -mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors {activeTab === 'deploys' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
@@ -987,7 +986,7 @@
 			<!-- Repository selection -->
 			{#if !gitStack}
 				<div class="space-y-3">
-					<Label>Repository</Label>
+					<Label>仓库</Label>
 					<div class="flex gap-2">
 						<Button
 							variant={formRepoMode === 'existing' ? 'default' : 'outline'}
@@ -1025,7 +1024,7 @@
 										<span class="text-muted-foreground text-xs truncate hidden sm:inline">({repoPath})</span>
 									</div>
 								{:else}
-									<span class="text-muted-foreground">Select a repository...</span>
+									<span class="text-muted-foreground">选择一个仓库…</span>
 								{/if}
 							</Select.Trigger>
 							<Select.Content>
@@ -1052,14 +1051,12 @@
 						{#if errors.repository}
 							<p class="text-xs text-destructive">{errors.repository}</p>
 						{:else if repositories.length === 0}
-							<p class="text-xs text-muted-foreground">
-								No repositories configured. Click "Add new" to add one.
-							</p>
+							<p class="text-xs text-muted-foreground">尚未配置任何仓库。单击“添加新仓库”以添加一个。</p>
 						{/if}
 						<!-- Branch selection for existing repository -->
 						{#if formRepoMode === 'existing' && selectedRepo}
 							<div class="space-y-2">
-								<Label for="existing-repo-branch">Branch</Label>
+								<Label for="existing-repo-branch">分支</Label>
 								<BranchCombobox
 									id="existing-repo-branch"
 									value={formBranch ?? ''}
@@ -1077,7 +1074,7 @@
 					{:else}
 						<div class="space-y-3 p-3 border rounded-md bg-muted/30">
 							<div class="space-y-2">
-								<Label for="new-repo-name">Repository name</Label>
+								<Label for="new-repo-name">仓库名称</Label>
 								<Input
 									id="new-repo-name"
 									bind:value={formNewRepoName}
@@ -1090,7 +1087,7 @@
 								{/if}
 							</div>
 							<div class="space-y-2">
-								<Label for="new-repo-url">Repository URL</Label>
+								<Label for="new-repo-url">仓库 URL</Label>
 								<Input
 									id="new-repo-url"
 									bind:value={formNewRepoUrl}
@@ -1104,7 +1101,7 @@
 							</div>
 							<div class="grid grid-cols-2 items-start gap-3">
 								<div class="space-y-2">
-									<Label for="new-repo-branch">Branch</Label>
+									<Label for="new-repo-branch">分支</Label>
 									<!-- Free-text, searchable branch picker. Supports both discovered
 									     branches and arbitrary typed names: a new/private repository whose
 									     branch enumeration fails must not force the user onto "main" — they
@@ -1122,10 +1119,10 @@
 										onchange={(v) => { formNewRepoBranch = v; }}
 										onclear={() => { formNewRepoBranch = 'main'; }}
 									/>
-									<p class="text-xs text-muted-foreground">Type a name or pick from the list.</p>
+									<p class="text-xs text-muted-foreground">输入名称或从列表中选择。</p>
 								</div>
 								<div class="space-y-2">
-									<Label for="new-repo-credential">Credential</Label>
+									<Label for="new-repo-credential">凭据</Label>
 									<Select.Root
 										type="single"
 										value={formNewRepoCredentialId?.toString() ?? 'none'}
@@ -1144,15 +1141,13 @@
 												<span>{selectedCred.name} ({getAuthLabel(selectedCred.authType)})</span>
 											{:else}
 												<Key class="w-4 h-4 mr-2 text-muted-foreground" />
-												<span>None (public)</span>
+												<span>无（公开）</span>
 											{/if}
 										</Select.Trigger>
 										<Select.Content>
 											<Select.Item value="none">
 												<span class="flex items-center gap-2">
-													<Key class="w-4 h-4 text-muted-foreground" />
-													None (public)
-												</span>
+													<Key class="w-4 h-4 text-muted-foreground" />无（公开）</span>
 											</Select.Item>
 											{#each credentials as cred}
 												<Select.Item value={cred.id.toString()}>
@@ -1170,7 +1165,7 @@
 											{/each}
 										</Select.Content>
 									</Select.Root>
-									<p class="text-xs text-muted-foreground">SSH key or token for private repositories.</p>
+									<p class="text-xs text-muted-foreground">用于私有仓库的 SSH 密钥或令牌。</p>
 								</div>
 							</div>
 						</div>
@@ -1180,7 +1175,7 @@
 
 			<!-- Stack configuration -->
 			<div class="space-y-2">
-				<Label for="stack-name">Stack name</Label>
+				<Label for="stack-name">编排名称</Label>
 				<Input
 					id="stack-name"
 					bind:value={formStackName}
@@ -1191,20 +1186,20 @@
 				{#if errors.stackName}
 					<p class="text-xs text-destructive">{errors.stackName}</p>
 				{:else}
-					<p class="text-xs text-muted-foreground">This will be the name of the deployed stack</p>
+					<p class="text-xs text-muted-foreground">这将是已部署编排的名称。</p>
 				{/if}
 			</div>
 
 			{#if gitStack?.stackName}
 				<div class="space-y-2">
-					<Label>Tags</Label>
+					<Label>标签</Label>
 					<StackTagsSection stackName={gitStack.stackName} envId={effectiveEnvId} />
 				</div>
 			{/if}
 
 			{#if gitStack && selectedRepo}
 				<div class="space-y-2">
-					<Label>Repository</Label>
+					<Label>仓库</Label>
 					<div class="flex h-9 items-center gap-2 rounded-md border border-input bg-muted/50 px-3 py-1 text-sm text-muted-foreground">
 						<FolderGit2 class="w-4 h-4 shrink-0" />
 						<span class="truncate" title={selectedRepo.url}>{selectedRepo.url}</span>
@@ -1214,7 +1209,7 @@
 
 			{#if gitStack && selectedRepo}
 				<div class="space-y-2">
-					<Label for="stack-branch">Branch</Label>
+					<Label for="stack-branch">分支</Label>
 					<BranchCombobox
 						id="stack-branch"
 						value={formBranch ?? ''}
@@ -1231,15 +1226,15 @@
 			{/if}
 
 			<div class="space-y-2">
-				<Label for="compose-path">Compose file path</Label>
+				<Label for="compose-path">Compose 文件路径</Label>
 				<Input id="compose-path" bind:value={formComposePath} placeholder="compose.yaml" />
-				<p class="text-xs text-muted-foreground">Path to the compose file within the repository</p>
+				<p class="text-xs text-muted-foreground">仓库中 compose 文件的路径</p>
 			</div>
 
 			<!-- Additional env file for variable substitution -->
 			<div class="space-y-2">
 				<div class="flex items-center gap-1.5">
-					<Label for="env-file-path">Additional env file (optional)</Label>
+					<Label for="env-file-path">附加环境文件（可选）</Label>
 					<Tooltip.Root>
 						<Tooltip.Trigger>
 							<HelpCircle class="w-3.5 h-3.5 text-muted-foreground cursor-help" />
@@ -1247,8 +1242,8 @@
 						<Tooltip.Content>
 							<div class="w-80">
 								<p class="text-xs">A <code class="bg-muted px-1 rounded">.env</code> file in the compose directory is always loaded automatically, if present.</p>
-								<p class="text-xs mt-2">Use this field for an additional env file with a non-standard name (e.g. <code class="bg-muted px-1 rounded">.env.production</code>). Its values override the default <code class="bg-muted px-1 rounded">.env</code>.</p>
-								<p class="text-xs mt-2">Overrides from the environment variables editor on the right always take highest precedence.</p>
+								<p class="text-xs mt-2">此字段用于添加一个名称非标准（例如）的附加环境变量文件。<code class="bg-muted px-1 rounded">.env.production</code>). Its values override the default <code class="bg-muted px-1 rounded">.env</code>.</p>
+								<p class="text-xs mt-2">右侧环境变量编辑器中的更改始终具有最高优先级。</p>
 							</div>
 						</Tooltip.Content>
 					</Tooltip.Root>
@@ -1258,22 +1253,22 @@
 						bind:value={formEnvFilePath}
 						placeholder=""
 					/>
-				<p class="text-xs text-muted-foreground">Additional env file to pass to Docker Compose</p>
+				<p class="text-xs text-muted-foreground">要传递给 Docker Compose 的额外环境文件</p>
 			</div>
 
 			<!-- Context directory -->
 			<div class="space-y-2">
 				<div class="flex items-center gap-1.5">
-					<Label for="context-dir">Context directory (optional)</Label>
+					<Label for="context-dir">上下文目录（可选）</Label>
 					<Tooltip.Root>
 						<Tooltip.Trigger>
 							<HelpCircle class="w-3.5 h-3.5 text-muted-foreground cursor-help" />
 						</Tooltip.Trigger>
 						<Tooltip.Content>
 							<div class="w-80">
-								<p class="text-xs">Working directory for Docker Compose, relative to the repository root. All files in this directory will be available for volume mounts and build contexts.</p>
-								<p class="text-xs mt-2">Use <code class="bg-muted px-1 rounded">.</code> for the repository root when your compose file references files in sibling directories.</p>
-								<p class="text-xs mt-2">Defaults to the compose file's parent directory.</p>
+								<p class="text-xs">Docker Compose 的工作目录，相对于仓库根目录。此目录中的所有文件都可用于卷挂载和构建上下文。</p>
+								<p class="text-xs mt-2">使用<code class="bg-muted px-1 rounded">.</code> for the repository root when your compose file references files in sibling directories.</p>
+								<p class="text-xs mt-2">默认为 compose 文件的父目录。</p>
 							</div>
 						</Tooltip.Content>
 					</Tooltip.Root>
@@ -1282,9 +1277,9 @@
 					id="context-dir"
 					value={formContextDir ?? ''}
 					oninput={(e) => { const v = (e.target as HTMLInputElement).value; formContextDir = v.trim() || null; }}
-					placeholder="Defaults to compose file's directory"
+					placeholder="默认为 compose 文件所在的目录"
 				/>
-				<p class="text-xs text-muted-foreground">Relative to repository root, e.g. <code class="text-xs bg-muted px-1 rounded">.</code> for root</p>
+				<p class="text-xs text-muted-foreground">相对于仓库根目录，例如<code class="text-xs bg-muted px-1 rounded">.</code> for root</p>
 			</div>
 
 			<!-- Auto-update section -->
@@ -1292,13 +1287,11 @@
 			<div class="flex items-center gap-3">
 				<div class="flex items-center gap-2 flex-1">
 					<RefreshCw class="w-4 h-4 text-muted-foreground" />
-					<Label class="text-sm font-normal">Enable scheduled sync</Label>
+					<Label class="text-sm font-normal">启用计划同步</Label>
 				</div>
 				<TogglePill bind:checked={formAutoUpdate} />
 			</div>
-				<p class="text-xs text-muted-foreground">
-					Automatically sync repository and redeploy stack if there are changes.
-				</p>
+				<p class="text-xs text-muted-foreground">如果仓库发生更改，则自动同步仓库并重新部署编排。</p>
 				{#if formAutoUpdate}
 					<CronEditor
 						value={formAutoUpdateCron}
@@ -1312,16 +1305,14 @@
 			<div class="flex items-center gap-3">
 				<div class="flex items-center gap-2 flex-1">
 					<Webhook class="w-4 h-4 text-muted-foreground" />
-					<Label class="text-sm font-normal">Enable webhook</Label>
+					<Label class="text-sm font-normal">启用 webhook</Label>
 				</div>
 				<TogglePill
 					bind:checked={formWebhookEnabled}
 					onchange={() => { if (formWebhookEnabled && !formWebhookSecret) formWebhookSecret = generateWebhookSecret(); }}
 				/>
 			</div>
-				<p class="text-xs text-muted-foreground">
-					Receive push events from your Git provider to trigger sync and redeploy.
-				</p>
+				<p class="text-xs text-muted-foreground">接收来自 Git 提供商的推送事件，以触发同步和重新部署。</p>
 				{#if formWebhookEnabled}
 					{#if gitStack}
 						<div class="space-y-2">
@@ -1336,14 +1327,14 @@
 									variant="outline"
 									size="sm"
 									onclick={() => copyWebhookField(getWebhookUrl(gitStack.id), 'url')}
-									title="Copy URL"
+									title="复制链接"
 								>
 									{#if copiedWebhookUrl === 'error'}
 										<Tooltip.Root open>
 											<Tooltip.Trigger>
 												<XCircle class="w-4 h-4 text-red-500" />
 											</Tooltip.Trigger>
-											<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+											<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 										</Tooltip.Root>
 									{:else if copiedWebhookUrl === 'ok'}
 										<Check class="w-4 h-4 text-green-500" />
@@ -1355,12 +1346,12 @@
 						</div>
 					{/if}
 					<div class="space-y-2">
-						<Label for="webhook-secret">Webhook secret</Label>
+						<Label for="webhook-secret">Webhook 密钥</Label>
 						<div class="flex gap-2">
 							<Input
 								id="webhook-secret"
 								bind:value={formWebhookSecret}
-								placeholder="Required - generate or paste a secret"
+								placeholder="必填 - 生成或粘贴密钥"
 								class="font-mono text-xs {errors.webhookSecret ? 'border-destructive focus-visible:ring-destructive' : ''}"
 								oninput={() => errors.webhookSecret = undefined}
 							/>
@@ -1369,14 +1360,14 @@
 									variant="outline"
 									size="sm"
 									onclick={() => copyWebhookField(formWebhookSecret, 'secret')}
-									title="Copy secret"
+									title="复制密钥"
 								>
 									{#if copiedWebhookSecret === 'error'}
 										<Tooltip.Root open>
 											<Tooltip.Trigger>
 												<XCircle class="w-4 h-4 text-red-500" />
 											</Tooltip.Trigger>
-											<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+											<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 										</Tooltip.Root>
 									{:else if copiedWebhookSecret === 'ok'}
 										<Check class="w-4 h-4 text-green-500" />
@@ -1395,7 +1386,7 @@
 										<Key class="w-4 h-4" />
 									</Button>
 								</Tooltip.Trigger>
-								<Tooltip.Content>Generate secret</Tooltip.Content>
+								<Tooltip.Content>生成密钥</Tooltip.Content>
 							</Tooltip.Root>
 						</div>
 						{#if errors.webhookSecret}
@@ -1403,62 +1394,53 @@
 						{/if}
 					</div>
 					{#if !gitStack}
-						<p class="text-xs text-muted-foreground">
-							The webhook URL will be available after creating the stack.
-						</p>
+						<p class="text-xs text-muted-foreground">创建编排后，即可获得 webhook URL。</p>
 					{:else}
-						<p class="text-xs text-muted-foreground">
-							Configure this URL in your Git provider. Secret is used for signature verification.
-						</p>
+						<p class="text-xs text-muted-foreground">请在 Git 服务中配置此 URL。密钥用于签名验证。</p>
 					{/if}
 				{/if}
 			</div>
 
 			<!-- Deploy options section -->
 			<div class="space-y-3 p-3 bg-muted/50 rounded-md">
-				<p class="text-xs font-medium text-muted-foreground uppercase tracking-wider">Deploy options</p>
+				<p class="text-xs font-medium text-muted-foreground uppercase tracking-wider">部署选项</p>
 				<div class="flex items-center gap-3">
 					<div class="flex items-center gap-2 flex-1">
 						<Hammer class="w-4 h-4 text-muted-foreground" />
-						<Label class="text-sm font-normal">Build images on deploy</Label>
+						<Label class="text-sm font-normal">部署时构建镜像</Label>
 					</div>
 					<TogglePill bind:checked={formBuildOnDeploy} />
 				</div>
-				<p class="text-xs text-muted-foreground">
-					Run <code class="text-xs bg-muted px-1 rounded">--build</code> to build images from Dockerfiles before starting containers.
+				<p class="text-xs text-muted-foreground">运行<code class="text-xs bg-muted px-1 rounded">--build</code> to build images from Dockerfiles before starting containers.
 				</p>
 				{#if formBuildOnDeploy}
 				<div class="flex items-center gap-3 ml-6">
 					<div class="flex items-center gap-2 flex-1">
 						<Ban class="w-4 h-4 text-muted-foreground" />
-						<Label class="text-sm font-normal">Disable build cache</Label>
+						<Label class="text-sm font-normal">禁用构建缓存</Label>
 					</div>
 					<TogglePill bind:checked={formNoBuildCache} />
 				</div>
-				<p class="text-xs text-muted-foreground ml-6">
-					Pass <code class="text-xs bg-muted px-1 rounded">--no-cache</code> to force a clean build without using cached layers.
+				<p class="text-xs text-muted-foreground ml-6">经过<code class="text-xs bg-muted px-1 rounded">--no-cache</code> to force a clean build without using cached layers.
 				</p>
 				{/if}
 				<div class="flex items-center gap-3">
 					<div class="flex items-center gap-2 flex-1">
 						<ArrowDownToLine class="w-4 h-4 text-muted-foreground" />
-						<Label class="text-sm font-normal">Re-pull images</Label>
+						<Label class="text-sm font-normal">重新拉取镜像</Label>
 					</div>
 					<TogglePill bind:checked={formRepullImages} />
 				</div>
-				<p class="text-xs text-muted-foreground">
-					Always pull latest images before deploying, even if the compose file hasn't changed. Useful for CI/CD workflows with static tags like <code class="text-xs bg-muted px-1 rounded">:latest</code>.
+				<p class="text-xs text-muted-foreground">即使 compose 文件没有更改，部署前也务必拉取最新镜像。这对于带有静态标签的 CI/CD 工作流程非常有用，例如<code class="text-xs bg-muted px-1 rounded">:latest</code>.
 				</p>
 				<div class="flex items-center gap-3">
 					<div class="flex items-center gap-2 flex-1">
 						<Zap class="w-4 h-4 text-muted-foreground" />
-						<Label class="text-sm font-normal">Force redeployment</Label>
+						<Label class="text-sm font-normal">部队重新部署</Label>
 					</div>
 					<TogglePill bind:checked={formForceRedeploy} />
 				</div>
-				<p class="text-xs text-muted-foreground">
-					Always redeploy the stack on webhook or scheduled sync, even if no git changes are detected.
-				</p>
+				<p class="text-xs text-muted-foreground">即使未检测到 git 更改，也始终在 webhook 或计划同步时重新部署编排。</p>
 			</div>
 
 			<!-- Deploy now option (only for new stacks) -->
@@ -1468,8 +1450,8 @@
 						<div class="flex items-center gap-2 flex-1">
 							<Rocket class="w-4 h-4 text-muted-foreground" />
 							<div class="flex-1">
-								<Label class="text-sm font-normal">Deploy now</Label>
-								<p class="text-xs text-muted-foreground">Clone and deploy the stack immediately</p>
+								<Label class="text-sm font-normal">立即部署</Label>
+								<p class="text-xs text-muted-foreground">立即克隆并部署编排</p>
 							</div>
 						</div>
 						<TogglePill bind:checked={formDeployNow} />
@@ -1510,7 +1492,7 @@
 					providerName={secretProviders.find((p) => p.id === formSecretProviderId)?.name ?? null}
 					providerBound={formSecretProviderId != null && secretProviders.some((p) => p.id === formSecretProviderId)}
 					placeholder={{ key: 'MY_VAR', value: 'value' }}
-					infoText="Override variables from your repository env files. Non-secrets are saved to <code class='bg-muted px-1 rounded'>.env.dockhand</code> in the stack directory. Secrets are stored in the database and injected via shell environment at deploy time.<br/><br/>Variables are available for <strong>compose file interpolation</strong> using <code class='bg-muted px-1 rounded'>${'{VAR_NAME}'}</code> syntax. They are not automatically injected into containers — use <code class='bg-muted px-1 rounded'>environment:</code> or reference <code class='bg-muted px-1 rounded'>.env.dockhand</code> in <code class='bg-muted px-1 rounded'>env_file:</code> to pass them through."
+					infoText="Override variables from your repository env files. Non-secrets are saved to <code class='bg-muted px-1 rounded'>.env.dockhand</code> in the stack directory. Secrets are stored in the database and injected via shell environment at deploy time.<br/><br/>变量可用于<strong>compose file interpolation</strong> using <code class='bg-muted px-1 rounded'>${'{VAR_NAME}'}</code> syntax. They are not automatically injected into containers — use <code class='bg-muted px-1 rounded'>environment:</code> or reference <code class='bg-muted px-1 rounded'>.env.dockhand</code> in <code class='bg-muted px-1 rounded'>env_file:</code> to pass them through."
 					existingSecretKeys={gitStack !== null ? existingSecretKeys : new Set()}
 					showInterpolationHint={true}
 				>
@@ -1538,7 +1520,7 @@
 								</Tooltip.Trigger>
 								<Tooltip.Content>
 									<div class="w-64">
-										<p class="text-xs">Clone the repository and load environment variables from the <code class="bg-muted px-1 rounded">.env</code> file (in compose directory) and additional env file (if specified), so you can see what you can override.</p>
+										<p class="text-xs">克隆仓库并从中加载环境变量<code class="bg-muted px-1 rounded">.env</code> file (in compose directory) and additional env file (if specified), so you can see what you can override.</p>
 									</div>
 								</Tooltip.Content>
 							</Tooltip.Root>
@@ -1550,7 +1532,7 @@
 		{/if}
 
 		<Dialog.Footer class="px-5 py-2.5 border-t border-zinc-200 dark:border-zinc-700 flex-shrink-0">
-			<Button variant="outline" onclick={onClose}>{activeTab === 'backups' ? 'Close' : 'Cancel'}</Button>
+			<Button variant="outline" onclick={onClose}>{activeTab === 'backups' ? '关闭' : '取消'}</Button>
 			<!-- The deploy-form save buttons belong to the Settings tab. On the Backups
 			     tab the backup panel manages its own saving, so only Close is shown. -->
 			{#if activeTab !== 'backups'}
@@ -1578,7 +1560,7 @@
 							<Loader2 class="w-4 h-4 mr-1 animate-spin" />
 							{formDeployNow ? 'Deploying...' : 'Creating...'}
 						{:else}
-							{formDeployNow ? 'Deploy' : 'Create'}
+							{formDeployNow ? '部署' : '创建'}
 						{/if}
 					</Button>
 				{/if}
@@ -1592,9 +1574,7 @@
 	<Dialog.Content class="max-w-sm">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<TriangleAlert class="w-5 h-5 text-amber-500" />
-				Stack already exists
-			</Dialog.Title>
+				<TriangleAlert class="w-5 h-5 text-amber-500" />编排已存在</Dialog.Title>
 			<Dialog.Description>
 				A stack named "{formStackName}" already exists. Please choose a different name.
 			</Dialog.Description>
@@ -1607,7 +1587,7 @@
 	</Dialog.Content>
 </Dialog.Root>
 
-<IconPickerModal bind:open={showIconPicker} value={formIcon} onselect={onIconSelect} title="Choose a stack icon" />
+<IconPickerModal bind:open={showIconPicker} value={formIcon} onselect={onIconSelect} title="选择编排图标" />
 
 <!-- Live compose output for "Save and deploy" (see saveGitStack). -->
 <ComposeOutputModal

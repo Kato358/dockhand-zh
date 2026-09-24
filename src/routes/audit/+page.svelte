@@ -164,38 +164,38 @@
 	let showExportMenu = $state(false);
 
 	const entityTypes = [
-		{ value: 'container', label: 'Containers' },
-		{ value: 'image', label: 'Images' },
-		{ value: 'volume', label: 'Volumes' },
-		{ value: 'network', label: 'Networks' },
-		{ value: 'stack', label: 'Stacks' },
-		{ value: 'environment', label: 'Environments' },
-		{ value: 'registry', label: 'Registries' },
-		{ value: 'user', label: 'Users' },
-		{ value: 'role', label: 'Roles' },
-		{ value: 'settings', label: 'Settings' },
-		{ value: 'git_repository', label: 'Git repositories' },
-		{ value: 'git_credential', label: 'Git credentials' }
+		{ value: 'container', label: '容器' },
+		{ value: 'image', label: '镜像' },
+		{ value: 'volume', label: '存储卷' },
+		{ value: 'network', label: '网络' },
+		{ value: 'stack', label: '编排' },
+		{ value: 'environment', label: '环境' },
+		{ value: 'registry', label: '镜像仓库' },
+		{ value: 'user', label: '用户' },
+		{ value: 'role', label: '角色' },
+		{ value: 'settings', label: '设置' },
+		{ value: 'git_repository', label: 'Git 仓库' },
+		{ value: 'git_credential', label: 'Git 凭据' }
 	];
 
 	const actionTypes = [
-		{ value: 'create', label: 'Create' },
-		{ value: 'update', label: 'Update' },
-		{ value: 'delete', label: 'Delete' },
-		{ value: 'start', label: 'Start' },
-		{ value: 'stop', label: 'Stop' },
-		{ value: 'restart', label: 'Restart' },
-		{ value: 'pause', label: 'Pause' },
-		{ value: 'unpause', label: 'Unpause' },
-		{ value: 'pull', label: 'Pull' },
-		{ value: 'push', label: 'Push' },
-		{ value: 'prune', label: 'Prune' },
-		{ value: 'exec', label: 'Exec' },
-		{ value: 'connect', label: 'Connect' },
-		{ value: 'disconnect', label: 'Disconnect' },
-		{ value: 'login', label: 'Login' },
-		{ value: 'logout', label: 'Logout' },
-		{ value: 'sync', label: 'Sync' }
+		{ value: 'create', label: '创建' },
+		{ value: 'update', label: '更新' },
+		{ value: 'delete', label: '删除' },
+		{ value: 'start', label: '启动' },
+		{ value: 'stop', label: '停止' },
+		{ value: 'restart', label: '重启' },
+		{ value: 'pause', label: '暂停' },
+		{ value: 'unpause', label: '继续' },
+		{ value: 'pull', label: '拉取' },
+		{ value: 'push', label: '推送' },
+		{ value: 'prune', label: '清理' },
+		{ value: 'exec', label: '执行官' },
+		{ value: 'connect', label: '连接' },
+		{ value: 'disconnect', label: '断开' },
+		{ value: 'login', label: '登录' },
+		{ value: 'logout', label: '注销' },
+		{ value: 'sync', label: '同步' }
 	];
 
 	// Date filter preset
@@ -208,12 +208,12 @@
 	);
 
 	const datePresets = [
-		{ value: 'today', label: 'Today' },
-		{ value: 'yesterday', label: 'Yesterday' },
-		{ value: 'last7days', label: 'Last 7 days' },
-		{ value: 'last30days', label: 'Last 30 days' },
-		{ value: 'thisMonth', label: 'This month' },
-		{ value: 'lastMonth', label: 'Last month' }
+		{ value: 'today', label: '今天' },
+		{ value: 'yesterday', label: '昨天' },
+		{ value: 'last7days', label: '过去7天' },
+		{ value: 'last30days', label: '过去30天' },
+		{ value: 'thisMonth', label: '本月' },
+		{ value: 'lastMonth', label: '上个月' }
 	];
 
 	// Filter dates are calendar days in the configured display timezone (#1269).
@@ -320,7 +320,7 @@
 				signal: fetchController.signal
 			});
 			if (!response.ok) {
-				throw new Error('Failed to fetch audit logs');
+				throw new Error('获取审计日志失败');
 			}
 			const data = await response.json();
 
@@ -344,7 +344,7 @@
 			loadingMore = false;
 			fetchController = null;
 		} catch (error: any) {
-			if (error?.name === 'AbortError') {
+			if (error?.name === '中止错误') {
 				return;
 			}
 			console.error('Failed to fetch audit logs:', error);
@@ -596,14 +596,14 @@
 </script>
 
 <svelte:head>
-	<title>Audit log - Dockhand</title>
+	<title>审计日志 - Dockhand</title>
 </svelte:head>
 
 <div class="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
 	<!-- Header -->
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
 		<div class="flex items-center gap-3">
-			<PageHeader icon={Crown} title="Audit log" iconClass="text-amber-500" count={visibleEnd > 0 ? `${visibleStart}-${visibleEnd}` : undefined} total={total > 0 ? total : undefined} countClass="min-w-32" />
+			<PageHeader icon={Crown} title="审计日志" iconClass="text-amber-500" count={visibleEnd > 0 ? `${visibleStart}-${visibleEnd}` : undefined} total={total > 0 ? total : undefined} countClass="min-w-32" />
 		</div>
 		{#if $licenseStore.isEnterprise}
 			<div class="flex flex-wrap items-center gap-2">
@@ -627,9 +627,7 @@
 								type="button"
 								class="w-full px-2 py-1 text-xs text-left text-muted-foreground/60 hover:text-muted-foreground"
 								onclick={() => filterUsernames = []}
-							>
-								Clear
-							</button>
+							>清空</button>
 						{/if}
 						{#each users as user}
 							<Select.Item value={user}>
@@ -660,9 +658,7 @@
 								type="button"
 								class="w-full px-2 py-1 text-xs text-left text-muted-foreground/60 hover:text-muted-foreground"
 								onclick={() => filterEntityTypes = []}
-							>
-								Clear
-							</button>
+							>清空</button>
 						{/if}
 						{#each entityTypes as type}
 							<Select.Item value={type.value}>
@@ -693,9 +689,7 @@
 								type="button"
 								class="w-full px-2 py-1 text-xs text-left text-muted-foreground/60 hover:text-muted-foreground"
 								onclick={() => filterActions = []}
-							>
-								Clear
-							</button>
+							>清空</button>
 						{/if}
 						{#each actionTypes as action}
 							<Select.Item value={action.value}>
@@ -724,15 +718,13 @@
 								{#if filterEnvironmentId === null}
 									Environment
 								{:else}
-									{selectedEnv?.name || 'Environment'}
+									{selectedEnv?.name || '环境'}
 								{/if}
 							</span>
 						</Select.Trigger>
 						<Select.Content>
 							<Select.Item value="">
-								<Server class="w-4 h-4 mr-2 text-muted-foreground" />
-								All environments
-							</Select.Item>
+								<Server class="w-4 h-4 mr-2 text-muted-foreground" />所有环境</Select.Item>
 							{#each environments as env}
 								<Select.Item value={String(env.id)}>
 									<EnvironmentIcon icon={env.icon || 'globe'} envId={env.id} class="w-4 h-4 mr-2 text-muted-foreground" />
@@ -760,25 +752,25 @@
 							{#if selectedDatePreset === 'custom'}
 								Custom
 							{:else if selectedDatePreset}
-								{datePresets.find(d => d.value === selectedDatePreset)?.label || 'All time'}
+								{datePresets.find(d => d.value === selectedDatePreset)?.label || '所有时间'}
 							{:else}
 								All time
 							{/if}
 						</span>
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Item value="">All time</Select.Item>
+						<Select.Item value="">所有时间</Select.Item>
 						{#each datePresets as preset}
 							<Select.Item value={preset.value}>{preset.label}</Select.Item>
 						{/each}
-						<Select.Item value="custom">Custom range...</Select.Item>
+						<Select.Item value="custom">定制范围…</Select.Item>
 					</Select.Content>
 				</Select.Root>
 
 				<!-- Custom date inputs -->
 				{#if selectedDatePreset === 'custom'}
-					<DatePicker bind:value={filterFromDate} placeholder="From" class="h-8 w-28" />
-					<DatePicker bind:value={filterToDate} placeholder="To" class="h-8 w-28" />
+					<DatePicker bind:value={filterFromDate} placeholder="从" class="h-8 w-28" />
+					<DatePicker bind:value={filterToDate} placeholder="到" class="h-8 w-28" />
 				{/if}
 
 				<!-- Clear filters -->
@@ -788,7 +780,7 @@
 					class="h-8 px-2"
 					onclick={clearFilters}
 					disabled={!hasActiveFilters}
-					title="Clear all filters"
+					title="清除所有筛选条件"
 				>
 					<X class="w-3.5 h-3.5" />
 				</Button>
@@ -796,7 +788,7 @@
 				<!-- Live indicator -->
 				<span
 					class="flex items-center gap-1.5 text-xs {$auditSseConnected ? 'text-emerald-500' : 'text-muted-foreground'}"
-					title={$auditSseConnected ? 'Live updates active' : 'Connecting...'}
+					title={$auditSseConnected ? 'Live updates active' : '连接中…'}
 				>
 					<Wifi class="w-3.5 h-3.5" />
 				</span>
@@ -832,9 +824,7 @@
 								class="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent"
 								onclick={() => exportLogs('md')}
 							>
-								<FileText class="w-4 h-4" />
-								Markdown
-							</button>
+								<FileText class="w-4 h-4" />Markdown</button>
 						</div>
 					{/if}
 				</div>
@@ -845,21 +835,17 @@
 	{#if $licenseStore.loading}
 		<div class="flex flex-col items-center justify-center py-16 text-center">
 			<Loader2 class="w-8 h-8 animate-spin text-muted-foreground mb-4" />
-			<p class="text-muted-foreground">Loading...</p>
+			<p class="text-muted-foreground">加载中…</p>
 		</div>
 	{:else if !$licenseStore.isEnterprise}
 		<div class="flex flex-col items-center justify-center py-16 text-center">
 			<div class="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mb-4">
 				<Crown class="w-8 h-8 text-amber-500" />
 			</div>
-			<h2 class="text-xl font-semibold mb-2">Enterprise feature</h2>
-			<p class="text-muted-foreground max-w-md mb-6">
-				Audit logging is an enterprise feature that tracks all user actions for compliance and security monitoring.
-			</p>
+			<h2 class="text-xl font-semibold mb-2">企业功能</h2>
+			<p class="text-muted-foreground max-w-md mb-6">审计日志记录是一项企业级功能，用于跟踪所有用户操作，以进行合规性和安全监控。</p>
 			<Button variant="outline" href="/settings?tab=license">
-				<Key class="w-4 h-4" />
-				Activate license
-			</Button>
+				<Key class="w-4 h-4" />激活许可证</Button>
 		</div>
 	{:else}
 		<DataGrid
@@ -923,23 +909,19 @@
 			{#snippet emptyState()}
 				<div class="flex flex-col items-center justify-center py-16 text-muted-foreground">
 					<FileX class="w-10 h-10 mb-3 opacity-40" />
-					<p>No audit log entries found</p>
+					<p>未找到审计日志条目</p>
 				</div>
 			{/snippet}
 
 			{#snippet loadingState()}
 				<div class="flex items-center justify-center py-16 text-muted-foreground">
-					<RefreshCw class="w-5 h-5 animate-spin mr-2" />
-					Loading...
-				</div>
+					<RefreshCw class="w-5 h-5 animate-spin mr-2" />加载中…</div>
 			{/snippet}
 
 			{#snippet footer()}
 				{#if loadingMore}
 					<div class="flex items-center justify-center py-2 text-muted-foreground">
-						<Loader2 class="w-4 h-4 animate-spin mr-2" />
-						Loading more...
-					</div>
+						<Loader2 class="w-4 h-4 animate-spin mr-2" />加载中…</div>
 				{:else if !hasMore && logs.length > 0}
 					<div class="text-center py-2 text-sm text-muted-foreground">
 						End of results ({total.toLocaleString()} entries)
@@ -954,24 +936,24 @@
 <Dialog.Root bind:open={showDetailDialog}>
 	<Dialog.Content class="max-w-2xl">
 		<Dialog.Header>
-			<Dialog.Title>Audit log details</Dialog.Title>
+			<Dialog.Title>审计日志详情</Dialog.Title>
 		</Dialog.Header>
 		{#if selectedLog}
 			<div class="space-y-4">
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class="text-sm font-medium text-muted-foreground">Timestamp</label>
+						<label class="text-sm font-medium text-muted-foreground">时间戳</label>
 						<p class="font-mono text-sm">{formatTimestamp(selectedLog.createdAt)}</p>
 					</div>
 					<div>
-						<label class="text-sm font-medium text-muted-foreground">User</label>
+						<label class="text-sm font-medium text-muted-foreground">用户</label>
 						<p class="flex items-center gap-1">
 							<User class="w-4 h-4 text-muted-foreground" />
 							{selectedLog.username}
 						</p>
 					</div>
 					<div>
-						<label class="text-sm font-medium text-muted-foreground">Action</label>
+						<label class="text-sm font-medium text-muted-foreground">操作</label>
 						<p>
 							<Badge class="{getActionColor(selectedLog.action)} gap-1">
 								<svelte:component this={getActionIcon(selectedLog.action)} class="w-3 h-3" />
@@ -980,7 +962,7 @@
 						</p>
 					</div>
 					<div>
-						<label class="text-sm font-medium text-muted-foreground">Entity type</label>
+						<label class="text-sm font-medium text-muted-foreground">实体类型</label>
 						<p class="flex items-center gap-1">
 							<svelte:component this={getEntityIcon(selectedLog.entityType)} class="w-4 h-4 text-muted-foreground" />
 							{selectedLog.entityType}
@@ -988,25 +970,25 @@
 					</div>
 					{#if selectedLog.entityName}
 						<div>
-							<label class="text-sm font-medium text-muted-foreground">Entity name</label>
+							<label class="text-sm font-medium text-muted-foreground">实体名称</label>
 							<p>{selectedLog.entityName}</p>
 						</div>
 					{/if}
 					{#if selectedLog.entityId}
 						<div>
-							<label class="text-sm font-medium text-muted-foreground">Entity ID</label>
+							<label class="text-sm font-medium text-muted-foreground">实体 ID</label>
 							<p class="font-mono text-sm break-all">{selectedLog.entityId}</p>
 						</div>
 					{/if}
 					{#if selectedLog.environmentId}
 						<div>
-							<label class="text-sm font-medium text-muted-foreground">Environment ID</label>
+							<label class="text-sm font-medium text-muted-foreground">环境 ID</label>
 							<p>{selectedLog.environmentId}</p>
 						</div>
 					{/if}
 					{#if selectedLog.ipAddress}
 						<div>
-							<label class="text-sm font-medium text-muted-foreground">IP address</label>
+							<label class="text-sm font-medium text-muted-foreground">IP地址</label>
 							<p class="font-mono text-sm">{selectedLog.ipAddress}</p>
 						</div>
 					{/if}
@@ -1014,33 +996,33 @@
 
 				{#if selectedLog.description}
 					<div>
-						<label class="text-sm font-medium text-muted-foreground">Description</label>
+						<label class="text-sm font-medium text-muted-foreground">描述</label>
 						<p>{selectedLog.description}</p>
 					</div>
 				{/if}
 
 				{#if selectedLog.userAgent}
 					<div>
-						<label class="text-sm font-medium text-muted-foreground">User agent</label>
+						<label class="text-sm font-medium text-muted-foreground">用户代理</label>
 						<p class="text-xs text-muted-foreground break-all">{selectedLog.userAgent}</p>
 					</div>
 				{/if}
 
 				{#if selectedLog.details?.changes}
 					<div>
-						<label class="text-sm font-medium text-muted-foreground mb-2 block">Changes</label>
+						<label class="text-sm font-medium text-muted-foreground mb-2 block">变化</label>
 						<DiffViewer diff={selectedLog.details as AuditDiff} />
 					</div>
 				{:else if selectedLog.details}
 					<div>
-						<label class="text-sm font-medium text-muted-foreground">Details</label>
+						<label class="text-sm font-medium text-muted-foreground">详情</label>
 						<pre class="mt-1 p-3 bg-muted rounded-md text-xs overflow-auto max-h-[200px]">{JSON.stringify(selectedLog.details, null, 2)}</pre>
 					</div>
 				{/if}
 			</div>
 		{/if}
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => showDetailDialog = false}>Close</Button>
+			<Button variant="outline" onclick={() => showDetailDialog = false}>关闭</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
@@ -1051,6 +1033,6 @@
 		type="button"
 		class="fixed inset-0 z-40"
 		onclick={() => showExportMenu = false}
-		aria-label="Close menu"
+		aria-label="关闭菜单"
 	></button>
 {/if}

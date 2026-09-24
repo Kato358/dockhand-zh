@@ -60,7 +60,7 @@
 			stackProject = data.stackProject ?? null;
 			editorContent = onlyUserEnv ? composeUserEnv : composeFullEnv;
 		} catch (e) {
-			loadError = e instanceof Error ? e.message : 'Failed to generate compose';
+			loadError = e instanceof Error ? e.message : '生成 compose 文件失败';
 		} finally {
 			loading = false;
 		}
@@ -107,7 +107,7 @@
 			copied = true;
 			setTimeout(() => (copied = false), 1500);
 		} else {
-			toast.error('Failed to copy');
+			toast.error('复制失败');
 		}
 	}
 
@@ -158,7 +158,7 @@
 			validateReport = fresh;
 		} catch (e) {
 			if (seq !== validateSeq) return;
-			validateError = e instanceof Error ? e.message : 'Validation failed';
+			validateError = e instanceof Error ? e.message : '验证失败';
 			validateReport = null;
 		} finally {
 			if (seq === validateSeq) validateLoading = false;
@@ -222,9 +222,9 @@
 			mergedIntoStack = stack.name;
 			// Merge using the CURRENT env variant of the generated service (warn on clash once).
 			applyMerge(onlyUserEnv ? composeUserEnv : composeFullEnv, stack.name, true);
-			toast.info(`Merged into ${stack.name} - review the highlighted service, then Save`);
+			toast.info(`已合并到 ${stack.name} - 请查看突出显示的服务，然后保存`);
 		} catch (e) {
-			toast.error(e instanceof Error ? e.message : 'Merge failed');
+			toast.error(e instanceof Error ? e.message : '合并失败');
 		} finally {
 			merging = false;
 		}
@@ -240,7 +240,7 @@
 		// Only warn on the first merge - re-merges from the env toggle would re-spam the toast.
 		if (renamed && notify) {
 			const original = key.replace(/-\d+$/, '');
-			toast.warning(`"${original}" already exists in ${stackName}; added as "${key}"`);
+			toast.warning(`"${original}" 已存在于 ${stackName} 中；已添加为 "${key}"`);
 		}
 		// Set text + highlight in ONE transaction so the decorations land on the new doc.
 		const ranges = computeAddedRange(merged, key);
@@ -264,12 +264,12 @@
 				const body = await res.json().catch(() => ({}));
 				throw new Error(body.error || `Failed to save (${res.status})`);
 			}
-			toast.success(`Saved to ${mergedIntoStack}`);
+			toast.success(`已保存到 ${mergedIntoStack}`);
 			mergedIntoStack = null;
 			mergeBaseCompose = '';
 			addedLineMarkers = [];
 		} catch (e) {
-			toast.error(e instanceof Error ? e.message : 'Save failed');
+			toast.error(e instanceof Error ? e.message : '保存失败');
 		} finally {
 			merging = false;
 		}
@@ -289,8 +289,7 @@
 <div class="flex flex-col h-full min-h-0 gap-3">
 	{#if loading}
 		<div class="flex items-center justify-center py-12 text-muted-foreground">
-			<Loader2 class="h-5 w-5 animate-spin mr-2" /> Generating compose...
-		</div>
+			<Loader2 class="h-5 w-5 animate-spin mr-2" />正在生成 Compose…</div>
 	{:else if loadError}
 		<div class="text-sm text-red-500 py-4">{loadError}</div>
 	{:else}
@@ -298,19 +297,19 @@
 		{#if stackProject}
 			<div class="flex items-center gap-2 text-xs rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2">
 				<Layers class="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-				<span>This container already belongs to stack <span class="font-semibold">{stackProject}</span>. The generated compose is a fresh definition you can save separately or merge elsewhere.</span>
+				<span>此容器已属于编排<span class="font-semibold">{stackProject}</span>. The generated compose is a fresh definition you can save separately or merge elsewhere.</span>
 			</div>
 		{/if}
 
 		<!-- Toolbar -->
 		<div class="flex items-center gap-2 flex-wrap">
-			<span class="text-xs text-muted-foreground">Environment</span>
+			<span class="text-xs text-muted-foreground">环境</span>
 			<ToggleSwitch
 				value={envMode}
 				leftValue="user"
 				rightValue="all"
 				leftLabel="User-set only"
-				rightLabel="All"
+				rightLabel="全部"
 				onchange={(v) => { const m = v as 'user' | 'all'; envMode = m; reseedEditor(m); }}
 			/>
 			<div class="flex-1"></div>
@@ -323,22 +322,20 @@
 				Copy
 			</Button>
 			<Button variant="outline" size="sm" onclick={doDownload}>
-				<Download class="h-3.5 w-3.5 mr-1.5" /> Download
-			</Button>
+				<Download class="h-3.5 w-3.5 mr-1.5" />下载</Button>
 			<Button size="sm" variant="outline" onclick={() => (stackModalOpen = true)}>
-				<FileCode class="h-3.5 w-3.5 mr-1.5" /> Save as new stack
-			</Button>
+				<FileCode class="h-3.5 w-3.5 mr-1.5" />另存为新编排</Button>
 			<DropdownMenu.Root bind:open={appendMenuOpen} onOpenChange={(o) => o && loadInternalStacks()}>
 				<DropdownMenu.Trigger>
 					<Button size="sm" variant="outline">
-						<ListPlus class="h-3.5 w-3.5 mr-1.5" /> Append to existing <ChevronDown class="h-3.5 w-3.5 ml-1" />
+						<ListPlus class="h-3.5 w-3.5 mr-1.5" />添加到现有<ChevronDown class="h-3.5 w-3.5 ml-1" />
 					</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end" class="w-64 max-h-72 overflow-auto">
 					{#if loadingStacks}
-						<div class="flex items-center gap-2 px-2 py-2 text-xs text-muted-foreground"><Loader2 class="h-3.5 w-3.5 animate-spin" /> Loading...</div>
+						<div class="flex items-center gap-2 px-2 py-2 text-xs text-muted-foreground"><Loader2 class="h-3.5 w-3.5 animate-spin" />加载中…</div>
 					{:else if existingStacks.length === 0}
-						<div class="px-2 py-2 text-xs text-muted-foreground">No internal stacks</div>
+						<div class="px-2 py-2 text-xs text-muted-foreground">没有内部编排</div>
 					{:else}
 						{#each existingStacks as s (s.name)}
 							<DropdownMenu.Item
@@ -359,8 +356,8 @@
 		{#if mergedIntoStack}
 			<div class="flex items-center gap-2 text-xs rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2">
 				<Info class="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-				<span class="flex-1">Reviewing merge into <span class="font-semibold">{mergedIntoStack}</span>. The highlighted service is what will be added.</span>
-				<Button variant="ghost" size="sm" onclick={cancelMerge} disabled={merging}>Cancel</Button>
+				<span class="flex-1">审查合并事宜<span class="font-semibold">{mergedIntoStack}</span>. The highlighted service is what will be added.</span>
+				<Button variant="ghost" size="sm" onclick={cancelMerge} disabled={merging}>取消</Button>
 				<Button size="sm" onclick={saveToExisting} disabled={merging}>
 					{#if merging}<Loader2 class="h-3.5 w-3.5 mr-1.5 animate-spin" />{:else}<Save class="h-3.5 w-3.5 mr-1.5" />{/if}
 					Save to {mergedIntoStack}

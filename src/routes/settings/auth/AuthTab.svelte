@@ -99,13 +99,13 @@
 				await authStore.check();
 			} else {
 				const data = await response.json();
-				toast.error(data.error || 'Failed to update auth settings');
+				toast.error(data.error || '更新身份验证设置失败');
 				// Revert toggle on error - checked is new value, so previous was !checked
 				authEnabled = !checked;
 			}
 		} catch (error) {
 			console.error('Failed to update auth settings:', error);
-			toast.error('Failed to update auth settings');
+			toast.error('更新身份验证设置失败');
 			// Revert toggle on error
 			authEnabled = !checked;
 		} finally {
@@ -122,14 +122,14 @@
 				body: JSON.stringify({ sessionTimeout: neverExpire ? 0 : sessionTimeout })
 			});
 			if (response.ok) {
-				toast.success('Settings saved');
+				toast.success('设置已保存');
 			} else {
 				console.error('Failed to save auth settings');
-				toast.error('Failed to save settings');
+				toast.error('设置保存失败');
 			}
 		} catch (error) {
 			console.error('Failed to save auth settings:', error);
-			toast.error('Failed to save settings');
+			toast.error('设置保存失败');
 		} finally {
 			authSaving = false;
 		}
@@ -161,7 +161,7 @@
 	<Shield class="w-5 h-5 text-muted-foreground mt-0.5" />
 	<div class="flex-1">
 		<div class="flex items-center gap-3">
-			<p class="text-sm font-medium">Authentication</p>
+			<p class="text-sm font-medium">验证</p>
 			<TogglePill
 				bind:checked={authEnabled}
 				onchange={(checked) => handleAuthEnabledToggle(checked)}
@@ -195,9 +195,7 @@
 			: 'text-muted-foreground hover:text-foreground'}"
 		onclick={() => (authSubTab = 'general')}
 	>
-		<Settings class="w-4 h-4" />
-		General
-	</button>
+		<Settings class="w-4 h-4" />通用</button>
 	<button
 		class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all {authSubTab ===
 		'local'
@@ -205,9 +203,7 @@
 			: 'text-muted-foreground hover:text-foreground'}"
 		onclick={() => (authSubTab = 'local')}
 	>
-		<User class="w-4 h-4" />
-		Users
-	</button>
+		<User class="w-4 h-4" />用户</button>
 	<button
 		class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all {authSubTab ===
 		'sso'
@@ -215,9 +211,7 @@
 			: 'text-muted-foreground hover:text-foreground'}"
 		onclick={() => (authSubTab = 'sso')}
 	>
-		<LogIn class="w-4 h-4" />
-		SSO / OIDC
-	</button>
+		<LogIn class="w-4 h-4" />SSO / OIDC</button>
 	<button
 		class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all {authSubTab ===
 		'ldap'
@@ -225,9 +219,7 @@
 			: 'text-muted-foreground hover:text-foreground'}"
 		onclick={() => (authSubTab = 'ldap')}
 	>
-		<Network class="w-4 h-4" />
-		LDAP / AD
-		<Crown class="w-3 h-3 text-amber-500" />
+		<Network class="w-4 h-4" />LDAP/AD<Crown class="w-3 h-3 text-amber-500" />
 	</button>
 	<button
 		class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all {authSubTab ===
@@ -236,9 +228,7 @@
 			: 'text-muted-foreground hover:text-foreground'}"
 		onclick={() => (authSubTab = 'roles')}
 	>
-		<Shield class="w-4 h-4" />
-		Roles
-		<Crown class="w-3 h-3 text-amber-500" />
+		<Shield class="w-4 h-4" />角色<Crown class="w-3 h-3 text-amber-500" />
 	</button>
 </div>
 
@@ -251,20 +241,16 @@
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<KeyRound class="w-4 h-4" />
-						Session settings
-					</Card.Title>
+						<KeyRound class="w-4 h-4" />会话设置</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<div class="space-y-1.5">
-						<Label class="text-sm">Session timeout</Label>
-						<p class="text-xs text-muted-foreground mb-2">
-							How long a session stays valid after sign-in
-						</p>
+						<Label class="text-sm">会话超时</Label>
+						<p class="text-xs text-muted-foreground mb-2">登录后会话有效期有多长</p>
 						<div class="flex items-center gap-2 mb-2">
 							<ToggleGroup
 								value={neverExpire ? 'never' : 'timed'}
-								options={[{ value: 'timed', label: 'Timed' }, { value: 'never', label: 'Never expire' }]}
+								options={[{ value: 'timed', label: '定时' }, { value: 'never', label: '永不过期' }]}
 								onchange={(v) => neverExpire = v === 'never'}
 								disabled={!$canAccess('settings', 'edit')}
 							/>
@@ -307,7 +293,7 @@
 		{:else}
 			<div class="text-center py-12 text-muted-foreground">
 				<Shield class="w-12 h-12 mx-auto mb-3 opacity-30" />
-				<p class="text-sm">Enable authentication to configure session settings</p>
+				<p class="text-sm">启用身份验证以配置会话设置</p>
 			</div>
 		{/if}
 	</div>

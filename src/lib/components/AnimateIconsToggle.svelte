@@ -33,8 +33,8 @@
 
 <div class="space-y-1">
 	<div class="flex items-center gap-3">
-		<Label>Animate icons</Label>
+		<Label>动画图标</Label>
 		<TogglePill {checked} onchange={onToggle} />
 	</div>
-	<p class="text-xs text-muted-foreground">Spinners during pulls, scans and updates.</p>
+	<p class="text-xs text-muted-foreground">拉取、扫描和更新期间的旋转图标。</p>
 </div>

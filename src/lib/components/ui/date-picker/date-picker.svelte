@@ -14,7 +14,7 @@
 		class?: string;
 	}
 
-	let { value = $bindable(''), placeholder = 'Pick a date', class: className = '' }: Props = $props();
+	let { value = $bindable(''), placeholder = '选择一个日期', class: className = '' }: Props = $props();
 
 	let open = $state(false);
 

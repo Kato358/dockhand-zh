@@ -57,9 +57,9 @@
 
 	function getAuthLabel(type: string) {
 		switch (type) {
-			case 'ssh': return 'SSH Key';
-			case 'password': return 'Password';
-			default: return 'None';
+			case 'ssh': return 'SSH密钥';
+			case 'password': return '密码';
+			default: return '无';
 		}
 	}
 
@@ -119,13 +119,13 @@
 			testResult = data;
 
 			if (data.success) {
-				toast.success(`Connection successful! Branch: ${data.branch}, Commit: ${data.lastCommit}`);
+				toast.success(`连接成功！分支：${data.branch}，提交：${data.lastCommit}`);
 			} else {
-				toast.error(data.error || 'Connection test failed');
+				toast.error(data.error || '连接测试失败');
 			}
 		} catch (error) {
-			testResult = { success: false, error: 'Failed to test connection' };
-			toast.error('Failed to test connection');
+			testResult = { success: false, error: '连接测试失败' };
+			toast.error('连接测试失败');
 		} finally {
 			testing = false;
 		}
@@ -135,7 +135,7 @@
 		formErrors = {};
 
 		if (!formName.trim()) {
-			formErrors.name = 'Name is required';
+			formErrors.name = '名称（必填）';
 		}
 
 		if (!formUrl.trim()) {
@@ -174,9 +174,9 @@
 				if (data.error?.includes('already exists')) {
 					formErrors.name = 'Repository name already exists';
 				} else {
-					formError = data.error || 'Failed to save repository';
+					formError = data.error || '保存仓库失败';
 				}
-				toast.error(formError || 'Failed to save repository');
+				toast.error(formError || '保存仓库失败');
 				return;
 			}
 
@@ -185,8 +185,8 @@
 			onClose();
 			toast.success(wasEditing ? 'Repository updated' : 'Repository added');
 		} catch (error) {
-			formError = 'Failed to save repository';
-			toast.error('Failed to save repository');
+			formError = '保存仓库失败';
+			toast.error('保存仓库失败');
 		} finally {
 			formSaving = false;
 		}
@@ -199,7 +199,7 @@
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
 				<GitBranch class="w-5 h-5" />
-				{isEditing ? 'Edit' : 'Add'} Git repository
+				{isEditing ? '编辑' : '添加'} Git repository
 			</Dialog.Title>
 			<Dialog.Description>
 				{isEditing ? 'Update repository settings' : 'Add a Git repository that can be used to deploy stacks'}
@@ -208,7 +208,7 @@
 
 		<form onsubmit={(e) => { e.preventDefault(); saveRepository(); }} class="space-y-4">
 			<div class="space-y-2">
-				<Label for="repo-name">Name</Label>
+				<Label for="repo-name">名称</Label>
 				<Input
 					id="repo-name"
 					bind:value={formName}
@@ -219,12 +219,12 @@
 				{#if formErrors.name}
 					<p class="text-xs text-destructive">{formErrors.name}</p>
 				{:else if !isEditing}
-					<p class="text-xs text-muted-foreground">A friendly name to identify this repository</p>
+					<p class="text-xs text-muted-foreground">用于识别此仓库的友好名称</p>
 				{/if}
 			</div>
 
 			<div class="space-y-2">
-				<Label for="repo-url">Repository URL</Label>
+				<Label for="repo-url">仓库 URL</Label>
 				<Input
 					id="repo-url"
 					bind:value={formUrl}
@@ -238,12 +238,12 @@
 			</div>
 
 			<div class="space-y-2">
-				<Label for="repo-branch">Branch</Label>
+				<Label for="repo-branch">分支</Label>
 				<Input id="repo-branch" bind:value={formBranch} placeholder="main" oninput={() => testResult = null} />
 			</div>
 
 			<div class="space-y-2">
-				<Label for="repo-credential">Credential (optional)</Label>
+				<Label for="repo-credential">凭证（可选）</Label>
 				<Select.Root
 					type="single"
 					value={formCredentialId?.toString() ?? 'none'}
@@ -259,17 +259,13 @@
 							</span>
 						{:else}
 							<span class="flex items-center gap-2">
-								<Globe class="w-4 h-4 text-muted-foreground" />
-								None (public repository)
-							</span>
+								<Globe class="w-4 h-4 text-muted-foreground" />无（公共仓库）</span>
 						{/if}
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Item value="none">
 							<span class="flex items-center gap-2">
-								<Globe class="w-4 h-4 text-muted-foreground" />
-								None (public repository)
-							</span>
+								<Globe class="w-4 h-4 text-muted-foreground" />无（公共仓库）</span>
 						</Select.Item>
 						{#each credentials as cred}
 							<Select.Item value={cred.id.toString()}>
@@ -289,7 +285,7 @@
 				</Select.Root>
 				{#if credentials.length === 0 && !isEditing}
 					<p class="text-xs text-muted-foreground">
-						<a href="/settings?tab=git&subtab=credentials" class="text-primary hover:underline">Add credentials</a> for private repositories
+						<a href="/settings?tab=git&subtab=credentials" class="text-primary hover:underline">添加凭据</a> for private repositories
 					</p>
 				{/if}
 			</div>
@@ -299,7 +295,7 @@
 			{/if}
 
 			<Dialog.Footer>
-				<Button variant="outline" type="button" onclick={onClose}>Cancel</Button>
+				<Button variant="outline" type="button" onclick={onClose}>取消</Button>
 				<Button
 					type="button"
 					variant="outline"
@@ -321,7 +317,7 @@
 						<Loader2 class="w-4 h-4 mr-1 animate-spin" />
 						Saving...
 					{:else}
-						{isEditing ? 'Save changes' : 'Add repository'}
+						{isEditing ? 'Save changes' : '添加仓库'}
 					{/if}
 				</Button>
 			</Dialog.Footer>

@@ -48,7 +48,7 @@
 			registries = await response.json();
 		} catch (error) {
 			console.error('Failed to fetch registries:', error);
-			toast.error('Failed to fetch registries');
+			toast.error('获取镜像仓库失败');
 		} finally {
 			regLoading = false;
 		}
@@ -67,13 +67,13 @@
 
 			if (response.ok) {
 				await fetchRegistries();
-				toast.success('Registry deleted');
+				toast.success('镜像仓库已删除');
 			} else {
 				const data = await response.json();
-				toast.error(data.error || 'Failed to delete registry');
+				toast.error(data.error || '删除镜像仓库失败');
 			}
 		} catch (error) {
-			toast.error('Failed to delete registry');
+			toast.error('删除镜像仓库失败');
 		}
 	}
 
@@ -94,8 +94,8 @@
 				toast.error(result.message);
 			}
 		} catch {
-			testResults[id] = { success: false, message: 'Connection failed' };
-			toast.error('Connection test failed');
+			testResults[id] = { success: false, message: '连接失败' };
+			toast.error('连接测试失败');
 		} finally {
 			testingRegistryId = null;
 		}
@@ -109,13 +109,13 @@
 
 			if (response.ok) {
 				await fetchRegistries();
-				toast.success('Default registry updated');
+				toast.success('默认镜像仓库已更新');
 			} else {
-				toast.error('Failed to set default registry');
+				toast.error('设置默认镜像仓库失败');
 			}
 		} catch (error) {
 			console.error('Failed to set default registry:', error);
-			toast.error('Failed to set default registry');
+			toast.error('设置默认镜像仓库失败');
 		}
 	}
 
@@ -132,21 +132,19 @@
 		<div class="flex gap-2">
 			{#if $canAccess('registries', 'create')}
 				<Button size="sm" onclick={() => openRegModal()}>
-					<Plus class="w-4 h-4" />
-					Add registry
-				</Button>
+					<Plus class="w-4 h-4" />添加镜像仓库</Button>
 			{/if}
-			<Button size="sm" variant="outline" onclick={fetchRegistries}>Refresh</Button>
+			<Button size="sm" variant="outline" onclick={fetchRegistries}>刷新</Button>
 		</div>
 	</div>
 
 	{#if regLoading && registries.length === 0}
-		<p class="text-muted-foreground text-sm">Loading registries...</p>
+		<p class="text-muted-foreground text-sm">正在加载镜像仓库…</p>
 	{:else if registries.length === 0}
 		<EmptyState
 			icon={Download}
-			title="No registries found"
-			description="Add a Docker registry to pull and push images"
+			title="未找到镜像仓库"
+			description="添加 Docker 镜像仓库以拉取和推送镜像"
 		/>
 	{:else}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -165,10 +163,10 @@
 							</div>
 							<div class="flex items-center gap-1">
 								{#if registry.isDefault}
-									<Badge variant="default" class="text-xs">Default</Badge>
+									<Badge variant="default" class="text-xs">默认</Badge>
 								{/if}
 								{#if registry.hasCredentials}
-									<Badge variant="secondary" class="text-xs">Auth</Badge>
+									<Badge variant="secondary" class="text-xs">身份验证</Badge>
 								{/if}
 							</div>
 						</div>
@@ -193,16 +191,14 @@
 									size="sm"
 									onclick={() => setRegDefault(registry.id)}
 								>
-									<Star class="w-3 h-3" />
-									Set default
-								</Button>
+									<Star class="w-3 h-3" />设置默认值</Button>
 							{/if}
 							<Button
 								variant="outline"
 								size="sm"
 								onclick={() => testRegistry(registry.id)}
 								disabled={testingRegistryId === registry.id}
-								title="Test connectivity"
+								title="测试连接性"
 							>
 								{#if testingRegistryId === registry.id}
 									<RefreshCw class="w-3 h-3 animate-spin" />
@@ -226,10 +222,10 @@
 							{#if $canAccess('registries', 'delete')}
 								<ConfirmPopover
 									open={confirmDeleteRegistryId === registry.id}
-									action="Delete"
+									action="删除"
 									itemType="registry"
 									itemName={registry.name}
-									title="Remove"
+									title="移除"
 									position="left"
 									onConfirm={() => deleteRegistry(registry.id)}
 									onOpenChange={(open) => confirmDeleteRegistryId = open ? registry.id : null}

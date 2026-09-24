@@ -64,7 +64,7 @@
 	<div class="border rounded-md overflow-hidden">
 		<div class="flex items-center gap-3 px-3 py-2 bg-muted/30 border-b">
 			<Label class="text-xs">Backup all volumes ({backupable.length})</Label>
-			<TogglePill bind:checked={allVolumes} onLabel="Yes" offLabel="No" />
+			<TogglePill bind:checked={allVolumes} onLabel="是" offLabel="否" />
 		</div>
 
 		{#if showBindWarning && bindMounts.length > 0}
@@ -72,7 +72,7 @@
 				<AlertTriangle class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
 				<div class="space-y-1">
 					<p class="font-medium text-amber-600 dark:text-amber-400">{bindMounts.length} bind mount{bindMounts.length !== 1 ? 's' : ''} detected</p>
-					<p class="text-muted-foreground">Contents are captured in the snapshot, but bind sources are host paths. Restoring to a different environment requires those exact paths on the target host — otherwise services start with empty mounts.</p>
+					<p class="text-muted-foreground">快照中会捕获内容，但绑定源是主机路径。恢复到不同的环境需要目标主机上完全相同的路径——否则服务将以空挂载点启动。</p>
 				</div>
 			</div>
 		{/if}

@@ -40,7 +40,7 @@
 	//    volume, a DESTINATION. A destination pointing at a named volume / host path
 	//    the container mounts + a start action = a working CLONE; a plain extract
 	//    path = today's safe inspect-to-a-folder. Cross-env.
-	//  - 'in-place' ("Overwrite live"): overwrite the live volumes on the SOURCE env.
+	//  - 'in-place' ("覆盖实时"): overwrite the live volumes on the SOURCE env.
 	type RestoreMode = 'new-location' | 'in-place';
 
 	let loading = $state(false);
@@ -121,8 +121,8 @@
 	const postRestoreOptions = $derived([
 		...(mode === 'in-place' ? [{ value: 'start', label: targetIsStack ? 'Start stack' : 'Start container', icon: Play }] : []),
 		{ value: 'recreate', label: targetIsStack ? 'Recreate if missing' : 'Recreate container', icon: PackagePlus },
-		...(targetIsStack ? [{ value: 'redeploy', label: 'Redeploy stack', icon: Rocket }] : []),
-		{ value: 'none', label: 'Do nothing', icon: Ban }
+		...(targetIsStack ? [{ value: 'redeploy', label: '重新部署编排', icon: Rocket }] : []),
+		{ value: 'none', label: '什么都不做', icon: Ban }
 	]);
 	const targetEnv = $derived(envList.find((e) => e.id === effectiveEnvId));
 	const targetEnvName = $derived(targetEnv?.name ?? '');
@@ -171,7 +171,7 @@
 	);
 	const helperError = $derived(targetPreview && targetPreview.helperOk === false ? (targetPreview.helperError || 'the backup helper container could not run on the target environment') : '');
 	// Probe result per volume key (has-data / empty / missing), for the per-row badges in the
-	// "What will happen" recap. Null while the probe hasn't returned for that row yet -> the row
+	// "将会发生什么？" recap. Null while the probe hasn't returned for that row yet -> the row
 	// shows its own spinner.
 	const probeByKey = $derived(new Map((targetPreview?.volumes ?? []).map((v) => [v.key, v.hasData])));
 
@@ -287,7 +287,7 @@
 		}
 	}
 
-	// Switching a row between "Volume" (a named-volume) and "Host path" (a bind) —
+	// Switching a row between "存储卷" (a named-volume) and "主机路径" (a bind) —
 	// convert `dest` so a stale value from the other kind can't be submitted. A host
 	// path like `/docker/data/postgres18` is NOT a valid named-volume name (the server
 	// rejects it: validate.ts requires `^[a-zA-Z0-9][a-zA-Z0-9_.-]*$`), and vice-versa.
@@ -355,7 +355,7 @@
 			});
 			const data = await readJobResponse(res);
 			if (data?.error) {
-				error = data.error || 'Failed to read the snapshot';
+				error = data.error || '读取快照失败';
 				return;
 			}
 			const types: Record<string, 'volume' | 'bind'> = data.volumeTypes || {};
@@ -385,7 +385,7 @@
 			}
 			sourceSecretKeys = Array.isArray(data.sourceSecretKeys) ? data.sourceSecretKeys : [];
 		} catch {
-			error = 'Failed to read the snapshot';
+			error = '读取快照失败';
 		} finally {
 			loading = false;
 		}
@@ -497,8 +497,8 @@
 					? body.issues.map((i: { field?: string; message?: string }) => i.message).filter(Boolean)
 					: [];
 				error = issues.length
-					? `${body.error || 'Restore failed'}: ${issues.join('; ')}`
-					: (body.error || 'Restore failed');
+					? `${body.error || '还原失败'}: ${issues.join('; ')}`
+					: (body.error || '还原失败');
 				restoreStatus = 'error';
 				restoring = false;
 				return;
@@ -517,7 +517,7 @@
 				const { outcome, message } = classifyJobResult(result);
 				if (outcome === 'error' || outcome === 'skipped') {
 					restoreStatus = 'error';
-					error = message || 'Restore failed';
+					error = message || '还原失败';
 					restoreLogs = [...restoreLogs, tagLogLine(`[dockhand] Restore failed: ${error}`)];
 				} else if (outcome === 'warning') {
 					restoreStatus = 'warning';
@@ -532,7 +532,7 @@
 			}
 		} catch (e: any) {
 			restoreStatus = 'error';
-			error = e?.message || 'Restore failed';
+			error = e?.message || '还原失败';
 			restoreLogs = [...restoreLogs, tagLogLine(`[dockhand] Restore failed: ${error}`)];
 		} finally {
 			restoring = false;
@@ -558,7 +558,7 @@
 			<Dialog.Title>
 				<SnapshotHeader
 					icon={RotateCcw}
-					verb="Restore"
+					verb="还原"
 					name={containerName}
 					nameType={targetIsStack ? 'stack' : 'container'}
 					{destinationName}
@@ -584,7 +584,7 @@
 		<div class="flex flex-1 flex-col overflow-y-auto -mx-6 px-6">
 		{#if loading}
 			<div class="flex flex-1 items-center justify-center text-muted-foreground">
-				<Loader2 class="h-5 w-5 animate-spin" /> <span class="ml-2">Reading snapshot…</span>
+				<Loader2 class="h-5 w-5 animate-spin" /> <span class="ml-2">正在读取快照…</span>
 			</div>
 		{:else if restoreStatus !== 'idle'}
 			<!-- Running AND finished states keep the LIVE LOG visible (no separate result
@@ -596,17 +596,17 @@
 				<LogConsole lines={restoreLogs} class="flex-1 min-h-0" />
 				<div class="mt-2 flex shrink-0 items-center gap-1.5 text-sm">
 					{#if restoreStatus === 'running'}
-						<Loader2 class="h-4 w-4 animate-spin text-muted-foreground" /><span class="text-muted-foreground">Restoring…</span>
+						<Loader2 class="h-4 w-4 animate-spin text-muted-foreground" /><span class="text-muted-foreground">还原中…</span>
 					{:else if restoreStatus === 'success'}
 						<CheckCircle2 class="h-4 w-4 text-green-500" />
-						<span class="text-green-500">Restore completed</span>
+						<span class="text-green-500">还原完成</span>
 						<span class="text-muted-foreground">— {mode === 'new-location'
 							? `restored to ${targetEnvName}${postRestore !== 'none' ? (targetIsStack ? ', stack redeployed' : ', container recreated') : ''}`
 							: `live volume replaced — restart ${containerName}${hasStackFiles ? ' / redeploy the stack' : ''} to use it`}.</span>
 					{:else if restoreStatus === 'warning'}
 						<AlertTriangle class="h-4 w-4 text-amber-500" /><span class="text-amber-600 dark:text-amber-400">Restore completed with warnings — {restoreWarning}</span>
 					{:else}
-						<XCircle class="h-4 w-4 text-destructive" /><span class="text-destructive">{error || 'Restore failed'}</span>
+						<XCircle class="h-4 w-4 text-destructive" /><span class="text-destructive">{error || '还原失败'}</span>
 					{/if}
 				</div>
 			</div>
@@ -623,34 +623,34 @@
 						<span class="-mb-3 w-0.5 flex-1 rounded {stepLineClass}"></span>
 					</div>
 					<div class="space-y-2 pb-3">
-						<div class="text-sm font-semibold">Where does it go? <span class="font-normal text-xs text-muted-foreground">— pick where, and how</span></div>
+						<div class="text-sm font-semibold">它要去哪里？<span class="font-normal text-xs text-muted-foreground">— 选择地点和方式</span></div>
 						<div class="grid grid-cols-2 gap-2">
 							<button
 								type="button"
 								class="rounded border p-3 text-left text-sm {mode === 'new-location' ? 'border-primary bg-primary/5' : ''}"
 								onclick={() => (mode = 'new-location')}
 							>
-								<div class="flex items-center gap-1.5 font-medium"><Server class="h-3.5 w-3.5" /> To an environment</div>
-								<div class="mt-1 text-xs text-muted-foreground">Clone it onto a chosen environment.</div>
+								<div class="flex items-center gap-1.5 font-medium"><Server class="h-3.5 w-3.5" />一个环境</div>
+								<div class="mt-1 text-xs text-muted-foreground">将其克隆到选定的环境中。</div>
 							</button>
 							<button
 								type="button"
 								class="rounded border p-3 text-left text-sm {mode === 'in-place' ? 'border-primary bg-primary/5' : ''}"
 								onclick={() => (mode = 'in-place')}
 							>
-								<div class="flex items-center gap-1.5 font-medium"><AlertTriangle class="h-3.5 w-3.5 text-destructive" /> Overwrite live</div>
-								<div class="mt-1 text-xs text-muted-foreground">Replace the live data in place. Destructive.</div>
+								<div class="flex items-center gap-1.5 font-medium"><AlertTriangle class="h-3.5 w-3.5 text-destructive" />覆盖实时</div>
+								<div class="mt-1 text-xs text-muted-foreground">直接替换实时数据。此操作会造成数据丢失。</div>
 							</button>
 						</div>
 						{#if mode === 'new-location'}
 							<div class="space-y-1.5">
-								<Label class="flex items-center gap-1.5"><Server class="h-3.5 w-3.5" /> Target environment</Label>
+								<Label class="flex items-center gap-1.5"><Server class="h-3.5 w-3.5" />目标环境</Label>
 								<Select.Root type="single" value={effectiveEnvId != null ? String(effectiveEnvId) : ''} onValueChange={(v) => (targetEnvId = v ? parseInt(v) : undefined)}>
 									<Select.Trigger class="h-9 w-full">
 										{#if targetEnv}
 											<span class="flex items-center gap-2"><EnvironmentIcon icon={targetEnv.icon || 'globe'} envId={targetEnv.id} class="h-4 w-4 text-muted-foreground" />{targetEnv.name}</span>
 										{:else}
-											<span class="text-muted-foreground">Select an environment…</span>
+											<span class="text-muted-foreground">选择环境…</span>
 										{/if}
 									</Select.Trigger>
 									<Select.Content>
@@ -680,7 +680,7 @@
 								<Tooltip.Root>
 									<Tooltip.Trigger class="ml-0.5"><HelpCircle class="h-3.5 w-3.5 text-muted-foreground opacity-70" /></Tooltip.Trigger>
 									<Tooltip.Content class="w-[22rem] max-w-[90vw]">
-										<p class="text-xs leading-relaxed">Each destination is resolved by <b>{targetEnvName || 'the target'}</b>'s Docker daemon: a <b>host path</b> must exist on that host (not on Dockhand's), while a <b>named volume</b> is created there. Prefer named volumes for portability. The post-restore step brings the {targetIsStack ? 'stack' : 'container'} up; if it fails, the data is still restored and you finish manually.</p>
+										<p class="text-xs leading-relaxed">每个目的地都由以下方式解析：<b>{targetEnvName || 'the target'}</b>'s Docker daemon: a <b>host path</b> must exist on that host (not on Dockhand's), while a <b>named volume</b> is created there. Prefer named volumes for portability. The post-restore step brings the {targetIsStack ? 'stack' : 'container'} up; if it fails, the data is still restored and you finish manually.</p>
 									</Tooltip.Content>
 								</Tooltip.Root>
 							{/if}
@@ -713,22 +713,22 @@
 											<Select.Root type="single" value={vol.destKind} onValueChange={(v) => onDestKindChange(vol, v as 'volume' | 'path')}>
 												<Select.Trigger class="h-8 w-32 shrink-0 text-xs">
 													{#if vol.destKind === 'path'}
-														<span class="flex items-center gap-1.5"><Folder class="h-3.5 w-3.5 text-amber-500" /> Host path</span>
+														<span class="flex items-center gap-1.5"><Folder class="h-3.5 w-3.5 text-amber-500" />主机路径</span>
 													{:else}
-														<span class="flex items-center gap-1.5"><HardDrive class="h-3.5 w-3.5 text-sky-500" /> Volume</span>
+														<span class="flex items-center gap-1.5"><HardDrive class="h-3.5 w-3.5 text-sky-500" />存储卷</span>
 													{/if}
 												</Select.Trigger>
 												<Select.Content>
-													<Select.Item value="volume"><span class="flex items-center gap-1.5"><HardDrive class="h-3.5 w-3.5 text-sky-500" /> Volume</span></Select.Item>
-													<Select.Item value="path"><span class="flex items-center gap-1.5"><Folder class="h-3.5 w-3.5 text-amber-500" /> Host path</span></Select.Item>
+													<Select.Item value="volume"><span class="flex items-center gap-1.5"><HardDrive class="h-3.5 w-3.5 text-sky-500" />存储卷</span></Select.Item>
+													<Select.Item value="path"><span class="flex items-center gap-1.5"><Folder class="h-3.5 w-3.5 text-amber-500" />主机路径</span></Select.Item>
 												</Select.Content>
 											</Select.Root>
 											<Input bind:value={vol.dest} class="h-8 flex-1 font-mono text-xs {(vol.conflict || vol.pathInvalid) ? 'border-destructive' : ''}" placeholder={vol.destKind === 'path' ? '/absolute/path' : 'volume-name'} />
 										</div>
 										{#if vol.conflict}
-											<p class="pl-6 text-xs text-destructive">Volume <span class="font-mono">{vol.dest}</span> already exists on {targetEnvName}. Remove it or choose another destination.</p>
+											<p class="pl-6 text-xs text-destructive">存储卷<span class="font-mono">{vol.dest}</span> already exists on {targetEnvName}. Remove it or choose another destination.</p>
 										{:else if vol.pathInvalid}
-											<p class="pl-6 text-xs text-destructive">A host path must be absolute — start it with <span class="font-mono">/</span> (e.g. <span class="font-mono">/srv/{vol.name}</span>).</p>
+											<p class="pl-6 text-xs text-destructive">主机路径必须是绝对路径——以“*”开头<span class="font-mono">/</span> (e.g. <span class="font-mono">/srv/{vol.name}</span>).</p>
 										{/if}
 									{/if}
 								</div>
@@ -772,11 +772,11 @@
 						<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold {stepRingClass}">3</span>
 					</div>
 					<div class="space-y-2 pb-1">
-						<div class="text-sm font-semibold">Then what? <span class="font-normal text-xs text-muted-foreground">— {mode === 'in-place' ? 'bring it back up' : 'bring it up on the target'}</span></div>
+						<div class="text-sm font-semibold">然后呢？<span class="font-normal text-xs text-muted-foreground">— {mode === 'in-place' ? 'bring it back up' : 'bring it up on the target'}</span></div>
 				{#if mode === 'new-location'}
 					<!-- After restore: bring the target up on the chosen env. -->
 					<div class="space-y-1.5">
-						<Label class="sr-only">After restore</Label>
+						<Label class="sr-only">还原后</Label>
 						<Select.Root type="single" value={postRestore} onValueChange={(v) => { postRestore = v as PostRestore; postRestoreUserPicked = true; }}>
 							<Select.Trigger class="h-9">
 								{#each postRestoreOptions as opt}
@@ -796,12 +796,12 @@
 							</Select.Content>
 						</Select.Root>
 						{#if nameConflict}
-							<p class="text-xs text-destructive">A {targetIsStack ? 'stack' : 'container'} named <span class="font-mono">{containerName}</span> already exists on {targetEnvName}. Remove it or choose "Do nothing" — the restore won't overwrite it.</p>
+							<p class="text-xs text-destructive">A {targetIsStack ? 'stack' : 'container'} named <span class="font-mono">{containerName}</span> already exists on {targetEnvName}. Remove it or choose "什么都不做" — the restore won't overwrite it.</p>
 						{/if}
 					</div>
 				{:else}
 						<div class="space-y-1.5">
-							<Label>After restore</Label>
+							<Label>还原后</Label>
 							<Select.Root type="single" value={postRestore} onValueChange={(v) => { postRestore = v as PostRestore; postRestoreUserPicked = true; }}>
 							<Select.Trigger class="h-9">
 								{#each postRestoreOptions as opt}
@@ -852,7 +852,7 @@
 					{/if}
 				{/snippet}
 				<!-- Only the FAILURE states live here now (they block the restore and must be seen even
-				     when the "What will happen" recap can't render). The per-target paths + has-data
+				     when the "将会发生什么？" recap can't render). The per-target paths + has-data
 				     badges + overwrite ack moved INTO the recap so there's one place, not two. -->
 				{#snippet hostTargetsBlock()}
 					{#if helperError}
@@ -861,14 +861,14 @@
 							<div class="min-w-0">
 								<div class="font-medium text-destructive">The backup helper can't run on {targetEnvName || 'this environment'}</div>
 								<div class="mt-0.5 break-all text-muted-foreground">{helperError}</div>
-								<div class="mt-1 text-muted-foreground">A restore can't run until this is fixed - the same helper writes the restored data.</div>
+								<div class="mt-1 text-muted-foreground">这个问题解决之前，无法执行还原操作——还原的数据是由同一个辅助程序写入。</div>
 							</div>
 						</div>
 					{:else if targetPreviewError && !targetPreviewLoading}
 						<div class="flex items-start gap-2 rounded-md border border-destructive/50 bg-destructive/10 p-2.5 text-xs">
 							<AlertTriangle class="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
 							<div class="min-w-0">
-								<div class="font-medium text-destructive">Couldn't check the target paths</div>
+								<div class="font-medium text-destructive">无法检查目标路径</div>
 								<div class="mt-0.5 break-all text-muted-foreground">{targetPreviewError}</div>
 							</div>
 						</div>
@@ -897,9 +897,7 @@
 								<KeyRound class="h-4 w-4 shrink-0 translate-y-0.5 text-amber-500" />
 								<span>
 									Restore {sourceSecretKeys.length} secret{sourceSecretKeys.length === 1 ? '' : 's'} from this backup.
-									<span class="block text-xs text-muted-foreground">
-										Turn off to bring the stack up without secrets and set them by hand.
-									</span>
+									<span class="block text-xs text-muted-foreground">关闭以将编排还原到无密钥状态，然后手动设置它们。</span>
 								</span>
 							</label>
 							<div class="flex flex-wrap gap-1 pl-6">
@@ -933,11 +931,7 @@
 							<label class="flex cursor-pointer items-start gap-2 text-sm">
 								<Checkbox bind:checked={skipStackFiles} class="mt-0.5" />
 								<FileX class="h-4 w-4 shrink-0 translate-y-0.5 text-muted-foreground" />
-								<span>
-									Restore volume data only (skip stack files)
-									<span class="block text-xs text-muted-foreground">
-										Leave out the captured compose and config - restore just the volume data. Otherwise the stack files are restored and registered in Dockhand so you can edit and redeploy the stack.
-									</span>
+								<span>仅还原卷数据（跳过编排文件）<span class="block text-xs text-muted-foreground">忽略捕获的 compose 和 config 文件，仅还原卷数据。否则，编排文件将被还原并注册到 Dockhand 中，以便您可以编辑和重新部署编排。</span>
 								</span>
 							</label>
 						</div>
@@ -972,9 +966,7 @@
 						{/if}
 						<p class="mt-1.5 leading-relaxed">The {targetIsStack ? 'stack' : 'container'} is <b>stopped before the restore</b> (expect downtime); the volumes are swapped (staged then committed), then <b>{postRestoreLabel.toLowerCase()}</b>.</p>
 						<label class="mt-2.5 flex cursor-pointer items-center gap-2 border-t border-destructive/20 pt-2.5 text-sm">
-							<Checkbox bind:checked={confirmOverwrite} />
-							I understand this replaces the live volume data.
-						</label>
+							<Checkbox bind:checked={confirmOverwrite} />我了解到这将取代实时成交量数据。</label>
 					{:else}
 						<p class="leading-relaxed">
 							The snapshot{#if backupTime}&nbsp;taken <span class="font-mono">{formatDateTime(backupTime)}</span>{/if}{#if sourceEnvName}&nbsp;from {@render envChip(sourceEnv, sourceEnvName)}{/if} will be restored to {@render envChip(targetEnv, targetEnvName)}{#if selectedRows.length > 0}:{:else}.{/if}
@@ -1005,7 +997,7 @@
 							{/if}
 						{/if}
 						{#if postRestore !== 'none'}
-							<p class="mt-1.5 leading-relaxed">Then Dockhand will <b>{postRestoreLabel.toLowerCase()}</b> on {@render envChip(targetEnv, targetEnvName)}{#if sourceEnvName && sourceEnvName !== targetEnvName}. Nothing on {@render envChip(sourceEnv, sourceEnvName)} is touched{/if}.</p>
+							<p class="mt-1.5 leading-relaxed">然后 Dockhand 将会<b>{postRestoreLabel.toLowerCase()}</b> on {@render envChip(targetEnv, targetEnvName)}{#if sourceEnvName && sourceEnvName !== targetEnvName}. Nothing on {@render envChip(sourceEnv, sourceEnvName)} is touched{/if}.</p>
 						{:else}
 							<p class="mt-1.5 leading-relaxed">The {targetIsStack ? 'stack' : 'container'} is <b>not started</b> — the data lands on {@render envChip(targetEnv, targetEnvName)} and you bring it up yourself.</p>
 						{/if}
@@ -1024,11 +1016,10 @@
 							     name/type, so the target would come up on the wrong (empty) volume. -->
 							<div class="mt-2.5 rounded-md border border-l-[3px] border-amber-500/30 border-l-amber-500 bg-amber-500/10 p-2.5">
 								<div class="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">
-									<AlertTriangle class="h-3.5 w-3.5" /> You have changed a volume's name or type
-								</div>
+									<AlertTriangle class="h-3.5 w-3.5" />您已更改卷的名称或类型</div>
 								<p class="text-xs leading-relaxed text-amber-700 dark:text-amber-300/90">Your data goes to the new volumes. But the {targetIsStack ? 'stack redeploys from the stored compose file, which still names' : 'recreated container mounts'} the <b>original</b> ones — so it {targetIsStack ? 'starts with empty volumes' : "won't see the restored data"}.</p>
-								<p class="mt-1 text-xs leading-relaxed text-amber-700 dark:text-amber-300/90"><b>After restoring:</b> {targetIsStack ? 'update the compose file to the new volume names, then redeploy.' : 'edit the container and point the mount at the new volume.'}</p>
-								{#if postRestore === 'none'}<p class="mt-1 text-[11px] leading-relaxed text-amber-600/70 dark:text-amber-300/60">Next step set to <b>Do nothing</b> so it can't start with the wrong data.</p>{/if}
+								<p class="mt-1 text-xs leading-relaxed text-amber-700 dark:text-amber-300/90"><b>还原后：</b> {targetIsStack ? 'update the compose file to the new volume names, then redeploy.' : 'edit the container and point the mount at the new volume.'}</p>
+								{#if postRestore === 'none'}<p class="mt-1 text-[11px] leading-relaxed text-amber-600/70 dark:text-amber-300/60">下一步设置<b>什么都不做</b> so it can't start with the wrong data.</p>{/if}
 							</div>
 						{/if}
 					{/if}
@@ -1041,7 +1032,7 @@
 			{#if restoreStatus === 'success' || restoreStatus === 'warning' || restoreStatus === 'error'}
 				<Button variant="outline" onclick={() => (open = false)}>OK</Button>
 			{:else if restoreStatus !== 'running'}
-				<Button variant="outline" onclick={() => (open = false)} disabled={restoring}>Cancel</Button>
+				<Button variant="outline" onclick={() => (open = false)} disabled={restoring}>取消</Button>
 				<!-- Hide the restore action until the snapshot is read — until then we
 				     don't know its volumes/target, so there's nothing to restore yet. -->
 				{#if !loading}
@@ -1054,7 +1045,7 @@
 						{#if targetPreviewLoading && !restoring}
 							Checking target&hellip;
 						{:else}
-							{mode === 'in-place' ? 'Overwrite & restore' : (postRestore !== 'none' ? 'Restore & start' : 'Restore')}
+							{mode === 'in-place' ? 'Overwrite & restore' : (postRestore !== 'none' ? 'Restore & start' : '还原')}
 						{/if}
 					</Button>
 				{/if}

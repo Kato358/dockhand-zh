@@ -357,7 +357,7 @@
 				};
 			}
 		} catch (err) {
-			console.error('Failed to fetch auto-update settings:', err);
+			console.error('获取自动更新设置失败：', err);
 		}
 	}
 
@@ -657,7 +657,7 @@
 				runtime
 			};
 		} catch (err) {
-			error = 'Failed to load container data: ' + String(err);
+			error = '容器数据加载失败：' + String(err);
 		} finally {
 			loadingData = false;
 			// Fetch backup schedule count (BETA GATE: only when backups enabled)
@@ -1093,7 +1093,7 @@
 			onClose();
 		} catch (err) {
 			if (signal.aborted) return;
-			error = 'Failed to update container: ' + String(err);
+			error = '容器更新失败：' + String(err);
 		} finally {
 			loading = false;
 			abortController = null;
@@ -1173,9 +1173,9 @@
 				<button
 					type="button"
 					onclick={() => (showIconPicker = true)}
-					title="Change icon"
+					title="更改图标"
 					class="mr-1 rounded p-0.5 hover:bg-muted transition-colors cursor-pointer"
-					aria-label="Change container icon"
+					aria-label="更改容器图标"
 				>
 					<ContainerIcon {image} name={name} override={iconOverride} envId={currentEnvId} class="w-4 h-4" fallbackIcon={Box} showFallbackWhenOff />
 				</button>
@@ -1195,7 +1195,7 @@
 					<button
 						type="button"
 						onclick={saveEditingTitle}
-						title="Save"
+						title="保存"
 						class="p-0.5 rounded hover:bg-muted transition-colors"
 					>
 						<Check class="w-3 h-3 text-green-500 hover:text-green-600" />
@@ -1203,7 +1203,7 @@
 					<button
 						type="button"
 						onclick={cancelEditingTitle}
-						title="Cancel"
+						title="取消"
 						class="p-0.5 rounded hover:bg-muted transition-colors"
 					>
 						<X class="w-3 h-3 text-muted-foreground hover:text-foreground" />
@@ -1214,7 +1214,7 @@
 					<button
 						type="button"
 						onclick={startEditingTitle}
-						title="Rename container"
+						title="重命名容器"
 						class="p-0.5 rounded hover:bg-muted transition-colors ml-0.5"
 					>
 						<Pencil class="w-3 h-3 text-muted-foreground hover:text-foreground" />
@@ -1228,9 +1228,7 @@
 
 		{#if loadingData}
 			<div class="flex-1 flex items-center justify-center text-muted-foreground text-sm min-h-[200px]">
-				<Loader2 class="w-5 h-5 animate-spin mr-2" />
-				Loading container data...
-			</div>
+				<Loader2 class="w-5 h-5 animate-spin mr-2" />正在加载容器数据…</div>
 		{:else}
 			<div class="px-5 flex gap-1 border-b shrink-0">
 				<button
@@ -1238,9 +1236,7 @@
 					class="flex items-center gap-1.5 px-3 py-2 text-sm transition-colors border-b-2 -mb-px {activeTab === 'settings' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
 					onclick={() => activeTab = 'settings'}
 				>
-					<Settings class="w-3.5 h-3.5" />
-					Settings
-				</button>
+					<Settings class="w-3.5 h-3.5" />设置</button>
 				<!-- BETA GATE: Backups tab hidden unless FEAT_BACKUPS_ENABLED (see features.ts) -->
 				{#if $page.data.backupsEnabled}
 					<button
@@ -1272,18 +1268,18 @@
 				{#if showComposeRenameWarning}
 					<div class="mb-4 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 bg-amber-100/50 dark:bg-amber-900/30 rounded-md flex items-start gap-2">
 						<Layers class="w-4 h-4 shrink-0 mt-0.5" />
-						<span>This container is part of the <strong>{composeStackName}</strong> compose stack. Renaming it may cause issues with stack management.</span>
+						<span>这个容器是以下部分的一部分<strong>{composeStackName}</strong> compose stack. Renaming it may cause issues with stack management.</span>
 					</div>
 				{/if}
 				{#if showComposeConfigWarning}
 					<div class="mb-4 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 bg-amber-100/50 dark:bg-amber-900/30 rounded-md flex items-start gap-2">
 						<Layers class="w-4 h-4 shrink-0 mt-0.5" />
-						<span>This container is part of the <strong>{composeStackName}</strong> compose stack. Changes may be overwritten when the stack is redeployed.</span>
+						<span>这个容器是以下部分的一部分<strong>{composeStackName}</strong> compose stack. Changes may be overwritten when the stack is redeployed.</span>
 					</div>
 				{/if}
 
 				<div class="space-y-1.5 pb-4 border-b">
-					<span class="text-xs font-medium">Tags</span>
+					<span class="text-xs font-medium">标签</span>
 					<ContainerTagsSection containerName={name} envId={currentEnvId} />
 				</div>
 
@@ -1359,9 +1355,7 @@
 			</div>
 
 			<div class="flex justify-end gap-2 px-5 py-3 border-t bg-muted/30 shrink-0">
-				<Button type="button" variant="outline" onclick={handleClose} size="sm">
-					Cancel
-				</Button>
+				<Button type="button" variant="outline" onclick={handleClose} size="sm">取消</Button>
 				<Button type="button" variant="secondary" disabled={loading} size="sm" onclick={handleSubmit}>
 					{#if loading}
 						<Loader2 class="w-4 h-4 mr-1 animate-spin" />
@@ -1379,20 +1373,16 @@
 <Dialog.Root bind:open={showConfirmClose}>
 	<Dialog.Content class="max-w-sm">
 		<Dialog.Header>
-			<Dialog.Title>Unsaved changes</Dialog.Title>
-			<Dialog.Description>
-				You have unsaved changes. Are you sure you want to close without saving?
-			</Dialog.Description>
+			<Dialog.Title>未保存的更改</Dialog.Title>
+			<Dialog.Description>您有未保存的更改。您确定要在不保存的情况下关闭吗？</Dialog.Description>
 		</Dialog.Header>
 		<div class="flex justify-end gap-1.5 mt-4">
 			<Button variant="outline" size="sm" onclick={() => showConfirmClose = false}>
 				Continue editing
 			</Button>
-			<Button variant="destructive" size="sm" onclick={discardAndClose}>
-				Discard changes
-			</Button>
+			<Button variant="destructive" size="sm" onclick={discardAndClose}>放弃更改</Button>
 		</div>
 	</Dialog.Content>
 </Dialog.Root>
 
-<IconPickerModal bind:open={showIconPicker} value={iconOverride} onselect={onIconSelect} title="Choose a container icon" />
+<IconPickerModal bind:open={showIconPicker} value={iconOverride} onselect={onIconSelect} title="选择容器图标" />

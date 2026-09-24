@@ -44,18 +44,16 @@
 	<Tooltip.Content side="right" class="w-64 p-3">
 		<div class="space-y-1.5">
 			<p class="font-medium text-sm flex items-center gap-1.5">
-				<Tag class="w-4 h-4 text-amber-500 shrink-0" />
-				Newer version available
-			</p>
+				<Tag class="w-4 h-4 text-amber-500 shrink-0" />有新版本可用</p>
 			<p class="text-xs">
-				<span class="text-muted-foreground">Move to</span>
+				<span class="text-muted-foreground">移至</span>
 				<code class="mx-0.5 rounded bg-muted px-1 py-0.5 font-mono">{newerVersion.tag}</code>
 				<span class="font-semibold uppercase {bumpColor}">{newerVersion.bump}</span>
 			</p>
 			{#if behind > 1}
 				<p class="text-xs text-muted-foreground">{behind} versions ahead of the tag you run.</p>
 			{/if}
-			<p class="text-xs text-muted-foreground">Click for release notes. Never auto-applied.</p>
+			<p class="text-xs text-muted-foreground">点击查看发行说明。从不会自动应用。</p>
 		</div>
 	</Tooltip.Content>
 </Tooltip.Root>

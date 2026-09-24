@@ -19,20 +19,20 @@
 	// reach. `needsEnv` = the page is env-scoped (shown with the chosen env in the hint and
 	// eligible for env-click). `permission` / `gate` / `enterpriseOnly` mirror canSeeMenuItem.
 	const ALL_PAGES = [
-		{ value: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard, needsEnv: false, permission: 'always' },
-		{ value: 'containers', label: 'Containers', Icon: Box, needsEnv: true, permission: 'containers' },
-		{ value: 'logs', label: 'Logs', Icon: ScrollText, needsEnv: true, permission: 'containers' },
-		{ value: 'terminal', label: 'Shell', Icon: Terminal, needsEnv: true, permission: 'containers' },
-		{ value: 'stacks', label: 'Compose stacks', Icon: Layers, needsEnv: true, permission: 'stacks' },
-		{ value: 'images', label: 'Images', Icon: Images, needsEnv: true, permission: 'images' },
-		{ value: 'volumes', label: 'Volumes', Icon: HardDrive, needsEnv: true, permission: 'volumes' },
-		{ value: 'networks', label: 'Networks', Icon: Network, needsEnv: true, permission: 'networks' },
-		{ value: 'templates', label: 'Templates', Icon: LibraryBig, needsEnv: false, permission: 'templates' },
-		{ value: 'registry', label: 'Registry', Icon: Download, needsEnv: false, permission: 'registries' },
-		{ value: 'activity', label: 'Activity', Icon: Activity, needsEnv: false, permission: 'activity' },
-		{ value: 'backups', label: 'Backups', Icon: Archive, needsEnv: false, permission: 'backups', gate: 'backups' },
-		{ value: 'schedules', label: 'Schedules', Icon: Timer, needsEnv: false, permission: 'schedules' },
-		{ value: 'audit', label: 'Audit log', Icon: ClipboardList, needsEnv: false, permission: 'audit_logs', enterpriseOnly: true }
+		{ value: 'dashboard', label: '仪表盘', Icon: LayoutDashboard, needsEnv: false, permission: 'always' },
+		{ value: 'containers', label: '容器', Icon: Box, needsEnv: true, permission: 'containers' },
+		{ value: 'logs', label: '日志', Icon: ScrollText, needsEnv: true, permission: 'containers' },
+		{ value: 'terminal', label: '终端', Icon: Terminal, needsEnv: true, permission: 'containers' },
+		{ value: 'stacks', label: '编排', Icon: Layers, needsEnv: true, permission: 'stacks' },
+		{ value: 'images', label: '镜像', Icon: Images, needsEnv: true, permission: 'images' },
+		{ value: 'volumes', label: '存储卷', Icon: HardDrive, needsEnv: true, permission: 'volumes' },
+		{ value: 'networks', label: '网络', Icon: Network, needsEnv: true, permission: 'networks' },
+		{ value: 'templates', label: '模板', Icon: LibraryBig, needsEnv: false, permission: 'templates' },
+		{ value: 'registry', label: '镜像仓库', Icon: Download, needsEnv: false, permission: 'registries' },
+		{ value: 'activity', label: '活动', Icon: Activity, needsEnv: false, permission: 'activity' },
+		{ value: 'backups', label: '备份', Icon: Archive, needsEnv: false, permission: 'backups', gate: 'backups' },
+		{ value: 'schedules', label: '计划任务', Icon: Timer, needsEnv: false, permission: 'schedules' },
+		{ value: 'audit', label: '审计日志', Icon: ClipboardList, needsEnv: false, permission: 'audit_logs', enterpriseOnly: true }
 	] as const;
 
 	// Visibility mirrors app-sidebar's canSeeMenuItem: hide the Backups beta unless the gate is
@@ -74,7 +74,7 @@
 	const clickSel = $derived(resolve(envClickPageV, 'containers'));
 
 	// Label helper for the trigger + the (default: X) hint.
-	const pageLabel = (v: string | null): string => v ? pageOf(v).label : 'Dashboard';
+	const pageLabel = (v: string | null): string => v ? pageOf(v).label : '仪表盘';
 
 	onMount(async () => {
 		try {
@@ -111,9 +111,9 @@
 					envClickPage: envClickPageV ?? ''
 				})
 			});
-			if (!res.ok) toast.error('Failed to save navigation preference');
+			if (!res.ok) toast.error('导航偏好设置保存失败');
 		} catch {
-			toast.error('Failed to save navigation preference');
+			toast.error('导航偏好设置保存失败');
 		}
 	}
 	function persist() {
@@ -123,14 +123,14 @@
 	}
 </script>
 
-<!-- Two groups side by side: "Open the app on" (which page + which env) and "Environment
+<!-- Two groups side by side: "打开应用程序" (which page + which env) and "Environment
      click". Wraps to a column on narrow screens. -->
 <div class="flex flex-col sm:flex-row sm:items-start gap-6">
 
 	<!-- 1. Open the app on: the landing PAGE. The environment is not forced - the app opens on
 	     the last-used one. -->
 	<div class="space-y-1.5 min-w-0 flex-1">
-		<Label>Open the app on</Label>
+		<Label>打开应用程序</Label>
 		<div class="flex items-center gap-2.5">
 			<Select.Root type="single" value={homeSel} onValueChange={(v) => { if (v) pickHome(v); }}>
 				<Select.Trigger class="flex-1 min-w-0">
@@ -146,7 +146,7 @@
 				</Select.Trigger>
 				<Select.Content>
 					{#if isUser}
-						<Select.Item value={INHERIT}><span class="text-muted-foreground">Use global default</span></Select.Item>
+						<Select.Item value={INHERIT}><span class="text-muted-foreground">使用全局默认值</span></Select.Item>
 					{/if}
 					{#each PAGES as page}
 						<Select.Item value={page.value}>
@@ -159,13 +159,13 @@
 				</Select.Content>
 			</Select.Root>
 		</div>
-		<p class="text-xs text-muted-foreground">Where the app opens (on the last-used environment).</p>
+		<p class="text-xs text-muted-foreground">应用在上次使用的环境打开。</p>
 	</div>
 
 	<!-- 3. Dashboard env-click target. Clicking an environment is an intentional "show me THIS
 	     view of this env", so it's always a concrete page (default: containers). -->
 	<div class="space-y-1.5 min-w-0 flex-1">
-		<Label>Environment click</Label>
+		<Label>环境点击</Label>
 		<Select.Root type="single" value={clickSel} onValueChange={(v) => { if (v) pickClick(v); }}>
 			<Select.Trigger class="w-full">
 				<div class="flex items-center gap-2">
@@ -180,7 +180,7 @@
 			</Select.Trigger>
 			<Select.Content>
 				{#if isUser}
-					<Select.Item value={INHERIT}><span class="text-muted-foreground">Use global default</span></Select.Item>
+					<Select.Item value={INHERIT}><span class="text-muted-foreground">使用全局默认值</span></Select.Item>
 				{/if}
 				{#each CLICK_PAGES as page}
 					<Select.Item value={page.value}>
@@ -192,6 +192,6 @@
 				{/each}
 			</Select.Content>
 		</Select.Root>
-		<p class="text-xs text-muted-foreground">Where a tile click goes.</p>
+		<p class="text-xs text-muted-foreground">点击图块后会跳转到哪里？</p>
 	</div>
 </div>

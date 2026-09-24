@@ -86,12 +86,12 @@ services:
 
 	function saveComposeTemplate() {
 		appSettings.setDefaultComposeTemplate(composeTemplateWIP);
-		toast.success('Compose template updated');
+		toast.success('撰写模板已更新');
 	}
 
 	function revertComposeTemplate() {
 		composeTemplateWIP = builtinComposeTemplate;
-		toast.info('Template reverted to default');
+		toast.info('模板已还原为默认值');
 	}
 	let scheduleRetentionDays = $derived($appSettings.scheduleRetentionDays);
 	let eventRetentionDays = $derived($appSettings.eventRetentionDays);
@@ -123,57 +123,57 @@ services:
 				if (total > 0) {
 					toast.success(`Scanner cache cleared (${total} items removed)`);
 				} else {
-					toast.info('Scanner cache was already empty');
+					toast.info('扫描仪缓存已为空。');
 				}
 			} else {
-				toast.error(data.error || 'Failed to clear scanner cache');
+				toast.error(data.error || '清除扫描仪缓存失败');
 			}
 		} catch {
-			toast.error('Failed to clear scanner cache');
+			toast.error('清除扫描仪缓存失败');
 		} finally {
 			clearingCache = false;
 		}
 	}
 
 	const dateFormatOptions: { value: DateFormat; label: string; example: string }[] = [
-		{ value: 'DD.MM.YYYY', label: 'DD.MM.YYYY', example: '31.12.2024' },
-		{ value: 'DD/MM/YYYY', label: 'DD/MM/YYYY', example: '31/12/2024' },
-		{ value: 'MM/DD/YYYY', label: 'MM/DD/YYYY', example: '12/31/2024' },
+		{ value: '日.月.年', label: '日.月.年', example: '31.12.2024' },
+		{ value: '日/月/年', label: '日/月/年', example: '31/12/2024' },
+		{ value: '月/日/年', label: '月/日/年', example: '12/31/2024' },
 		{ value: 'YYYY-MM-DD', label: 'YYYY-MM-DD', example: '2024-12-31' }
 	];
 
 	const downloadFormatOptions: { value: DownloadFormat; label: string; description: string }[] = [
-		{ value: 'tar', label: 'tar', description: 'Uncompressed archive' },
-		{ value: 'tar.gz', label: 'tar.gz', description: 'Gzip-compressed archive' },
-		{ value: 'raw', label: 'No archive', description: 'Single file, raw bytes' }
+		{ value: 'tar', label: 'tar', description: '未压缩存档' },
+		{ value: 'tar.gz', label: 'tar.gz', description: 'Gzip压缩存档' },
+		{ value: 'raw', label: '无存档', description: '单个文件，原始字节' }
 	];
 
 	const downloadFormatLabel: Record<DownloadFormat, string> = {
 		tar: 'tar',
 		'tar.gz': 'tar.gz',
-		raw: 'No archive'
+		raw: '无存档'
 	};
 
 	function handleScheduleRetentionChange(e: Event) {
 		const value = Math.max(1, Math.min(365, parseInt((e.target as HTMLInputElement).value) || 30));
 		appSettings.setScheduleRetentionDays(value);
-		toast.success('Schedule retention updated');
+		toast.success('计划保留更新');
 	}
 
 	function handleEventRetentionChange(e: Event) {
 		const value = Math.max(1, Math.min(365, parseInt((e.target as HTMLInputElement).value) || 30));
 		appSettings.setEventRetentionDays(value);
-		toast.success('Event retention updated');
+		toast.success('事件保留更新');
 	}
 
 	function handleScheduleCleanupCronChange(cron: string) {
 		appSettings.setScheduleCleanupCron(cron);
-		toast.success('Schedule cleanup cron updated');
+		toast.success('计划清理 cron 已更新');
 	}
 
 	function handleEventCleanupCronChange(cron: string) {
 		appSettings.setEventCleanupCron(cron);
-		toast.success('Event cleanup cron updated');
+		toast.success('事件清理 cron 已更新');
 	}
 
 	function handleScheduleCleanupEnabledChange() {
@@ -190,7 +190,7 @@ services:
 
 	function handleScannerCleanupCronChange(cron: string) {
 		appSettings.setScannerCleanupCron(cron);
-		toast.success('Scanner cleanup cron updated');
+		toast.success('扫描仪清理 cron 已更新');
 	}
 
 	function handleScannerCleanupEnabledChange() {
@@ -201,7 +201,7 @@ services:
 
 	function handleDeployLogReconcileCronChange(cron: string) {
 		appSettings.setDeployLogReconcileCron(cron);
-		toast.success('Deploy log reconcile cron updated');
+		toast.success('部署日志协调 cron 已更新');
 	}
 
 	function handleDeployLogReconcileEnabledChange() {
@@ -214,7 +214,7 @@ services:
 		const value = (e.target as HTMLInputElement).value.trim();
 		if (value && value !== defaultGrypeImage) {
 			appSettings.setDefaultGrypeImage(value);
-			toast.success('Grype image updated');
+			toast.success('Grype 镜像已更新');
 		}
 	}
 
@@ -222,7 +222,7 @@ services:
 		const value = (e.target as HTMLInputElement).value.trim();
 		if (value && value !== defaultTrivyImage) {
 			appSettings.setDefaultTrivyImage(value);
-			toast.success('Trivy image updated');
+			toast.success('Trivy 镜像已更新');
 		}
 	}
 
@@ -230,7 +230,7 @@ services:
 		const value = (e.target as HTMLInputElement).value.trim();
 		if (value !== defaultGrypeArgs) {
 			appSettings.setDefaultGrypeArgs(value);
-			toast.success('Grype default arguments updated');
+			toast.success('Grype 默认参数已更新');
 		}
 	}
 
@@ -238,7 +238,7 @@ services:
 		const value = (e.target as HTMLInputElement).value.trim();
 		if (value !== defaultTrivyArgs) {
 			appSettings.setDefaultTrivyArgs(value);
-			toast.success('Trivy default arguments updated');
+			toast.success('Trivy 默认参数已更新');
 		}
 	}
 
@@ -246,7 +246,7 @@ services:
 		const trimmed = (value ?? '').trim();
 		if (trimmed !== defaultScannerNetworkMode) {
 			appSettings.setDefaultScannerNetworkMode(trimmed);
-			toast.success(trimmed ? `Scanner network mode set to ${trimmed}` : 'Scanner network mode cleared');
+			toast.success(trimmed ? `扫描仪网络模式设置为 ${trimmed}` : 'Scanner network mode cleared');
 		}
 	}
 
@@ -261,7 +261,7 @@ services:
 			cleaned.every((v, i) => v === defaultScannerDns[i]);
 		if (!sameAsCurrent) {
 			appSettings.setDefaultScannerDns(cleaned);
-			toast.success(cleaned.length ? `Scanner DNS set to ${cleaned.join(', ')}` : 'Scanner DNS cleared');
+			toast.success(cleaned.length ? `扫描器 DNS 设置为 ${cleaned.join(', ')}` : 'Scanner DNS cleared');
 		}
 	}
 
@@ -276,27 +276,27 @@ services:
 		const n = parseInt(value ?? '');
 		if (!Number.isFinite(n) || n <= 0) return;
 		appSettings.setLogMaxLines(Math.min(2000, Math.max(100, n)));
-		toast.success('Log buffer size updated');
+		toast.success('日志缓冲区大小已更新');
 	}
 
 	function handleEventCollectionModeChange(value: string | undefined) {
 		if (value === 'stream' || value === 'poll') {
 			appSettings.setEventCollectionMode(value);
-			toast.success(`Event collection mode: ${value}`);
+			toast.success(`事件收集模式：${value}`);
 		}
 	}
 
 	function handleEventPollIntervalChange(selected: { value: number } | undefined) {
 		if (selected?.value) {
 			appSettings.setEventPollInterval(selected.value);
-			toast.success(`Event poll interval: ${selected.value / 1000}s`);
+			toast.success(`事件轮询间隔：${selected.value / 1000}秒`);
 		}
 	}
 
 	function handleMetricsIntervalChange(selected: { value: number } | undefined) {
 		if (selected?.value) {
 			appSettings.setMetricsCollectionInterval(selected.value);
-			toast.success(`Metrics interval: ${selected.value / 1000}s`);
+			toast.success(`指标间隔：${selected.value / 1000}秒`);
 		}
 	}
 
@@ -304,7 +304,7 @@ services:
 		const value = (e.target as HTMLInputElement).value.trim();
 		if (value && value !== defaultBackupImage) {
 			appSettings.setDefaultBackupImage(value);
-			toast.success('Backup image updated');
+			toast.success('备份映像已更新');
 		}
 	}
 
@@ -363,7 +363,7 @@ services:
 				})
 			});
 		} catch {
-			toast.error('Failed to save version-check settings');
+			toast.error('保存版本检查设置失败');
 		}
 	}
 
@@ -381,9 +381,7 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Eye class="w-4 h-4" />
-						Appearance
-						<Tooltip.Provider delayDuration={100}>
+						<Eye class="w-4 h-4" />外貌<Tooltip.Provider delayDuration={100}>
 							<Tooltip.Root>
 								<Tooltip.Trigger>
 									<HelpCircle class="w-4 h-4 text-muted-foreground cursor-help" />
@@ -407,7 +405,7 @@ services:
 						<div class="space-y-4">
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Show stopped containers</Label>
+									<Label>停运的容器</Label>
 									<TogglePill
 										checked={showStoppedContainers}
 										onchange={(checked) => {
@@ -417,11 +415,11 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Display stopped and exited containers in lists</p>
+								<p class="text-xs text-muted-foreground">在列表中显示已停止和已退出的容器</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Highlight available updates</Label>
+									<Label>突出显示可用更新</Label>
 									<TogglePill
 										checked={highlightUpdates}
 										onchange={(checked) => {
@@ -431,17 +429,17 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Highlight container rows in amber when updates are available</p>
+								<p class="text-xs text-muted-foreground">当有更新可用时，以琥珀色高亮显示容器行。</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Show changelog links</Label>
+									<Label>显示更新日志链接</Label>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
 											<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 										</Tooltip.Trigger>
 										<Tooltip.Content side="top" class="w-96 max-w-[90vw]">
-											<p>Surface a release-notes link next to the image name on rows with updates available. The link is resolved from the image's <code>org.opencontainers.image.source</code> label, from the <code>ghcr.io</code> registry path, or from an explicit <code>dockhand.changelog.url</code> label override.</p>
+											<p>在有可用更新的行中，在镜像名称旁边显示发行说明链接。该链接由镜像解析而来。<code>org.opencontainers.image.source</code> label, from the <code>ghcr.io</code> registry path, or from an explicit <code>dockhand.changelog.url</code> label override.</p>
 										</Tooltip.Content>
 									</Tooltip.Root>
 									<TogglePill
@@ -453,17 +451,17 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Show a release-notes icon next to images with updates available</p>
+								<p class="text-xs text-muted-foreground">在有可用更新的镜像旁边显示发行说明图标</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Use selfh.st icons</Label>
+									<Label>使用 selfh.st 图标</Label>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
 											<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 										</Tooltip.Trigger>
 										<Tooltip.Content side="top" class="w-96 max-w-[90vw]">
-											<p>Show app logos from <a href="https://selfh.st" target="_blank" rel="noopener" class="underline">selfh.st</a> as container icons, matched automatically from the image name. Logos are fetched once and cached locally, so your browser never contacts an external CDN. Off by default. Logos are CC BY 4.0; product names and trademarks are the property of their respective owners and are shown for identification only, without implying endorsement.</p>
+											<p>显示应用图标<a href="https://selfh.st" target="_blank" rel="noopener" class="underline">selfh.st</a> as container icons, matched automatically from the image name. Logos are fetched once and cached locally, so your browser never contacts an external CDN. Off by default. Logos are CC BY 4.0; product names and trademarks are the property of their respective owners and are shown for identification only, without implying endorsement.</p>
 										</Tooltip.Content>
 									</Tooltip.Root>
 									<TogglePill
@@ -475,11 +473,11 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Auto app logos on containers, fetched from selfh.st and cached locally</p>
+								<p class="text-xs text-muted-foreground">容器上的自动应用图标，从 selfh.st 获取并缓存于本地</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Show "What's New"</Label>
+									<Label>显示“最新动态”</Label>
 									<TogglePill
 										checked={showWhatsNew}
 										onchange={(checked) => {
@@ -489,11 +487,11 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Show the "What's New" popup after upgrading to a new version</p>
+								<p class="text-xs text-muted-foreground">升级到新版本后显示“新增功能”弹出窗口</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Compact port display</Label>
+									<Label>紧凑型端口显示器</Label>
 									<TogglePill
 										checked={compactPorts}
 										onchange={(checked) => {
@@ -503,17 +501,17 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Show first port with +N count instead of all ports</p>
+								<p class="text-xs text-muted-foreground">显示第一个端口（计数为 +N），而不是显示所有端口。</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Show exposed ports</Label>
+									<Label>显示暴露的端口</Label>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
 											<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 										</Tooltip.Trigger>
 										<Tooltip.Content side="top" class="w-96 max-w-[90vw]">
-											<p>Shows internal container ports (from EXPOSE directives) that are not published to the host. These appear in the container list with an amber badge to distinguish them from published port mappings.</p>
+											<p>显示未发布到主机的内部容器端口（来自 EXPOSE 指令）。这些端口在容器列表中以琥珀色标记显示，以区别于已发布的端口映射。</p>
 										</Tooltip.Content>
 									</Tooltip.Root>
 									<TogglePill
@@ -525,17 +523,17 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Display internal container ports in the container list grid</p>
+								<p class="text-xs text-muted-foreground">在容器列表网格中显示内部容器端口</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Show git commit hash</Label>
+									<Label>显示 Git 提交哈希值</Label>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
 											<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 										</Tooltip.Trigger>
 										<Tooltip.Content side="top" class="w-96 max-w-[90vw]">
-											<p>Shows the deployed short commit hash on the Git badge in the stacks list source column, with the full hash, repo URL and branch in a tooltip.</p>
+											<p>在编排列表源列的 Git 徽章上显示已部署的简短提交哈希值，并在工具提示中显示完整哈希值、仓库 URL 和分支。</p>
 										</Tooltip.Content>
 									</Tooltip.Root>
 									<TogglePill
@@ -547,17 +545,17 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Display the deployed commit hash on the Git source badge in the stacks list</p>
+								<p class="text-xs text-muted-foreground">在编排列表中的 Git 源代码徽章上显示已部署提交的哈希值</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Honor Traefik/Pangolin/Caddy labels</Label>
+									<Label>荣誉 Traefik/Pangolin/Caddy 标签</Label>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
 											<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 										</Tooltip.Trigger>
 										<Tooltip.Content side="top" class="w-96 max-w-[90vw]">
-											<p>Parse <code>traefik.http.routers.&lt;name&gt;.rule</code>, <code>pangolin.public-resources.&lt;name&gt;.full-domain</code>, <code>pangolin.private-resources.&lt;name&gt;.full-domain</code>, and caddy-docker-proxy <code>caddy</code>/<code>caddy_&lt;n&gt;</code> site-address labels, and surface the resulting URLs as clickable pills next to ports. When off, only explicit <code>dockhand.url</code> labels are shown.</p>
+											<p>解析<code>traefik.http.routers.&lt;name&gt;.rule</code>, <code>pangolin.public-resources.&lt;name&gt;.full-domain</code>, <code>pangolin.private-resources.&lt;name&gt;.full-domain</code>, and caddy-docker-proxy <code>caddy</code>/<code>caddy_&lt;n&gt;</code> site-address labels, and surface the resulting URLs as clickable pills next to ports. When off, only explicit <code>dockhand.url</code> labels are shown.</p>
 										</Tooltip.Content>
 									</Tooltip.Root>
 									<TogglePill
@@ -569,7 +567,7 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Show URLs inferred from Traefik and Pangolin labels alongside dockhand.url</p>
+								<p class="text-xs text-muted-foreground">显示从 Traefik 和 Pangolin 标签推断出的 URL，以及 dockhand.url</p>
 							</div>
 						</div>
 						<!-- Right column: Theme settings (always shown, with hint when auth enabled) -->
@@ -588,7 +586,7 @@ services:
 								<div class="text-xs text-muted-foreground flex items-start gap-1.5 mt-2 p-2 bg-muted/50 rounded-md">
 									<HelpCircle class="w-3.5 h-3.5 shrink-0 mt-0.5" />
 									<div>
-										<p>These are the <strong>defaults for new users</strong> - they don't change your own view. To customise how <em>you</em> see the app, use the theme settings in your <a href="/profile" class="text-primary hover:underline">profile</a>.</p>
+										<p>这些是<strong>defaults for new users</strong>它们不会改变你自己的观点。要自定义如何<em>you</em> see the app, use the theme settings in your <a href="/profile" class="text-primary hover:underline">profile</a>.</p>
 									</div>
 								</div>
 							{/if}
@@ -600,7 +598,7 @@ services:
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
 						<div class="space-y-1">
 							<div class="flex items-center gap-3">
-								<Label>Time format</Label>
+								<Label>时间格式</Label>
 								<ToggleSwitch
 									value={timeFormat}
 									leftValue="24h"
@@ -616,7 +614,7 @@ services:
 						</div>
 						<div class="space-y-1">
 							<div class="flex items-center gap-3">
-								<Label>Date format</Label>
+								<Label>日期格式</Label>
 								<Select.Root
 									type="single"
 									value={dateFormat}
@@ -660,9 +658,7 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Compass class="w-4 h-4" />
-						Navigation
-					</Card.Title>
+						<Compass class="w-4 h-4" />导航</Card.Title>
 				</Card.Header>
 				<Card.Content>
 					<NavigationSelector />
@@ -672,13 +668,11 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Globe class="w-4 h-4" />
-						Scheduling
-					</Card.Title>
+						<Globe class="w-4 h-4" />日程安排</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<div class="space-y-2">
-						<Label>Default timezone</Label>
+						<Label>默认时区</Label>
 						<TimezoneSelector
 							value={defaultTimezone}
 							onchange={(value) => {
@@ -687,7 +681,7 @@ services:
 							}}
 							class="w-[320px]"
 						/>
-						<p class="text-xs text-muted-foreground">Default timezone for new environments. Used for scheduled tasks like auto-updates.</p>
+						<p class="text-xs text-muted-foreground">新环境的默认时区。用于计划任务，例如自动更新。</p>
 					</div>
 				</Card.Content>
 			</Card.Root>
@@ -695,14 +689,12 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Bell class="w-4 h-4" />
-						Confirmations
-					</Card.Title>
+						<Bell class="w-4 h-4" />确认</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<div class="space-y-1">
 						<div class="flex items-center gap-3">
-							<Label>Confirm destructive actions</Label>
+							<Label>确认破坏行为</Label>
 							<TogglePill
 								checked={confirmDestructive}
 								onchange={(checked) => {
@@ -712,7 +704,7 @@ services:
 								disabled={!$canAccess('settings', 'edit')}
 							/>
 						</div>
-						<p class="text-xs text-muted-foreground">Show confirmation dialogs before deleting resources</p>
+						<p class="text-xs text-muted-foreground">删除资源前显示确认对话框</p>
 					</div>
 				</Card.Content>
 			</Card.Root>
@@ -720,15 +712,13 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<FileText class="w-4 h-4" />
-						Logs & files
-					</Card.Title>
+						<FileText class="w-4 h-4" />日志和文件</Card.Title>
 				</Card.Header>
 				<Card.Content>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
 						<div class="space-y-4">
 							<div class="space-y-2">
-								<Label for="log-max-lines">Log buffer size</Label>
+								<Label for="log-max-lines">日志缓冲区大小</Label>
 								<Select.Root
 									type="single"
 									value={String(logMaxLines)}
@@ -744,11 +734,11 @@ services:
 										{/each}
 									</Select.Content>
 								</Select.Root>
-								<p class="text-xs text-muted-foreground">Maximum number of log lines kept per container panel. Older lines are dropped when the limit is exceeded.</p>
+								<p class="text-xs text-muted-foreground">每个容器面板保留的最大日志行数。超过限制后，较旧的日志行将被删除。</p>
 							</div>
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Download format</Label>
+									<Label>下载格式</Label>
 									<Select.Root
 										type="single"
 										value={downloadFormat}
@@ -776,13 +766,13 @@ services:
 										</Select.Content>
 									</Select.Root>
 								</div>
-								<p class="text-xs text-muted-foreground">Format when downloading files from containers or volumes. "No archive" emits raw bytes for single files; directories still download as tar.</p>
+								<p class="text-xs text-muted-foreground">从容器或卷下载文件时的格式。“No archive”选项会输出单个文件的原始字节；目录仍会以 tar 格式下载。</p>
 							</div>
 						</div>
 						<div class="space-y-4">
 							<div class="space-y-1">
 								<div class="flex items-center gap-3">
-									<Label>Format log timestamps</Label>
+									<Label>格式化日志时间戳</Label>
 									<TogglePill
 										checked={formatLogTimestamps}
 										onchange={(checked) => {
@@ -792,10 +782,10 @@ services:
 										disabled={!$canAccess('settings', 'edit')}
 									/>
 								</div>
-								<p class="text-xs text-muted-foreground">Convert ISO timestamps in logs to your configured date/time format</p>
+								<p class="text-xs text-muted-foreground">将日志中的 ISO 时间戳转换为您配置的日期/时间格式</p>
 								<div class="flex items-start gap-1.5 mt-1">
 									<Info class="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />
-									<p class="text-xs text-muted-foreground">Docker logs use UTC timestamps by default. When enabled, timestamps like <code class="bg-muted px-1 rounded">2026-01-12T07:47:44Z</code> are converted to local time using your date/time settings.</p>
+									<p class="text-xs text-muted-foreground">Docker 日志默认使用 UTC 时间戳。启用后，时间戳将类似于<code class="bg-muted px-1 rounded">2026-01-12T07:47:44Z</code> are converted to local time using your date/time settings.</p>
 								</div>
 							</div>
 						</div>
@@ -806,10 +796,8 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Layers class="w-4 h-4" />
-						Stack operation logs
-					</Card.Title>
-					<p class="text-xs text-muted-foreground">Choose which stack operations open the full compose-log popover. Unchecked operations run quietly with just a toast; their log still opens automatically if the operation fails.</p>
+						<Layers class="w-4 h-4" />编排操作日志</Card.Title>
+					<p class="text-xs text-muted-foreground">选择哪些编排操作会打开完整的 compose-log 弹出窗口。未选中的操作会静默运行，仅显示一条提示信息；如果操作失败，其日志仍会自动打开。</p>
 				</Card.Header>
 				<Card.Content>
 					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3">
@@ -830,10 +818,8 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<FileText class="w-4 h-4" />
-						Compose template
-					</Card.Title>
-					<p class="text-xs text-muted-foreground">Default YAML content when creating a new stack.</p>
+						<FileText class="w-4 h-4" />编写模板</Card.Title>
+					<p class="text-xs text-muted-foreground">创建新编排时的默认 YAML 内容。</p>
 				</Card.Header>
 				<Card.Content class="space-y-3">
 					<div class="h-64">
@@ -848,13 +834,9 @@ services:
 					{#if $canAccess('settings', 'edit')}
 						<div class="flex gap-2">
 							<Button size="sm" variant="outline" onclick={saveComposeTemplate}>
-								<Save class="w-3.5 h-3.5" />
-								Save template
-							</Button>
+								<Save class="w-3.5 h-3.5" />保存模板</Button>
 							<Button size="sm" variant="ghost" onclick={revertComposeTemplate}>
-								<RotateCcw class="w-3.5 h-3.5" />
-								Revert to default
-							</Button>
+								<RotateCcw class="w-3.5 h-3.5" />还原默认设置</Button>
 						</div>
 					{/if}
 				</Card.Content>
@@ -867,13 +849,11 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<ShieldCheck class="w-4 h-4" />
-						Vulnerability scanners
-					</Card.Title>
+						<ShieldCheck class="w-4 h-4" />漏洞扫描器</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<div class="space-y-2">
-						<Label for="grype-image">Grype image</Label>
+						<Label for="grype-image">Grype 镜像</Label>
 						<Input
 							id="grype-image"
 							value={defaultGrypeImage}
@@ -881,10 +861,10 @@ services:
 							disabled={!$canAccess('settings', 'edit')}
 							placeholder={"anchore/grype:v0.110.0"}
 						/>
-						<p class="text-xs text-muted-foreground">Docker image for Grype scanner. Pin to a specific version for supply chain security.</p>
+						<p class="text-xs text-muted-foreground">Grype 扫描器的 Docker 镜像。锁定到特定版本，以确保供应链安全。</p>
 					</div>
 					<div class="space-y-2">
-						<Label for="trivy-image">Trivy image</Label>
+						<Label for="trivy-image">Trivy 镜像</Label>
 						<Input
 							id="trivy-image"
 							value={defaultTrivyImage}
@@ -892,10 +872,10 @@ services:
 							disabled={!$canAccess('settings', 'edit')}
 							placeholder={"aquasec/trivy:0.69.3"}
 						/>
-						<p class="text-xs text-muted-foreground">Docker image for Trivy scanner. Pin to a specific version for supply chain security.</p>
+						<p class="text-xs text-muted-foreground">Trivy 扫描仪的 Docker 镜像。锁定到特定版本，以确保供应链安全。</p>
 					</div>
 					<div class="space-y-2">
-						<Label for="grype-args">Default Grype arguments</Label>
+						<Label for="grype-args">默认的 Grype 参数</Label>
 						<Input
 							id="grype-args"
 							value={defaultGrypeArgs}
@@ -903,10 +883,10 @@ services:
 							disabled={!$canAccess('settings', 'edit')}
 							placeholder={"-o json -v {image}"}
 						/>
-						<p class="text-xs text-muted-foreground">Use <code class="bg-muted px-1 rounded">{'{image}'}</code> as placeholder for the image name</p>
+						<p class="text-xs text-muted-foreground">使用<code class="bg-muted px-1 rounded">{'{image}'}</code> as placeholder for the image name</p>
 					</div>
 					<div class="space-y-2">
-						<Label for="trivy-args">Default Trivy arguments</Label>
+						<Label for="trivy-args">默认 Trivy 参数</Label>
 						<Input
 							id="trivy-args"
 							value={defaultTrivyArgs}
@@ -914,7 +894,7 @@ services:
 							disabled={!$canAccess('settings', 'edit')}
 							placeholder={"image --format json {image}"}
 						/>
-						<p class="text-xs text-muted-foreground">Use <code class="bg-muted px-1 rounded">{'{image}'}</code> as placeholder for the image name</p>
+						<p class="text-xs text-muted-foreground">使用<code class="bg-muted px-1 rounded">{'{image}'}</code> as placeholder for the image name</p>
 					</div>
 					<div class="pt-2">
 						<button
@@ -932,40 +912,40 @@ services:
 					</div>
 					{#if showAdvancedScannerSettings}
 						<div class="space-y-2">
-							<Label for="scanner-network-mode">Network mode</Label>
+							<Label for="scanner-network-mode">网络模式</Label>
 							<Select.Root
 								type="single"
 								value={defaultScannerNetworkMode}
 								onValueChange={handleScannerNetworkModeChange}
 							>
 								<Select.Trigger id="scanner-network-mode" class="w-full" disabled={!$canAccess('settings', 'edit')}>
-									<span>{defaultScannerNetworkMode || 'Default (auto-detect)'}</span>
+									<span>{defaultScannerNetworkMode || '默认值（自动检测）'}</span>
 								</Select.Trigger>
 								<Select.Content>
-									<Select.Item value="">Default (auto-detect)</Select.Item>
+									<Select.Item value="">默认值（自动检测）</Select.Item>
 									<Select.Item value="host">host</Select.Item>
 									<Select.Item value="bridge">bridge</Select.Item>
 									<Select.Item value="none">none</Select.Item>
 								</Select.Content>
 							</Select.Root>
-							<p class="text-xs text-muted-foreground">Override the Docker network mode for vulnerability scanner containers. Use <code class="bg-muted px-1 rounded">host</code> on hosts where the default bridge can't reach the internet (e.g. iptables disabled, SELinux restricted).</p>
+							<p class="text-xs text-muted-foreground">覆盖漏洞扫描器容器的 Docker 网络模式。<code class="bg-muted px-1 rounded">host</code> on hosts where the default bridge can't reach the internet (e.g. iptables disabled, SELinux restricted).</p>
 						</div>
 						<div class="space-y-2">
-							<Label for="scanner-dns">DNS servers</Label>
+							<Label for="scanner-dns">DNS服务器</Label>
 							<Input
 								id="scanner-dns"
 								value={defaultScannerDns.join(', ')}
 								onblur={handleScannerDnsBlur}
 								disabled={!$canAccess('settings', 'edit')}
 							/>
-							<p class="text-xs text-muted-foreground">Comma-separated DNS IPs for scanner containers. Empty = inherit from the Docker daemon.</p>
+							<p class="text-xs text-muted-foreground">扫描器容器的 DNS IP 地址，以逗号分隔。为空表示从 Docker 守护程序继承。</p>
 						</div>
 					{/if}
 					<div class="pt-2 border-t">
 						<div class="flex items-center justify-between">
 							<div>
-								<p class="text-sm font-medium">Scanner cache</p>
-								<p class="text-xs text-muted-foreground">Remove cached vulnerability databases to free disk space. Next scan will re-download fresh data (~200MB).</p>
+								<p class="text-sm font-medium">扫描仪缓存</p>
+								<p class="text-xs text-muted-foreground">删除缓存的漏洞数据库以释放磁盘空间。下次扫描将重新下载最新数据（约 200MB）。</p>
 							</div>
 							<Button
 								variant="outline"
@@ -987,9 +967,7 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Tags class="w-4 h-4" />
-						Newer version tags
-					</Card.Title>
+						<Tags class="w-4 h-4" />新版本标签</Card.Title>
 					<Card.Description>
 						How the update check looks for newer version tags on pinned images. Applies to every
 						check - scheduled and manual. Per-environment settings decide whether to check on a
@@ -1009,24 +987,21 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<Database class="w-4 h-4" />
-						System jobs
-					</Card.Title>
+						<Database class="w-4 h-4" />系统作业</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<div class="space-y-3">
 						<div>
 							<div class="flex items-center gap-2">
-								<Label>Activity event collection mode</Label>
+								<Label>活动事件收集模式</Label>
 								<Tooltip.Root>
 									<Tooltip.Trigger>
 										<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 									</Tooltip.Trigger>
 									<Tooltip.Content class="w-80">
 										<p class="text-xs">
-											<strong>Stream:</strong> Continuous event stream from Docker, instant notifications, higher CPU usage<br />
-											<strong>Poll:</strong> Periodic checks for new events, slight notification delay, lower CPU usage
-										</p>
+											<strong>溪流：</strong>来自 Docker 的持续事件流、即时通知、更高的 CPU 使用率<br />
+											<strong>轮询：</strong>定期检查新事件，通知略有延迟，CPU占用率较低</p>
 									</Tooltip.Content>
 								</Tooltip.Root>
 							</div>
@@ -1042,7 +1017,7 @@ services:
 										class="accent-primary w-4 h-4"
 									/>
 									<Activity class="w-3.5 h-3.5" />
-									<span class="text-sm">Stream</span>
+									<span class="text-sm">流式</span>
 								</label>
 								<label class="flex items-center gap-2 cursor-pointer">
 									<input
@@ -1055,7 +1030,7 @@ services:
 										class="accent-primary w-4 h-4"
 									/>
 									<Clock class="w-3.5 h-3.5" />
-									<span class="text-sm">Poll</span>
+									<span class="text-sm">轮询</span>
 								</label>
 
 								<span class="text-xs text-muted-foreground {(eventCollectionMode || 'stream') === 'poll' ? '' : 'invisible'}">every</span>
@@ -1081,7 +1056,7 @@ services:
 
 					<div class="space-y-1 pt-2 border-t">
 						<div class="flex items-center gap-2">
-							<Label for="metrics-interval">Metrics collection interval</Label>
+							<Label for="metrics-interval">指标收集间隔</Label>
 							<Tooltip.Root>
 								<Tooltip.Trigger>
 									<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
@@ -1116,14 +1091,14 @@ services:
 
 					<div class="space-y-1 pt-2 border-t">
 						<div class="flex items-center gap-3">
-							<Label for="schedule-retention">Schedule execution cleanup</Label>
+							<Label for="schedule-retention">计划执行清理</Label>
 							<TogglePill
 								checked={scheduleCleanupEnabled}
 								onchange={handleScheduleCleanupEnabledChange}
 								disabled={!$canAccess('settings', 'edit')}
 							/>
 						</div>
-						<p class="text-xs text-muted-foreground">Delete executions older than specified days</p>
+						<p class="text-xs text-muted-foreground">删除早于指定天数的执行记录</p>
 						<div class="flex items-center gap-2 mt-2">
 							<Input
 								id="schedule-retention"
@@ -1147,14 +1122,14 @@ services:
 					</div>
 					<div class="space-y-1">
 						<div class="flex items-center gap-3">
-							<Label for="event-retention">Container event cleanup</Label>
+							<Label for="event-retention">容器事件清理</Label>
 							<TogglePill
 								checked={eventCleanupEnabled}
 								onchange={handleEventCleanupEnabledChange}
 								disabled={!$canAccess('settings', 'edit')}
 							/>
 						</div>
-						<p class="text-xs text-muted-foreground">Delete events older than specified days</p>
+						<p class="text-xs text-muted-foreground">删除超过指定天数的事件</p>
 						<div class="flex items-center gap-2 mt-2">
 							<Input
 								id="event-retention"
@@ -1178,8 +1153,8 @@ services:
 					</div>
 					<div class="space-y-1 pt-2 border-t">
 						<div class="flex items-center gap-3">
-							<Label>Volume helper cleanup</Label>
-							<Badge variant="secondary" class="text-xs">Always enabled</Badge>
+							<Label>卷助手清理</Label>
+							<Badge variant="secondary" class="text-xs">始终启用</Badge>
 						</div>
 						<p class="text-xs text-muted-foreground">
 							Automatically removes temporary containers used for browsing volume contents.
@@ -1188,14 +1163,14 @@ services:
 					</div>
 					<div class="space-y-1 pt-2 border-t">
 						<div class="flex items-center gap-3">
-							<Label>Scanner cache cleanup</Label>
+							<Label>扫描仪缓存清理</Label>
 							<TogglePill
 								checked={scannerCleanupEnabled}
 								onchange={handleScannerCleanupEnabledChange}
 								disabled={!$canAccess('settings', 'edit')}
 							/>
 						</div>
-						<p class="text-xs text-muted-foreground">Remove cached vulnerability databases to reclaim disk space</p>
+						<p class="text-xs text-muted-foreground">删除缓存的漏洞数据库以回收磁盘空间</p>
 						{#if scannerCleanupEnabled}
 							<div class="mt-2">
 								<CronEditor
@@ -1208,7 +1183,7 @@ services:
 					</div>
 					<div class="space-y-1 pt-2 border-t">
 						<div class="flex items-center gap-3">
-							<Label>Deploy log reconcile</Label>
+							<Label>部署日志协调</Label>
 							<Tooltip.Provider delayDuration={100}>
 								<Tooltip.Root>
 									<Tooltip.Trigger>
@@ -1231,7 +1206,7 @@ services:
 								disabled={!$canAccess('settings', 'edit')}
 							/>
 						</div>
-						<p class="text-xs text-muted-foreground">Keeps deploy-log files in sync with their deploy records: removes logs whose run is gone, and flags runs whose log went missing (never deletes a run).</p>
+						<p class="text-xs text-muted-foreground">保持部署日志文件与其部署记录同步：删除运行已丢失的日志，并标记日志丢失的运行（从不删除运行）。</p>
 						{#if deployLogReconcileEnabled}
 							<div class="mt-2">
 								<CronEditor
@@ -1244,13 +1219,13 @@ services:
 					</div>
 					<div class="space-y-1 pt-2 border-t">
 						<div class="flex items-center gap-3">
-							<Label>Protect scanner images from prune</Label>
+							<Label>保护扫描仪镜像免遭清理</Label>
 							<Tooltip.Root>
 								<Tooltip.Trigger>
 									<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 								</Tooltip.Trigger>
 								<Tooltip.Content side="top" class="w-96 max-w-[90vw]">
-									<p>When ON, "Prune all unused" skips Dockhand's grype and trivy scanner images so the next scan doesn't have to re-pull them (and re-download the ~100MB vuln database). When OFF, prune behaves like vanilla Docker and may remove them.</p>
+									<p>启用“清理所有未使用项”后，Dockhand 的 grype 和 trivy 扫描器镜像将被跳过，这样下次扫描就无需重新拉取它们（以及重新下载约 100MB 的漏洞数据库）。禁用后，清理操作将与 Docker 默认行为相同，可能会删除这些镜像。</p>
 								</Tooltip.Content>
 							</Tooltip.Root>
 							<TogglePill
@@ -1262,7 +1237,7 @@ services:
 								disabled={!$canAccess('settings', 'edit')}
 							/>
 						</div>
-						<p class="text-xs text-muted-foreground">Skip grype and trivy images during "Prune all unused"</p>
+						<p class="text-xs text-muted-foreground">在“删除所有未使用的镜像”期间跳过 grype 和 trivy 镜像</p>
 					</div>
 				</Card.Content>
 			</Card.Root>
@@ -1270,24 +1245,20 @@ services:
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-sm font-medium flex items-center gap-2">
-						<LayoutDashboard class="w-4 h-4" />
-						Dashboard
-					</Card.Title>
+						<LayoutDashboard class="w-4 h-4" />仪表盘</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<div class="space-y-3">
 						<div class="space-y-1">
 							<div class="flex items-center gap-3">
-								<Label>Environment label filter matching</Label>
+								<Label>环境标签过滤器匹配</Label>
 								<Tooltip.Root>
 									<Tooltip.Trigger>
 										<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 									</Tooltip.Trigger>
 									<Tooltip.Content class="w-80">
-										<p class="text-xs">
-											Controls how multiple selected environment labels filter environments on the dashboard.
-											<strong>"Any"</strong>: shows environments that have at least one of the selected labels.
-											<strong>"All"</strong>: shows only environments that have every selected label.
+										<p class="text-xs">控制仪表盘上如何筛选多个选定的环境标签。<strong>"Any"</strong>: shows environments that have at least one of the selected labels.
+											<strong>"全部"</strong>: shows only environments that have every selected label.
 										</p>
 									</Tooltip.Content>
 								</Tooltip.Root>

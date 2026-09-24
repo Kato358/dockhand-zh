@@ -37,7 +37,7 @@
 
 	async function verifyAndEnableMfa() {
 		if (!token) {
-			error = 'Please enter the verification code';
+			error = '请输入验证码';
 			return;
 		}
 
@@ -60,7 +60,7 @@
 				error = data.error || 'Invalid verification code';
 			}
 		} catch (e) {
-			error = 'Failed to verify MFA';
+			error = '多因素身份验证失败';
 		} finally {
 			loading = false;
 		}
@@ -115,9 +115,7 @@
 			<div class="space-y-4">
 				<Alert.Root>
 					<TriangleAlert class="h-4 w-4" />
-					<Alert.Description>
-						Save these backup codes in a safe place. Each code can only be used once to sign in if you lose access to your authenticator app.
-					</Alert.Description>
+					<Alert.Description>请将这些备份代码保存在安全的地方。每个代码只能使用一次，用于在您无法访问身份验证器应用程序时登录。</Alert.Description>
 				</Alert.Root>
 
 				<div class="grid grid-cols-2 gap-2 p-3 bg-muted rounded-lg font-mono text-sm">
@@ -136,7 +134,7 @@
 								<Tooltip.Trigger>
 									<XCircle class="w-4 h-4 text-red-500" />
 								</Tooltip.Trigger>
-								<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+								<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 							</Tooltip.Root>
 							Failed
 						{:else if copied === 'ok'}
@@ -148,16 +146,12 @@
 						{/if}
 					</Button>
 					<Button variant="outline" class="flex-1" onclick={downloadBackupCodes}>
-						<Download class="w-4 h-4" />
-						Download
-					</Button>
+						<Download class="w-4 h-4" />下载</Button>
 				</div>
 			</div>
 			<Dialog.Footer>
 				<Button onclick={handleDone}>
-					<ShieldCheck class="w-4 h-4" />
-					Done
-				</Button>
+					<ShieldCheck class="w-4 h-4" />完成</Button>
 			</Dialog.Footer>
 		{:else}
 			<!-- Setup view -->
@@ -169,37 +163,33 @@
 					</Alert.Root>
 				{/if}
 
-				<p class="text-sm text-muted-foreground">
-					Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)
-				</p>
+				<p class="text-sm text-muted-foreground">请使用您的身份验证器应用（例如 Google Authenticator、Authy 等）扫描此二维码。</p>
 
 				{#if qrCode}
 					<div class="flex justify-center p-4 bg-white rounded-lg">
-						<img src={qrCode} alt="MFA QR Code" class="w-48 h-48" />
+						<img src={qrCode} alt="多因素身份验证二维码" class="w-48 h-48" />
 					</div>
 				{/if}
 
 				<div class="space-y-2">
-					<Label class="text-xs text-muted-foreground">Or enter this code manually:</Label>
+					<Label class="text-xs text-muted-foreground">或者手动输入此代码：</Label>
 					<code class="block p-2 bg-muted rounded text-sm font-mono break-all">{secret}</code>
 				</div>
 
 				<div class="space-y-2">
-					<Label>Verification code</Label>
+					<Label>验证码</Label>
 					<Input
 						bind:value={token}
 						name="totp"
-						placeholder="Enter 6-digit code"
+						placeholder="请输入6位代码"
 						maxlength={6}
 						autocomplete="one-time-code"
 					/>
-					<p class="text-xs text-muted-foreground">
-						Enter the code from your authenticator app to verify setup
-					</p>
+					<p class="text-xs text-muted-foreground">输入身份验证器应用中的代码以验证设置</p>
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button variant="outline" onclick={onClose}>Cancel</Button>
+				<Button variant="outline" onclick={onClose}>取消</Button>
 				<Button onclick={verifyAndEnableMfa} disabled={loading || !token}>
 					{#if loading}
 						<RefreshCw class="w-4 h-4 animate-spin" />

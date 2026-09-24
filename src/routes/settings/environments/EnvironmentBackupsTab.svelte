@@ -121,7 +121,7 @@
 	}
 
 	async function batchApply() {
-		if (!batchDestId) { toast.error('Select a repository'); return; }
+		if (!batchDestId) { toast.error('选择一个仓库'); return; }
 		batchSaving = true;
 		let created = 0;
 		let skippedBindOnly = 0;
@@ -176,7 +176,7 @@
 		<Loader2 class="w-5 h-5 animate-spin text-muted-foreground" />
 	</div>
 {:else if items.length === 0}
-	<p class="text-sm text-muted-foreground py-4 text-center">No containers or stacks found on this environment.</p>
+	<p class="text-sm text-muted-foreground py-4 text-center">在此环境中未找到容器或编排。</p>
 {:else}
 	<!-- Batch setup -->
 	{#if unconfiguredCount > 0}
@@ -211,21 +211,21 @@
 					<CronEditor value={batchSchedule} onchange={(v) => batchSchedule = v} />
 				</div>
 				<div class="flex items-center gap-2 text-xs">
-					<TogglePill bind:checked={batchSkipBinds} onLabel="Yes" offLabel="No" />
-					<span class="whitespace-nowrap">Skip bind mounts</span>
+					<TogglePill bind:checked={batchSkipBinds} onLabel="是" offLabel="否" />
+					<span class="whitespace-nowrap">跳过绑定挂载</span>
 					<Tooltip.Root>
 						<Tooltip.Trigger>
 							<HelpCircle class="w-3.5 h-3.5 text-muted-foreground cursor-help" />
 						</Tooltip.Trigger>
 						<Tooltip.Content>
 							<div class="w-64">
-								<p class="text-xs">Prefer named volumes and skip host bind mounts (e.g. media libraries or ISOs). A stack that isn't running yet keeps all volumes until it comes up. Applied to each schedule as it's created - edit a schedule later to change it.</p>
+								<p class="text-xs">优先使用命名卷，并跳过主机绑定挂载（例如媒体库或 ISO 文件）。尚未运行的编排会保留所有卷，直到其启动为止。此设置会在创建每个计划时应用——之后可通过编辑计划来更改此设置。</p>
 							</div>
 						</Tooltip.Content>
 					</Tooltip.Root>
 				</div>
 				<div class="flex items-center justify-end gap-2">
-					<Button variant="ghost" size="sm" class="text-xs" onclick={() => showBatch = false}>Cancel</Button>
+					<Button variant="ghost" size="sm" class="text-xs" onclick={() => showBatch = false}>取消</Button>
 					<Button size="sm" disabled={!batchDestId || batchSaving} onclick={batchApply}>
 						{#if batchSaving}<Loader2 class="w-3.5 h-3.5 mr-1 animate-spin" />{/if}
 						Schedule {unconfiguredLabel}
@@ -265,15 +265,15 @@
 					<span class="flex min-w-0 flex-1 items-center gap-1.5">
 						<span class="truncate text-sm">{item.name}</span>
 						{#if item.git}
-							<span class="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-medium text-purple-600 dark:text-purple-400" title="Git-deployed stack"><GitBranch class="h-2.5 w-2.5" />git</span>
+							<span class="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-medium text-purple-600 dark:text-purple-400" title="Git部署编排"><GitBranch class="h-2.5 w-2.5" />git</span>
 						{/if}
 						{#if item.external}
-							<span class="inline-flex flex-shrink-0 items-center rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground" title="Untracked stack — can't be backed up until adopted">external</span>
+							<span class="inline-flex flex-shrink-0 items-center rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground" title="未跟踪的编排——在采用之前无法备份。">external</span>
 						{/if}
 					</span>
 
 					{#if item.external}
-						<span class="text-xs text-muted-foreground/60 flex-shrink-0" title="This stack is untracked — Dockhand doesn't know its compose file location, so it can't be backed up. Adopt it (Stacks → Adopt) first.">adopt first</span>
+						<span class="text-xs text-muted-foreground/60 flex-shrink-0" title="这个编排未被跟踪——Dockhand 不知道它的 compose 文件位置，因此无法备份。请先将其纳入管理（编排 → 纳入管理）。">adopt first</span>
 					{:else if hasBackup}
 						<ArrowRight class="w-3 h-3 text-muted-foreground/40 flex-shrink-0" />
 						{#if itemConfigs.length === 1}

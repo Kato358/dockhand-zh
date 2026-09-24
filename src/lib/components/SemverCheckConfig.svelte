@@ -38,9 +38,8 @@
 	<div class="flex items-start gap-2" class:opacity-55={isFloating}>
 		<Tag class="w-4 h-4 text-green-500 glow-green mt-0.5 shrink-0" />
 		<div class="flex-1">
-			<Label>Check for newer version tags</Label>
-			<p class="text-xs text-muted-foreground mt-0.5">
-				For a container pinned to a version tag (e.g. <code>16.2</code>, <code>v3.0</code>), also detect
+			<Label>检查是否有更新的版本标签</Label>
+			<p class="text-xs text-muted-foreground mt-0.5">对于绑定到版本标签的容器（例如<code>16.2</code>, <code>v3.0</code>), also detect
 				when a newer version is published. Advisory only.
 			</p>
 		</div>
@@ -59,7 +58,7 @@
 			<!-- max bump -->
 			<div class="space-y-2">
 				<div class="flex items-center gap-4">
-					<Label class="flex-1">Which updates to show</Label>
+					<Label class="flex-1">要显示哪些更新</Label>
 					<div class="inline-flex shrink-0 gap-0.5 rounded-lg border border-border bg-muted/60 p-0.5">
 						{#each bumps as bump}
 							<button
@@ -75,11 +74,10 @@
 						{/each}
 					</div>
 				</div>
-				<div class="rounded-md border border-border bg-muted/40 p-2.5 text-[11.5px] leading-relaxed text-muted-foreground">
-					Running <code>1.4.2</code>, you'll be told about:<br />
-					<span class="font-bold text-foreground">Patch</span> bug-fix only → <code>1.4.3</code><br />
-					<span class="font-bold text-foreground">Minor</span> new features too → <code>1.4.3</code>, <code>1.5.0</code><br />
-					<span class="font-bold text-foreground">Major</span> everything, incl. breaking → <code>1.4.3</code>, <code>1.5.0</code>, <code>2.0.0</code>
+				<div class="rounded-md border border-border bg-muted/40 p-2.5 text-[11.5px] leading-relaxed text-muted-foreground">运行中<code>1.4.2</code>, you'll be told about:<br />
+					<span class="font-bold text-foreground">修补</span> bug-fix only → <code>1.4.3</code><br />
+					<span class="font-bold text-foreground">次要</span> new features too → <code>1.4.3</code>, <code>1.5.0</code><br />
+					<span class="font-bold text-foreground">主要</span> everything, incl. breaking → <code>1.4.3</code>, <code>1.5.0</code>, <code>2.0.0</code>
 				</div>
 			</div>
 
@@ -87,26 +85,23 @@
 			<div class="space-y-2 border-t border-border/60 pt-3">
 				<div class="flex items-start gap-4">
 					<div class="flex-1">
-						<Label>Match the tag flavor</Label>
-						<p class="text-xs text-muted-foreground mt-0.5">
-							Only suggest tags with the same suffix as the one you run — the flavor, like
-							<code>-alpine</code> or <code>-ls123</code>.
+						<Label>匹配标签风格</Label>
+						<p class="text-xs text-muted-foreground mt-0.5">只建议与你运行的标签后缀相同的标签——例如，风味标签。<code>-alpine</code> or <code>-ls123</code>.
 						</p>
 					</div>
 					<div class="shrink-0"><TogglePill bind:checked={matchFlavor} /></div>
 				</div>
 				<div class="rounded-md border border-border bg-muted/40 p-2.5 text-[11.5px] leading-relaxed text-muted-foreground">
-					<span class="font-bold text-foreground">On</span> <code>1.2-alpine</code> → <code>1.5-alpine</code>, never bare <code>1.5</code><br />
-					<span class="font-bold text-foreground">Off</span> any newer version, even a different flavor — noisier
+					<span class="font-bold text-foreground">在</span> <code>1.2-alpine</code> → <code>1.5-alpine</code>, never bare <code>1.5</code><br />
+					<span class="font-bold text-foreground">关</span> any newer version, even a different flavor — noisier
 				</div>
 			</div>
 
 			<!-- include prereleases -->
 			<div class="flex items-start gap-4 border-t border-border/60 pt-3">
 				<div class="flex-1">
-					<Label>Include prereleases</Label>
-					<p class="text-xs text-muted-foreground mt-0.5">
-						Consider <code>-rc</code> / <code>-beta</code> tags. Off keeps a stable deployment on
+					<Label>包含预发布版本</Label>
+					<p class="text-xs text-muted-foreground mt-0.5">考虑<code>-rc</code> / <code>-beta</code> tags. Off keeps a stable deployment on
 						stable releases.
 					</p>
 				</div>
@@ -118,7 +113,7 @@
 	{#if enabled && !isFloating}
 		<div class="ml-6 flex items-start gap-2 rounded-md bg-muted/50 p-2 text-xs text-muted-foreground">
 			<Info class="w-3.5 h-3.5 mt-0.5 shrink-0" />
-			<span>A newer version shows as a badge on the container — it is <strong class="text-foreground font-semibold">never auto-applied</strong>.</span>
+			<span>新版本会以徽章的形式显示在容器上——它是<strong class="text-foreground font-semibold">never auto-applied</strong>.</span>
 		</div>
 	{/if}
 </div>

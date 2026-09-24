@@ -121,15 +121,15 @@
 
 			if (res.ok) {
 				const data = await res.json();
-				toast.success(`Renamed "${renameTarget.label}" to "${newLabelName.trim()}" across ${data.affected} environment${data.affected !== 1 ? 's' : ''}`);
+				toast.success(`在 ${data.affected} 环境中，将 "${renameTarget.label}" 重命名为 "${newLabelName.trim()}"。`);
 				showRenameDialog = false;
 				await fetchLabels();
 			} else {
 				const err = await res.json();
-				toast.error(err.error || 'Failed to rename label');
+				toast.error(err.error || '标签重命名失败');
 			}
 		} catch {
-			toast.error('Failed to rename label');
+			toast.error('标签重命名失败');
 		} finally {
 			renaming = false;
 		}
@@ -152,15 +152,15 @@
 
 			if (res.ok) {
 				const data = await res.json();
-				toast.success(`Added "${addLabelName.trim()}" to ${data.affected} environment${data.affected !== 1 ? 's' : ''}`);
+				toast.success(`已将“${addLabelName.trim()}”添加到 ${data.affected} 环境`);
 				showAddDialog = false;
 				await fetchLabels();
 			} else {
 				const err = await res.json();
-				toast.error(err.error || 'Failed to add label');
+				toast.error(err.error || '添加标签失败');
 			}
 		} catch {
-			toast.error('Failed to add label');
+			toast.error('添加标签失败');
 		} finally {
 			adding = false;
 		}
@@ -176,14 +176,14 @@
 
 			if (res.ok) {
 				const data = await res.json();
-				toast.success(`Removed "${info.label}" from ${data.affected} environment${data.affected !== 1 ? 's' : ''}`);
+				toast.success(`从 ${data.affected} 环境中移除 "${info.label}"`);
 				await fetchLabels();
 			} else {
 				const err = await res.json();
-				toast.error(err.error || 'Failed to delete label');
+				toast.error(err.error || '删除标签失败');
 			}
 		} catch {
-			toast.error('Failed to delete label');
+			toast.error('删除标签失败');
 		}
 	}
 
@@ -203,10 +203,10 @@
 					customColors = rest;
 				}
 				colorPopoverLabel = null;
-				toast.success(color ? `Color set for "${label}"` : `Color reset for "${label}"`);
+				toast.success(color ? `为“${label}”设置颜色` : `Color reset for "${label}"`);
 			}
 		} catch {
-			toast.error('Failed to set color');
+			toast.error('设置颜色失败');
 		}
 	}
 
@@ -234,8 +234,8 @@
 				<div class="flex items-center gap-2">
 					<Tags class="w-5 h-5 text-muted-foreground" />
 					<div>
-						<Card.Title class="text-base">Environment labels</Card.Title>
-						<Card.Description>Manage labels across all environments. Renaming or deleting a label applies to every environment using it.</Card.Description>
+						<Card.Title class="text-base">环境标签</Card.Title>
+						<Card.Description>管理所有环境中的标签。重命名或删除标签会应用到使用该标签的所有环境中。</Card.Description>
 					</div>
 				</div>
 				<div class="flex items-center gap-2">
@@ -249,33 +249,29 @@
 						disabled={!$canAccess('environments', 'edit')}
 						class="h-7 text-xs"
 					>
-						<Plus class="w-3.5 h-3.5" />
-						Add label
-					</Button>
+						<Plus class="w-3.5 h-3.5" />添加标签</Button>
 				</div>
 			</div>
 		</Card.Header>
 		<Card.Content>
 			{#if loading}
 				<div class="flex items-center justify-center py-8 text-muted-foreground">
-					<Loader2 class="w-5 h-5 animate-spin mr-2" />
-					Loading labels...
-				</div>
+					<Loader2 class="w-5 h-5 animate-spin mr-2" />正在加载标签…</div>
 			{:else if labels.length === 0}
 				<div class="flex flex-col items-center justify-center py-8 text-muted-foreground gap-2">
 					<Tags class="w-8 h-8 opacity-50" />
-					<p class="text-sm">No labels found</p>
-					<p class="text-xs">Click "Add label" to create one and assign it to environments</p>
+					<p class="text-sm">未找到标签</p>
+					<p class="text-xs">点击“添加标签”创建标签并将其分配给环境</p>
 				</div>
 			{:else}
 				<Table.Root>
 					<Table.Header>
 						<Table.Row>
-							<Table.Head class="w-[200px]">Label</Table.Head>
-							<Table.Head class="w-[60px] text-center">Color</Table.Head>
-							<Table.Head class="w-[80px] text-center">Environments</Table.Head>
-							<Table.Head>Used by</Table.Head>
-							<Table.Head class="w-[100px] text-right">Actions</Table.Head>
+							<Table.Head class="w-[200px]">标签</Table.Head>
+							<Table.Head class="w-[60px] text-center">颜色</Table.Head>
+							<Table.Head class="w-[80px] text-center">环境</Table.Head>
+							<Table.Head>使用者</Table.Head>
+							<Table.Head class="w-[100px] text-right">操作</Table.Head>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
@@ -297,12 +293,12 @@
 												type="button"
 												class="w-5 h-5 rounded border border-border hover:ring-2 hover:ring-primary/30 transition-all"
 												style="background-color: {colors.color}"
-												title="Change color"
+												title="改变颜色"
 											></button>
 										</Popover.Trigger>
 										<Popover.Content class="w-auto p-3" align="start">
 											<div class="space-y-2">
-												<p class="text-xs font-medium text-muted-foreground">Pick a color</p>
+												<p class="text-xs font-medium text-muted-foreground">选择一种颜色</p>
 												<div class="grid grid-cols-6 gap-1">
 													{#each COLOR_PALETTE as color}
 														<button
@@ -319,9 +315,7 @@
 														class="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors w-full justify-center pt-1"
 														onclick={() => setColor(info.label, null)}
 													>
-														<RotateCcw class="w-3 h-3" />
-														Reset to default
-													</button>
+														<RotateCcw class="w-3 h-3" />重置为默认值</button>
 												{/if}
 											</div>
 										</Popover.Content>
@@ -354,14 +348,14 @@
 													<Pencil class="w-3.5 h-3.5" />
 												</Button>
 											</Tooltip.Trigger>
-											<Tooltip.Content>Rename across all environments</Tooltip.Content>
+											<Tooltip.Content>在所有环境中重命名</Tooltip.Content>
 										</Tooltip.Root>
 										<ConfirmPopover
 											open={confirmDeleteLabel === info.label}
-											action="Remove"
+											action="移除"
 											itemType="label"
 											itemName={info.label}
-											confirmText="Remove"
+											confirmText="移除"
 											position="left"
 											onConfirm={() => handleDelete(info)}
 											onOpenChange={(open) => confirmDeleteLabel = open ? info.label : null}
@@ -388,7 +382,7 @@
 <Dialog.Root bind:open={showRenameDialog}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Rename label</Dialog.Title>
+			<Dialog.Title>重命名标签</Dialog.Title>
 			<Dialog.Description>
 				{#if renameTarget}
 					This will rename "{renameTarget.label}" across {renameTarget.count} environment{renameTarget.count !== 1 ? 's' : ''}.
@@ -399,7 +393,7 @@
 			{@const currentColors = getColors(renameTarget.label)}
 			<div class="space-y-4 py-2">
 				<div class="space-y-2">
-					<Label>Current name</Label>
+					<Label>当前名称</Label>
 					<span
 						class="inline-block px-2 py-0.5 text-xs rounded font-medium"
 						style="background-color: {currentColors.bgColor}; color: {currentColors.color}"
@@ -408,18 +402,18 @@
 					</span>
 				</div>
 				<div class="space-y-2">
-					<Label for="new-label-name">New name</Label>
+					<Label for="new-label-name">新名称</Label>
 					<Input
 						id="new-label-name"
 						bind:value={newLabelName}
-						placeholder="Enter new label name"
+						placeholder="输入新标签名称"
 						onkeydown={(e) => { if (e.key === 'Enter' && newLabelName.trim()) handleRename(); }}
 					/>
 				</div>
 				{#if newLabelName.trim() && newLabelName.trim() !== renameTarget.label}
 					{@const newColors = getColors(newLabelName.trim())}
 					<div class="flex items-center gap-2 text-xs text-muted-foreground">
-						<span>Preview:</span>
+						<span>预览：</span>
 						<span
 							class="px-2 py-0.5 rounded font-medium"
 							style="background-color: {newColors.bgColor}; color: {newColors.color}"
@@ -437,7 +431,7 @@
 			</div>
 		{/if}
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => showRenameDialog = false}>Cancel</Button>
+			<Button variant="outline" onclick={() => showRenameDialog = false}>取消</Button>
 			<Button
 				onclick={handleRename}
 				disabled={renaming || !newLabelName.trim() || newLabelName.trim() === renameTarget?.label}
@@ -455,12 +449,12 @@
 <Dialog.Root bind:open={showAddDialog}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Add label</Dialog.Title>
-			<Dialog.Description>Create a new label and assign it to one or more environments.</Dialog.Description>
+			<Dialog.Title>添加标签</Dialog.Title>
+			<Dialog.Description>创建一个新标签，并将其分配给一个或多个环境。</Dialog.Description>
 		</Dialog.Header>
 		<div class="space-y-4 py-2">
 			<div class="space-y-2">
-				<Label for="add-label-name">Label name</Label>
+				<Label for="add-label-name">标签名称</Label>
 				<Input
 					id="add-label-name"
 					bind:value={addLabelName}
@@ -470,7 +464,7 @@
 				{#if addLabelName.trim()}
 					{@const previewColors = getColors(addLabelName.trim())}
 					<div class="flex items-center gap-2 text-xs text-muted-foreground">
-						<span>Preview:</span>
+						<span>预览：</span>
 						<span
 							class="px-2 py-0.5 rounded font-medium"
 							style="background-color: {previewColors.bgColor}; color: {previewColors.color}"
@@ -482,16 +476,16 @@
 				{#if addLabelName.trim() && labels.some(l => l.label === addLabelName.trim())}
 					<div class="flex items-center gap-1.5 text-xs text-amber-500">
 						<AlertTriangle class="w-3.5 h-3.5" />
-						<span>This label already exists. It will be added to the selected environments that don't have it yet.</span>
+						<span>此标签已存在。它将被添加到尚未添加此标签的选定环境中。</span>
 					</div>
 				{/if}
 			</div>
 			<div class="space-y-2">
 				<div class="flex items-center justify-between">
-					<Label>Environments</Label>
+					<Label>环境</Label>
 					<div class="flex gap-2">
-						<button type="button" class="text-2xs text-primary hover:underline" onclick={selectAllEnvs}>Select all</button>
-						<button type="button" class="text-2xs text-muted-foreground hover:underline" onclick={deselectAllEnvs}>Clear</button>
+						<button type="button" class="text-2xs text-primary hover:underline" onclick={selectAllEnvs}>全选</button>
+						<button type="button" class="text-2xs text-muted-foreground hover:underline" onclick={deselectAllEnvs}>清空</button>
 					</div>
 				</div>
 				<div class="max-h-48 overflow-y-auto border rounded-md p-2 space-y-1">
@@ -506,14 +500,14 @@
 						</label>
 					{/each}
 					{#if addEnvOptions.length === 0}
-						<p class="text-xs text-muted-foreground text-center py-2">No environments available</p>
+						<p class="text-xs text-muted-foreground text-center py-2">没有可用的环境</p>
 					{/if}
 				</div>
 				<p class="text-xs text-muted-foreground h-4">{addSelectedEnvIds.length > 0 ? `${addSelectedEnvIds.length} environment${addSelectedEnvIds.length !== 1 ? 's' : ''} selected` : '\u00A0'}</p>
 			</div>
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => showAddDialog = false}>Cancel</Button>
+			<Button variant="outline" onclick={() => showAddDialog = false}>取消</Button>
 			<Button
 				onclick={handleAdd}
 				disabled={adding || !addLabelName.trim() || addSelectedEnvIds.length === 0}

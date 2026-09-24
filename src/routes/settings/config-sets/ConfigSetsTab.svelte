@@ -40,7 +40,7 @@
 			configSets = await response.json();
 		} catch (error) {
 			console.error('Failed to fetch config sets:', error);
-			toast.error('Failed to fetch config sets');
+			toast.error('获取配置集失败');
 		} finally {
 			cfgLoading = false;
 		}
@@ -59,13 +59,13 @@
 
 			if (response.ok) {
 				await fetchConfigSets();
-				toast.success('Config set deleted');
+				toast.success('配置集已删除');
 			} else {
 				const data = await response.json();
-				toast.error(data.error || 'Failed to delete config set');
+				toast.error(data.error || '删除配置集失败');
 			}
 		} catch (error) {
-			toast.error('Failed to delete config set');
+			toast.error('删除配置集失败');
 		}
 	}
 
@@ -80,10 +80,8 @@
 			<div class="flex items-start gap-3">
 				<Layers class="w-5 h-5 text-muted-foreground mt-0.5" />
 				<div>
-					<p class="text-sm font-medium">What are config sets?</p>
-					<p class="text-xs text-muted-foreground mt-1">
-						Config sets are reusable templates for container configuration. Define common environment variables, labels, ports, and volumes once, then apply them when creating or editing containers. Values from config sets can be overwritten during container creation.
-					</p>
+					<p class="text-sm font-medium">什么是配置集？</p>
+					<p class="text-xs text-muted-foreground mt-1">配置集是用于容器配置的可重用模板。只需定义一次常用的环境变量、标签、端口和卷，即可在创建或编辑容器时应用它们。配置集中的值可以在容器创建期间被覆盖。</p>
 				</div>
 			</div>
 		</Card.Content>
@@ -96,21 +94,19 @@
 		<div class="flex gap-2">
 			{#if $canAccess('configsets', 'create')}
 				<Button size="sm" onclick={() => openCfgModal()}>
-					<Plus class="w-4 h-4" />
-					Add config set
-				</Button>
+					<Plus class="w-4 h-4" />添加配置集</Button>
 			{/if}
-			<Button size="sm" variant="outline" onclick={fetchConfigSets}>Refresh</Button>
+			<Button size="sm" variant="outline" onclick={fetchConfigSets}>刷新</Button>
 		</div>
 	</div>
 
 	{#if cfgLoading && configSets.length === 0}
-		<p class="text-muted-foreground text-sm">Loading config sets...</p>
+		<p class="text-muted-foreground text-sm">正在加载配置集…</p>
 	{:else if configSets.length === 0}
 		<EmptyState
 			icon={Layers}
-			title="No config sets found"
-			description="Create a reusable config set to get started"
+			title="未找到配置集"
+			description="创建可重用的配置集以开始使用"
 		/>
 	{:else}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -158,17 +154,15 @@
 									size="sm"
 									onclick={() => openCfgModal(cfg)}
 								>
-									<Pencil class="w-3 h-3" />
-									Edit
-								</Button>
+									<Pencil class="w-3 h-3" />编辑</Button>
 							{/if}
 							{#if $canAccess('configsets', 'delete')}
 								<ConfirmPopover
 									open={confirmDeleteConfigSetId === cfg.id}
-									action="Delete"
+									action="删除"
 									itemType="config set"
 									itemName={cfg.name}
-									title="Remove"
+									title="移除"
 									position="left"
 									onConfirm={() => deleteConfigSet(cfg.id)}
 									onOpenChange={(open) => confirmDeleteConfigSetId = open ? cfg.id : null}

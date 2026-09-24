@@ -31,8 +31,8 @@
 
 <div class="space-y-1">
 	<div class="flex items-center gap-3">
-		<Label>Colored grid buttons</Label>
+		<Label>彩色网格按钮</Label>
 		<TogglePill {checked} onchange={onToggle} />
 	</div>
-	<p class="text-xs text-muted-foreground">Use semantic colors instead of muted gray</p>
+	<p class="text-xs text-muted-foreground">使用语义色彩而非暗灰色。</p>
 </div>

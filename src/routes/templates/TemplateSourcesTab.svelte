@@ -29,7 +29,7 @@
 				sources = await response.json();
 			}
 		} catch {
-			toast.error('Failed to load template sources');
+			toast.error('加载模板源失败');
 		} finally {
 			loading = false;
 		}
@@ -50,7 +50,7 @@
 		} catch {
 			source.enabled = !newEnabled;
 			sources = sources;
-			toast.error('Failed to update source');
+			toast.error('更新源失败');
 		}
 	}
 
@@ -59,10 +59,10 @@
 			const response = await fetch(`/api/templates/sources?id=${source.id}`, { method: 'DELETE' });
 			if (!response.ok) throw new Error();
 			sources = sources.filter(s => s.id !== source.id);
-			toast.success('Source removed');
+			toast.success('来源已移除');
 			onSourcesChanged();
 		} catch {
-			toast.error('Failed to remove source');
+			toast.error('移除源失败');
 		}
 	}
 
@@ -80,10 +80,10 @@
 			newName = '';
 			newUrl = '';
 			addingNew = false;
-			toast.success('Source added');
+			toast.success('来源已添加');
 			onSourcesChanged();
 		} catch {
-			toast.error('Failed to add source');
+			toast.error('添加源失败');
 		}
 	}
 
@@ -107,7 +107,7 @@
 				const templates = Array.isArray(data) ? data : (data.templates || []);
 				validationResults.set(key, { ok: true, count: templates.length });
 			} catch (error) {
-				const msg = error instanceof Error ? error.message : 'Connection failed';
+				const msg = error instanceof Error ? error.message : '连接失败';
 				validationResults.set(key, { ok: false, error: msg });
 				failedCount++;
 			}
@@ -118,9 +118,9 @@
 		validating = false;
 
 		if (failedCount > 0) {
-			toast.warning(`${failedCount} source(s) failed validation`);
+			toast.warning(`${failedCount} 个源验证失败`);
 		} else {
-			toast.success('All sources are reachable');
+			toast.success('所有资源均可访问');
 		}
 	}
 
@@ -140,7 +140,7 @@
 		}
 		sources = sources;
 		if (disabled > 0) {
-			toast.success(`Disabled ${disabled} inactive source(s)`);
+			toast.success(`已禁用 ${disabled} 个非活动源`);
 			onSourcesChanged();
 		}
 	}
@@ -152,9 +152,7 @@
 
 <div class="space-y-4 max-w-3xl">
 	<div class="flex items-center justify-between">
-		<p class="text-sm text-muted-foreground">
-			Configure template catalog sources. Templates are fetched and cached for 1 hour.
-		</p>
+		<p class="text-sm text-muted-foreground">配置模板目录源。模板将被获取并缓存 1 小时。</p>
 		<div class="flex items-center gap-2">
 			<Button size="sm" variant="outline" onclick={validateAllSources} disabled={validating}>
 				{#if validating}
@@ -167,14 +165,10 @@
 			</Button>
 			{#if validationResults.size > 0 && [...validationResults.values()].some(v => !v.ok)}
 				<Button size="sm" variant="outline" onclick={disableInactive}>
-					<XCircle class="w-3.5 h-3.5 mr-1.5" />
-					Disable inactive
-				</Button>
+					<XCircle class="w-3.5 h-3.5 mr-1.5" />禁用非活动状态</Button>
 			{/if}
 			<Button size="sm" onclick={() => addingNew = !addingNew}>
-				<Plus class="w-3.5 h-3.5 mr-1.5" />
-				Add source
-			</Button>
+				<Plus class="w-3.5 h-3.5 mr-1.5" />添加来源</Button>
 		</div>
 	</div>
 
@@ -183,15 +177,15 @@
 			<Card.Content class="p-3">
 				<div class="flex items-end gap-3">
 					<div class="flex-1 space-y-1">
-						<label for="new-source-name" class="text-xs font-medium text-muted-foreground">Name</label>
-						<Input id="new-source-name" bind:value={newName} placeholder="My templates" class="h-8 text-sm" />
+						<label for="new-source-name" class="text-xs font-medium text-muted-foreground">名称</label>
+						<Input id="new-source-name" bind:value={newName} placeholder="我的模板" class="h-8 text-sm" />
 					</div>
 					<div class="flex-[2] space-y-1">
 						<label for="new-source-url" class="text-xs font-medium text-muted-foreground">URL</label>
 						<Input id="new-source-url" bind:value={newUrl} placeholder="https://example.com/templates.json" class="h-8 text-sm" />
 					</div>
-					<Button size="sm" onclick={addSource} disabled={!newName.trim() || !newUrl.trim()}>Add</Button>
-					<Button size="sm" variant="ghost" onclick={() => addingNew = false}>Cancel</Button>
+					<Button size="sm" onclick={addSource} disabled={!newName.trim() || !newUrl.trim()}>添加</Button>
+					<Button size="sm" variant="ghost" onclick={() => addingNew = false}>取消</Button>
 				</div>
 			</Card.Content>
 		</Card.Root>
@@ -199,9 +193,7 @@
 
 	{#if loading}
 		<div class="flex items-center justify-center py-8 text-muted-foreground">
-			<Loader2 class="w-5 h-5 animate-spin mr-2" />
-			Loading sources...
-		</div>
+			<Loader2 class="w-5 h-5 animate-spin mr-2" />正在加载源…</div>
 	{:else}
 		<div class="space-y-2">
 			{#each sources as source (source.id)}

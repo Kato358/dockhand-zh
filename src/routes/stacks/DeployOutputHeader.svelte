@@ -10,7 +10,7 @@
 	//   "<state icon> <verb> <stack icon> <name> on <env icon> <env> <status>"
 	// One component = one place to change sizing/spacing/fallback (no per-dialog drift).
 	interface Props {
-		// The action word, e.g. "Bringing down" or "Git deploy".
+		// The action word, e.g. "Bringing down" or "Git 部署".
 		verb: string;
 		stackName?: string;
 		// Icon value (lucide/selfhst/custom). When unset, StackIcon shows the generic Layers glyph.

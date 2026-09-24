@@ -82,9 +82,7 @@
 				size="sm"
 				class="h-6 px-2 text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/50"
 				onclick={onForceUpdate}
-			>
-				Update anyway
-			</Button>
+			>无论如何都要更新</Button>
 		{/if}
 	{/if}
 
@@ -94,7 +92,7 @@
 			type="button"
 			onclick={onToggleLogs}
 			class="p-1 hover:bg-muted rounded cursor-pointer"
-			title={showLogs ? 'Hide logs' : 'Show logs'}
+			title={showLogs ? 'Hide logs' : '显示日志'}
 		>
 			{#if showLogs}
 				<ChevronDown class="w-4 h-4 text-muted-foreground" />

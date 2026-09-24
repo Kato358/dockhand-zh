@@ -1,33 +1,33 @@
 <script lang="ts" module>
 	// Static data moved outside component to prevent recreation on each mount
 	const NETWORK_DRIVERS = [
-		{ value: 'bridge', label: 'Bridge', description: 'Default network driver' },
-		{ value: 'host', label: 'Host', description: 'Use host networking directly' },
-		{ value: 'overlay', label: 'Overlay', description: 'Swarm multi-host networking' },
-		{ value: 'macvlan', label: 'Macvlan', description: 'Assign MAC address to containers' },
-		{ value: 'ipvlan', label: 'IPvlan', description: 'IPvlan L2/L3 networking' },
-		{ value: 'none', label: 'None', description: 'Disable networking' }
+		{ value: 'bridge', label: '桥接', description: '默认网络驱动程序' },
+		{ value: 'host', label: '主机', description: '直接使用主机网络' },
+		{ value: 'overlay', label: 'Overlay', description: 'Swarm 多主机网络' },
+		{ value: 'macvlan', label: 'Macvlan', description: '为容器分配 MAC 地址' },
+		{ value: 'ipvlan', label: 'IPvlan', description: 'IPvLAN 二层/三层网络' },
+		{ value: 'none', label: '无', description: '禁用网络连接' }
 	] as const;
 
 	const COMMON_DRIVER_OPTIONS: Record<string, { key: string; description: string }[]> = {
 		bridge: [
-			{ key: 'com.docker.network.bridge.name', description: 'Bridge device name' },
-			{ key: 'com.docker.network.bridge.enable_ip_masquerade', description: 'Enable IP masquerading (true/false)' },
-			{ key: 'com.docker.network.bridge.enable_icc', description: 'Enable inter-container communication (true/false)' },
-			{ key: 'com.docker.network.bridge.host_binding_ipv4', description: 'Host binding IPv4 address' },
-			{ key: 'com.docker.network.driver.mtu', description: 'MTU size' }
+			{ key: 'com.docker.network.bridge.name', description: '桥接设备名称' },
+			{ key: 'com.docker.network.bridge.enable_ip_masquerade', description: '启用 IP 地址伪装（真/假）' },
+			{ key: 'com.docker.network.bridge.enable_icc', description: '启用容器间通信（真/假）' },
+			{ key: 'com.docker.network.bridge.host_binding_ipv4', description: '主机绑定 IPv4 地址' },
+			{ key: 'com.docker.network.driver.mtu', description: 'MTU尺寸' }
 		],
 		macvlan: [
-			{ key: 'parent', description: 'Parent interface (e.g., eth0)' },
-			{ key: 'macvlan_mode', description: 'Mode: bridge, private, vepa, passthru' }
+			{ key: 'parent', description: '父接口（例如 eth0）' },
+			{ key: 'macvlan_mode', description: '模式：桥接、专用、vepa、passthru' }
 		],
 		ipvlan: [
-			{ key: 'parent', description: 'Parent interface (e.g., eth0)' },
-			{ key: 'ipvlan_mode', description: 'Mode: l2, l3, l3s' },
-			{ key: 'ipvlan_flag', description: 'Flag: bridge, private, vepa' }
+			{ key: 'parent', description: '父接口（例如 eth0）' },
+			{ key: 'ipvlan_mode', description: '模式：l2、l3、l3s' },
+			{ key: 'ipvlan_flag', description: '标志：bridge、private、vepa' }
 		],
 		overlay: [
-			{ key: 'encrypted', description: 'Enable encryption (true/false)' }
+			{ key: 'encrypted', description: '启用加密（真/假）' }
 		]
 	};
 
@@ -232,14 +232,14 @@
 			const data = await response.json();
 
 			if (!response.ok) {
-				throw new Error(data.details || data.error || 'Failed to create network');
+				throw new Error(data.details || data.error || '创建网络失败');
 			}
 
 			resetForm();
 			open = false;
 			onSuccess?.();
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to create network';
+			error = err instanceof Error ? err.message : '创建网络失败';
 		} finally {
 			creating = false;
 		}
@@ -255,33 +255,28 @@
 	<Dialog.Content class="max-w-3xl max-h-[90vh] overflow-y-auto">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<Network class="w-5 h-5" />
-				Create network
-			</Dialog.Title>
-			<Dialog.Description>Configure a new Docker network with custom settings.</Dialog.Description>
+				<Network class="w-5 h-5" />创建网络</Dialog.Title>
+			<Dialog.Description>使用自定义设置配置新的 Docker 网络。</Dialog.Description>
 		</Dialog.Header>
 
 		<Tabs.Root value="basic" class="mt-4">
 			<Tabs.List class="grid w-full grid-cols-4">
 				<Tabs.Trigger value="basic" class="flex items-center gap-1.5 text-xs">
-					<Network class="w-3.5 h-3.5" />Basic
-				</Tabs.Trigger>
+					<Network class="w-3.5 h-3.5" />基础</Tabs.Trigger>
 				<Tabs.Trigger value="ipam" class="flex items-center gap-1.5 text-xs">
 					<Settings class="w-3.5 h-3.5" />IPAM
 				</Tabs.Trigger>
 				<Tabs.Trigger value="options" class="flex items-center gap-1.5 text-xs">
-					<Settings class="w-3.5 h-3.5" />Options
-				</Tabs.Trigger>
+					<Settings class="w-3.5 h-3.5" />选项</Tabs.Trigger>
 				<Tabs.Trigger value="labels" class="flex items-center gap-1.5 text-xs">
-					<Tag class="w-3.5 h-3.5" />Labels
-				</Tabs.Trigger>
+					<Tag class="w-3.5 h-3.5" />标签</Tabs.Trigger>
 			</Tabs.List>
 
 			<div class="min-h-[200px] sm:min-h-[300px] mt-4">
 				<!-- Basic Tab -->
 				<Tabs.Content value="basic" class="space-y-4 h-full overflow-y-auto">
 				<div class="space-y-2">
-					<Label for="name">Network name *</Label>
+					<Label for="name">网络名称 *</Label>
 					<Input
 						id="name"
 						bind:value={name}
@@ -295,7 +290,7 @@
 				</div>
 
 				<div class="space-y-2">
-					<Label for="driver">Driver</Label>
+					<Label for="driver">驱动</Label>
 					<Select.Root type="single" bind:value={driver}>
 						<Select.Trigger class="w-full h-9">
 							<span class="flex items-center">
@@ -352,7 +347,7 @@
 						</p>
 						<div class="grid grid-cols-2 gap-3">
 							<div class="space-y-1">
-								<Label for="parentInterface" class="text-xs">Parent interface *</Label>
+								<Label for="parentInterface" class="text-xs">父接口 *</Label>
 								<Input
 									id="parentInterface"
 									bind:value={parentInterface}
@@ -366,40 +361,36 @@
 							</div>
 							{#if driver === 'macvlan'}
 								<div class="space-y-1">
-									<Label for="macvlanMode" class="text-xs">Mode</Label>
+									<Label for="macvlanMode" class="text-xs">模式</Label>
 									<Select.Root type="single" bind:value={macvlanMode}>
 										<Select.Trigger class="h-8 text-xs">
 											<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />
-											<span>{macvlanMode === 'bridge' ? 'Bridge (default)' : macvlanMode === 'private' ? 'Private' : macvlanMode === 'vepa' ? 'VEPA' : 'Passthru'}</span>
+											<span>{macvlanMode === 'bridge' ? '桥接（默认）' : macvlanMode === 'private' ? '私有' : macvlanMode === 'vepa' ? 'VEPA' : '直通'}</span>
 										</Select.Trigger>
 										<Select.Content>
-											<Select.Item value="bridge" label="Bridge (default)">
-												<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />Bridge (default)
-											</Select.Item>
-											<Select.Item value="private" label="Private">
-												<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />Private
-											</Select.Item>
+											<Select.Item value="bridge" label="桥接（默认）">
+												<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />桥接（默认）</Select.Item>
+											<Select.Item value="private" label="私有">
+												<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />私有</Select.Item>
 											<Select.Item value="vepa" label="VEPA">
 												<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />VEPA
 											</Select.Item>
-											<Select.Item value="passthru" label="Passthru">
-												<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />Passthru
-											</Select.Item>
+											<Select.Item value="passthru" label="直通">
+												<Layers class="w-3 h-3 mr-1.5 text-muted-foreground" />直通</Select.Item>
 										</Select.Content>
 									</Select.Root>
 								</div>
 							{:else}
 								<div class="space-y-1">
-									<Label for="ipvlanMode" class="text-xs">Mode</Label>
+									<Label for="ipvlanMode" class="text-xs">模式</Label>
 									<Select.Root type="single" bind:value={ipvlanMode}>
 										<Select.Trigger class="h-8 text-xs">
 											<Share2 class="w-3 h-3 mr-1.5 text-muted-foreground" />
-											<span>{ipvlanMode === 'l2' ? 'L2 (default)' : ipvlanMode === 'l3' ? 'L3' : 'L3S'}</span>
+											<span>{ipvlanMode === 'l2' ? 'L2（默认）' : ipvlanMode === 'l3' ? 'L3' : 'L3S'}</span>
 										</Select.Trigger>
 										<Select.Content>
-											<Select.Item value="l2" label="L2 (default)">
-												<Share2 class="w-3 h-3 mr-1.5 text-muted-foreground" />L2 (default)
-											</Select.Item>
+											<Select.Item value="l2" label="L2（默认）">
+												<Share2 class="w-3 h-3 mr-1.5 text-muted-foreground" />L2（默认）</Select.Item>
 											<Select.Item value="l3" label="L3">
 												<Share2 class="w-3 h-3 mr-1.5 text-muted-foreground" />L3
 											</Select.Item>
@@ -413,7 +404,7 @@
 						</div>
 						<div class="grid grid-cols-2 gap-3">
 							<div class="space-y-1">
-								<Label for="subnetQuick" class="text-xs">Subnet *</Label>
+								<Label for="subnetQuick" class="text-xs">子网*</Label>
 								<Input
 									id="subnetQuick"
 									bind:value={subnet}
@@ -426,7 +417,7 @@
 								{/if}
 							</div>
 							<div class="space-y-1">
-								<Label for="gatewayQuick" class="text-xs">Gateway</Label>
+								<Label for="gatewayQuick" class="text-xs">网关</Label>
 								<Input id="gatewayQuick" bind:value={gateway} placeholder="192.168.1.1" class="h-8" />
 							</div>
 						</div>
@@ -437,24 +428,24 @@
 					<div class="flex items-center gap-3">
 						<TogglePill bind:checked={internal} />
 						<div>
-							<span class="text-sm font-normal">Internal network</span>
-							<span class="text-muted-foreground text-xs block">Restrict external access to this network</span>
+							<span class="text-sm font-normal">内部网络</span>
+							<span class="text-muted-foreground text-xs block">限制外部对此网络的访问</span>
 						</div>
 					</div>
 
 					<div class="flex items-center gap-3">
 						<TogglePill bind:checked={attachable} />
 						<div>
-							<span class="text-sm font-normal">Attachable</span>
-							<span class="text-muted-foreground text-xs block">Allow manual container attachment (overlay networks)</span>
+							<span class="text-sm font-normal">可附加</span>
+							<span class="text-muted-foreground text-xs block">允许手动连接容器（覆盖网络）</span>
 						</div>
 					</div>
 
 					<div class="flex items-center gap-3">
 						<TogglePill bind:checked={enableIPv6} />
 						<div>
-							<span class="text-sm font-normal">Enable IPv6</span>
-							<span class="text-muted-foreground text-xs block">Enable IPv6 networking</span>
+							<span class="text-sm font-normal">启用 IPv6</span>
+							<span class="text-muted-foreground text-xs block">启用 IPv6 网络</span>
 						</div>
 					</div>
 				</div>
@@ -463,41 +454,40 @@
 				<!-- IPAM Tab -->
 				<Tabs.Content value="ipam" class="space-y-4 h-full overflow-y-auto">
 				<div class="space-y-2">
-					<Label for="ipamDriver">IPAM driver</Label>
+					<Label for="ipamDriver">IPAM驱动程序</Label>
 					<Input id="ipamDriver" bind:value={ipamDriver} placeholder="default" />
-					<p class="text-xs text-muted-foreground">IP Address Management driver (default: default)</p>
+					<p class="text-xs text-muted-foreground">IP地址管理驱动程序（默认值：default）</p>
 				</div>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div class="space-y-2">
-						<Label for="subnet">Subnet</Label>
+						<Label for="subnet">子网</Label>
 						<Input id="subnet" bind:value={subnet} placeholder="172.20.0.0/16" />
 					</div>
 					<div class="space-y-2">
-						<Label for="gateway">Gateway</Label>
+						<Label for="gateway">网关</Label>
 						<Input id="gateway" bind:value={gateway} placeholder="172.20.0.1" />
 					</div>
 				</div>
 
 				<div class="space-y-2">
-					<Label for="ipRange">IP range</Label>
+					<Label for="ipRange">IP范围</Label>
 					<Input id="ipRange" bind:value={ipRange} placeholder="172.20.10.0/24" />
-					<p class="text-xs text-muted-foreground">Allocate container IPs from a sub-range of the subnet</p>
+					<p class="text-xs text-muted-foreground">从子网的子范围内分配容器 IP 地址</p>
 				</div>
 
 				<!-- Auxiliary Addresses -->
 				<div class="space-y-2">
 					<div class="flex items-center justify-between">
-						<Label>Auxiliary addresses</Label>
+						<Label>辅助地址</Label>
 						<Button variant="outline" size="sm" onclick={() => auxAddresses = addItem(auxAddresses)}>
-							<Plus class="w-3 h-3" />Add
-						</Button>
+							<Plus class="w-3 h-3" />添加</Button>
 					</div>
-					<p class="text-xs text-muted-foreground">Reserve IP addresses for network devices (e.g., host=192.168.1.1)</p>
+					<p class="text-xs text-muted-foreground">为网络设备保留 IP 地址（例如，host=192.168.1.1）</p>
 					{#each auxAddresses as aux, i}
 						<div class="flex gap-2 items-center">
 							<div class="flex-1 relative">
-								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">Hostname</span>
+								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">主机名</span>
 								<Input bind:value={aux.key} class="h-9" />
 							</div>
 							<div class="flex-1 relative">
@@ -514,19 +504,18 @@
 				<!-- IPAM Options -->
 				<div class="space-y-2">
 					<div class="flex items-center justify-between">
-						<Label>IPAM options</Label>
+						<Label>IPAM选项</Label>
 						<Button variant="outline" size="sm" onclick={() => ipamOptions = addItem(ipamOptions)}>
-							<Plus class="w-3 h-3" />Add
-						</Button>
+							<Plus class="w-3 h-3" />添加</Button>
 					</div>
 					{#each ipamOptions as opt, i}
 						<div class="flex gap-2 items-center">
 							<div class="flex-1 relative">
-								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">Key</span>
+								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">键</span>
 								<Input bind:value={opt.key} class="h-9" />
 							</div>
 							<div class="flex-1 relative">
-								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">Value</span>
+								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">值</span>
 								<Input bind:value={opt.value} class="h-9" />
 							</div>
 							<Button variant="ghost" size="sm" onclick={() => ipamOptions = removeItem(ipamOptions, i)}>
@@ -541,12 +530,11 @@
 				<Tabs.Content value="options" class="space-y-4 h-full overflow-y-auto">
 				<div class="space-y-2">
 					<div class="flex items-center justify-between">
-						<Label>Driver options</Label>
+						<Label>驱动选项</Label>
 						<Button variant="outline" size="sm" onclick={() => driverOptions = addItem(driverOptions)}>
-							<Plus class="w-3 h-3" />Add
-						</Button>
+							<Plus class="w-3 h-3" />添加</Button>
 					</div>
-					<p class="text-xs text-muted-foreground">Set driver-specific options (-o key=value)</p>
+					<p class="text-xs text-muted-foreground">设置驱动程序特定选项（-o key=value）</p>
 
 					{#if COMMON_DRIVER_OPTIONS[driver]?.length > 0}
 						<div class="bg-muted/50 rounded-md p-3 text-xs space-y-1">
@@ -560,11 +548,11 @@
 					{#each driverOptions as opt, i}
 						<div class="flex gap-2 items-center">
 							<div class="flex-1 relative">
-								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">Key</span>
+								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">键</span>
 								<Input bind:value={opt.key} class="h-9" />
 							</div>
 							<div class="flex-1 relative">
-								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">Value</span>
+								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">值</span>
 								<Input bind:value={opt.value} class="h-9" />
 							</div>
 							<Button variant="ghost" size="sm" onclick={() => driverOptions = removeItem(driverOptions, i)}>
@@ -579,21 +567,20 @@
 				<Tabs.Content value="labels" class="space-y-4 h-full overflow-y-auto">
 				<div class="space-y-2">
 					<div class="flex items-center justify-between">
-						<Label>Labels</Label>
+						<Label>标签</Label>
 						<Button variant="outline" size="sm" onclick={() => labels = addItem(labels)}>
-							<Plus class="w-3 h-3" />Add
-						</Button>
+							<Plus class="w-3 h-3" />添加</Button>
 					</div>
-					<p class="text-xs text-muted-foreground">Set metadata labels on the network</p>
+					<p class="text-xs text-muted-foreground">在网络上设置元数据标签</p>
 
 					{#each labels as label, i}
 						<div class="flex gap-2 items-center">
 							<div class="flex-1 relative">
-								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">Key</span>
+								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">键</span>
 								<Input bind:value={label.key} class="h-9" />
 							</div>
 							<div class="flex-1 relative">
-								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">Value</span>
+								<span class="absolute -top-2 left-2 text-2xs text-muted-foreground bg-background px-1">值</span>
 								<Input bind:value={label.value} class="h-9" />
 							</div>
 							<Button variant="ghost" size="sm" onclick={() => labels = removeItem(labels, i)}>
@@ -602,7 +589,7 @@
 						</div>
 					{/each}
 					{#if labels.length === 0}
-						<p class="text-xs text-muted-foreground italic">No labels configured</p>
+						<p class="text-xs text-muted-foreground italic">未配置任何标签</p>
 					{/if}
 				</div>
 				</Tabs.Content>
@@ -619,12 +606,12 @@
 		{#if errors.name || errors.parentInterface || errors.subnet}
 			<Alert.Root variant="destructive" class="mt-4">
 				<TriangleAlert class="h-4 w-4" />
-				<Alert.Description>Please fix the validation errors above</Alert.Description>
+				<Alert.Description>请修正上述验证错误。</Alert.Description>
 			</Alert.Root>
 		{/if}
 
 		<Dialog.Footer class="mt-6">
-			<Button variant="outline" onclick={handleClose} disabled={creating}>Cancel</Button>
+			<Button variant="outline" onclick={handleClose} disabled={creating}>取消</Button>
 			<Button onclick={handleSubmit} disabled={creating}>
 				{#if creating}Creating...{:else}Create network{/if}
 			</Button>

@@ -141,7 +141,7 @@
 	let errors = $state<{ stackName?: string; compose?: string }>({});
 	let composeContent = $state('');
 	// Whether the current compose content declares a build: section for any service --
-	// pre-checks "Build images" in the Save & redeploy / Create & Start popover
+	// pre-checks "构建镜像" in the Save & redeploy / Create & Start popover
 	// (RedeployPopover's defaultBuild). Logic lives in compose-build-detect.ts, not
 	// inline, so it has its own unit test independent of mounting this component.
 	let hasBuildSection = $derived(detectBuildSection(composeContent));
@@ -418,7 +418,7 @@
 			}
 		} catch (e) {
 			if (seq !== validateSeq) return; // superseded - don't clobber a newer report
-			validateError = e instanceof Error ? e.message : 'Validation failed';
+			validateError = e instanceof Error ? e.message : '验证失败';
 			validateReport = null;
 		} finally {
 			if (seq === validateSeq) validateLoading = false;
@@ -543,7 +543,7 @@
 	let showPathChangeConfirm = $state(false);
 	let pathChangeOldDir = $state<string | null>(null); // Old directory to move files from
 	let pathChangeFileCount = $state(0); // Number of files in old directory
-	let pendingSaveRestart = $state(false); // Whether user clicked "Save & restart" vs "Save"
+	let pendingSaveRestart = $state(false); // Whether user clicked "Save & restart" vs "保存"
 	// Pull/build/forceRecreate chosen in the "Save & redeploy" RedeployPopover (see
 	// handleSave below) -- carried across the path-change confirmation dialog the same
 	// way pendingSaveRestart is, so re-entering handleSave() after the user confirms a
@@ -586,7 +586,7 @@
 
 	function openEnvBrowser() {
 		fileBrowserConfig = {
-			title: 'Select environment file or directory',
+			title: '选择环境文件或目录',
 			selectFilter: /\.env($|\.)/,  // matches .env, .env.local, app.env, etc.
 			selectMode: 'file_or_directory',
 			onSelect: handleEnvSelect
@@ -597,7 +597,7 @@
 	function openChangeLocationBrowser() {
 		const displayName = mode === 'edit' ? stackName : newStackName;
 		fileBrowserConfig = {
-			title: `Relocate ${displayName}`,
+			title: `重新定位 ${displayName}`,
 			icon: FolderSync,
 			selectMode: 'directory',
 			onSelect: handleChangeLocation
@@ -618,7 +618,7 @@
 	let showPersistenceWarn = $state(false);
 	let persistenceWarnText = $state('');
 	let pendingHasFilesToMove = $state(false);
-	// Continuation run when the user accepts the persistence warning ("Use it anyway").
+	// Continuation run when the user accepts the persistence warning ("无论如何都要用它").
 	// Lets create / save / relocate share one dialog: each stashes what to do next.
 	let persistenceWarnProceed: (() => void) | null = null;
 
@@ -708,7 +708,7 @@
 		isDirty = true;
 	}
 
-	// "Use it anyway". A continuation (create/save) runs first; otherwise this is the
+	// "无论如何都要用它". A continuation (create/save) runs first; otherwise this is the
 	// change-location flow, so continue to the move dialog or commit the new path.
 	function confirmPersistenceWarn() {
 		showPersistenceWarn = false;
@@ -775,7 +775,7 @@
 
 			if (!response.ok) {
 				const data = await response.json();
-				throw new Error((typeof data.error === 'string' ? data.error : data.message) || 'Failed to move files');
+				throw new Error((typeof data.error === 'string' ? data.error : data.message) || '文件移动失败');
 			}
 
 			const result = await response.json();
@@ -802,7 +802,7 @@
 
 		} catch (e: any) {
 			operationError = {
-				title: 'Failed to move files',
+				title: '文件移动失败',
 				message: e.message || 'An error occurred while moving files'
 			};
 		} finally {
@@ -1199,7 +1199,7 @@
 		} catch (e) {
 			if (seq !== probeSeq) return;
 			providerKeySet = new Set();
-			probeError = e instanceof Error ? e.message : 'Provider check failed';
+			probeError = e instanceof Error ? e.message : '提供商检查失败';
 		}
 		updateEditorMarkers();
 	}
@@ -1620,7 +1620,7 @@
 			requestBody.secretProviderId = formSecretProviderId;
 
 			// Only meaningful when start is true -- deployOptions is undefined for the
-			// plain "Create" button, which never reaches deployStack server-side anyway.
+			// plain "创建" button, which never reaches deployStack server-side anyway.
 			if (start && deployOptions) {
 				requestBody.pull = deployOptions.pull;
 				requestBody.build = deployOptions.build;
@@ -1647,15 +1647,15 @@
 			);
 
 			if (!response.ok && !data.success) {
-				throw new Error((typeof data.error === 'string' ? data.error : data.message) || 'Failed to create stack');
+				throw new Error((typeof data.error === 'string' ? data.error : data.message) || '创建编排失败');
 			}
 			if (data.success === false) {
-				throw new Error(data.error || 'Failed to create stack');
+				throw new Error(data.error || '创建编排失败');
 			}
 
 			await persistPendingIcon(newStackName.trim(), envId);
 
-			toast.success(`Created stack "${newStackName.trim()}"`);
+			toast.success(`创建编排“${newStackName.trim()}”`);
 			onSuccess();
 			switch (saveCloseTiming(start, Boolean(data.success))) {
 				case 'close':
@@ -1680,7 +1680,7 @@
 			// output panel exists to show.
 			if (start && outputRunning) finishOutput(undefined, false);
 			operationError = {
-				title: 'Failed to create stack',
+				title: '创建编排失败',
 				message: e.message || 'An error occurred while creating the stack',
 				details: e.details
 			};
@@ -1800,7 +1800,7 @@
 			requestBody.secretProviderId = formSecretProviderId;
 
 			// Only meaningful when restart is true -- deployOptions is undefined for the
-			// plain "Save" button, which never reaches deployStack server-side anyway.
+			// plain "保存" button, which never reaches deployStack server-side anyway.
 			if (restart && deployOptions) {
 				requestBody.pull = deployOptions.pull;
 				requestBody.build = deployOptions.build;
@@ -1819,8 +1819,8 @@
 			);
 
 			if (!rawEnvResponse.ok) {
-				const rawEnvError = await rawEnvResponse.json().catch(() => ({ error: 'Failed to save environment file' }));
-				throw new Error((typeof rawEnvError.error === 'string' ? rawEnvError.error : rawEnvError.message) || 'Failed to save environment file');
+				const rawEnvError = await rawEnvResponse.json().catch(() => ({ error: '环境文件保存失败' }));
+				throw new Error((typeof rawEnvError.error === 'string' ? rawEnvError.error : rawEnvError.message) || '环境文件保存失败');
 			}
 
 			// Save secrets to DB (non-secrets live in the .env file written above). Run this
@@ -1883,7 +1883,7 @@
 				// On the restart path the server persists the compose+env BEFORE deploying,
 				// so a success:false here is a failed DEPLOY, not a failed save -- the content
 				// is already on disk. Clear the dirty flag so the footer doesn't claim
-				// "Unsaved changes" for edits that were in fact saved; the deploy error still
+				// "未保存的更改" for edits that were in fact saved; the deploy error still
 				// surfaces via the throw below. (Plain save keeps isDirty on a real save fail.)
 				if (restart) isDirty = false;
 				throw new Error(data.error || 'Failed to save compose file');
@@ -2018,7 +2018,7 @@
 			validateSeq++;
 			// Same reasoning for the docked deploy output: without this, reopening the
 			// modal for a *different* stack would still show the previous stack's title,
-			// lines and status ("Redeploying A" / "Succeeded" while looking at stack B).
+			// lines and status ("Redeploying A" / "成功" while looking at stack B).
 			// A reopen of the *same* stack while its own deploy is still running loses the
 			// lines accumulated so far, but only until the next line arrives (the poll loop
 			// in sse-fetch.ts keeps running regardless of this modal's open state, same as
@@ -2169,7 +2169,7 @@
 						     repo content, so it stays editable even for a read-only git stack. -->
 						<button
 							type="button"
-							title="Change stack icon"
+							title="更改编排图标"
 							onclick={() => (showIconPicker = true)}
 							class="p-1.5 rounded-md bg-zinc-200 dark:bg-zinc-700 hover:ring-2 hover:ring-primary transition-shadow"
 						>
@@ -2223,15 +2223,13 @@
 				class="relative -mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors {activeTab === 'editor' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
 				onclick={() => activeTab = 'editor'}
 			>
-				<Code class="h-3.5 w-3.5" /> Editor
-			</button>
+				<Code class="h-3.5 w-3.5" />编辑</button>
 			<button
 				type="button"
 				class="relative -mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors {activeTab === 'graph' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
 				onclick={() => activeTab = 'graph'}
 			>
-				<GitGraph class="h-3.5 w-3.5" /> Graph
-			</button>
+				<GitGraph class="h-3.5 w-3.5" />图形</button>
 			<!-- BETA GATE: Backups tab hidden unless FEAT_BACKUPS_ENABLED (see features.ts).
 			     Also hidden for UNTRACKED stacks: with no known compose file the backup
 			     would be incomplete (can't redeploy at restore), so the backend refuses
@@ -2292,14 +2290,14 @@
 				<div class="flex-1 flex items-center justify-center">
 					<div class="flex items-center gap-3 text-zinc-400 dark:text-zinc-500">
 						<Loader2 class="w-5 h-5 animate-spin" />
-						<span>Loading compose file...</span>
+						<span>正在加载compose文件…</span>
 					</div>
 				</div>
 			{:else}
 				<!-- Tags (edit mode: stack has a stable name+env key) -->
 				{#if mode === 'edit' && stackName}
 					<div class="px-6 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center gap-2 flex-wrap">
-						<Label class="text-xs text-zinc-500 dark:text-zinc-400">Tags</Label>
+						<Label class="text-xs text-zinc-500 dark:text-zinc-400">标签</Label>
 						<StackTagsSection {stackName} envId={$currentEnvironment?.id ?? null} />
 					</div>
 				{/if}
@@ -2309,7 +2307,7 @@
 					<div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700">
 						<div class="flex gap-4 items-start">
 							<div class="flex-1 max-w-xs space-y-1">
-								<Label for="stack-name">Stack name</Label>
+								<Label for="stack-name">编排名称</Label>
 								<Input
 									id="stack-name"
 									bind:value={newStackName}
@@ -2332,11 +2330,10 @@
 							<AlertCircle class="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
 							<div class="flex-1 min-w-0">
 								<p class="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
-									<span class="font-medium text-amber-800 dark:text-amber-300">Untracked stack</span> — this stack is running in Docker but Dockhand doesn't know where its compose file is stored on disk. Browse to locate the file to start editing and managing it.
-								</p>
+									<span class="font-medium text-amber-800 dark:text-amber-300">未跟踪编排</span>— 此编排运行在 Docker 中，但 Dockhand 不知道其 compose 文件在磁盘上的存储位置。请浏览找到该文件，以便开始编辑和管理它。</p>
 								{#if stackContainers.length > 0}
 									<div class="text-xs text-zinc-500 dark:text-zinc-400">
-										<span class="font-medium text-zinc-700 dark:text-zinc-300">Running containers:</span>
+										<span class="font-medium text-zinc-700 dark:text-zinc-300">正在运行的容器：</span>
 										<div class="mt-1.5 flex flex-wrap gap-1.5">
 											{#each stackContainers as container}
 												<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs {container.state === 'running' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'}">
@@ -2359,8 +2356,7 @@
 						<div class="flex items-center border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/30">
 							{#if readonly}
 								<span class="ml-4 flex shrink-0 items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 text-2xs font-medium text-purple-600 dark:text-purple-400" title="This is a Git-managed stack — Dockhand shows its compose read-only; edit it in the repository.">
-									<GitBranch class="h-3 w-3" /> Git · read-only
-								</span>
+									<GitBranch class="h-3 w-3" />Git · 只读</span>
 								{#if gitInfo && (gitInfo.commit || gitInfo.url || gitInfo.branch)}
 									<div class="ml-3 flex min-w-0 items-center gap-3 text-2xs text-muted-foreground">
 										{#if gitInfo.commit}
@@ -2393,7 +2389,7 @@
 							<!-- Compose path -->
 							<div class="flex-shrink-0 px-4 py-2" style="width: {splitRatio}%">
 								<PathBarItem
-									label="Compose file"
+									label="Compose 文件"
 									path={workingComposePath || null}
 									placeholder="/path/to/compose.yaml"
 									copied={composePathCopied}
@@ -2409,10 +2405,10 @@
 							<!-- Env path -->
 							<div class="flex-1 min-w-0 px-4 py-2 bg-zinc-100/50 dark:bg-zinc-800/50">
 								<PathBarItem
-									label="Env file"
+									label="环境文件"
 									path={displayEnvPath || null}
 									selectedPath={workingEnvPath || suggestedEnvPath || ''}
-									placeholder="/path/to/.env (optional)"
+									placeholder="/path/to/.env（可选）"
 									copied={envPathCopied}
 									onCopy={() => copyText(displayEnvPath, (v) => envPathCopied = v)}
 									onBrowse={readonly ? undefined : openEnvBrowser}
@@ -2450,27 +2446,21 @@
 										{#if readonly && needsFileLocation && !composeContent}
 											<div class="h-full rounded-md border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/30 flex flex-col items-center justify-center text-center px-8">
 												<GitGraph class="w-12 h-12 text-zinc-300 dark:text-zinc-600 mb-4" />
-												<h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Compose file not available</h3>
-												<p class="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm">
-													Deploy or sync this Git stack first so Dockhand has a local copy of its compose file.
-												</p>
+												<h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Compose 文件不可用</h3>
+												<p class="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm">首先部署或同步此 Git 编排，以便 Dockhand 拥有其 compose 文件的本地副本。</p>
 											</div>
 										{:else if needsFileLocation && !composeContent}
 											<!-- Empty state for untracked stacks -->
 											<div class="h-full rounded-md border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/30 flex flex-col items-center justify-center text-center px-8">
 												<FolderOpen class="w-12 h-12 text-zinc-300 dark:text-zinc-600 mb-4" />
-												<h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">No compose file selected</h3>
-												<p class="text-xs text-zinc-500 dark:text-zinc-400 mb-4 max-w-sm">
-													Browse to locate the compose file for this stack. The editor will load the file contents once selected.
-												</p>
+												<h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">未选择任何Compose 文件</h3>
+												<p class="text-xs text-zinc-500 dark:text-zinc-400 mb-4 max-w-sm">浏览找到此编排的compose文件。选中后，编辑器将加载文件内容。</p>
 												<Button variant="outline" size="sm" onclick={openComposeBrowser}>
-													<FolderOpen class="w-4 h-4" />
-													Browse for compose file
-												</Button>
+													<FolderOpen class="w-4 h-4" />浏览 compose 文件</Button>
 												<!-- Info box explaining what happens -->
 												<div class="mt-6 max-w-md flex items-start gap-2.5 text-xs bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md px-3 py-2.5 text-left">
 													<Info class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-													<span><span class="font-medium text-amber-600 dark:text-amber-400">What happens when you select a file:</span> <span class="text-zinc-600 dark:text-zinc-400">Dockhand will track this compose file, letting you edit, start, and stop the stack from the UI. Your files stay in their current location.</span></span>
+													<span><span class="font-medium text-amber-600 dark:text-amber-400">选择文件后会发生什么：</span> <span class="text-zinc-600 dark:text-zinc-400">Dockhand 会跟踪此Compose 文件，允许您通过用户界面编辑、启动和停止编排。您的文件将保留在当前位置。</span></span>
 												</div>
 											</div>
 										{:else}
@@ -2483,7 +2473,7 @@
 														class="h-6 px-2 text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
 														onclick={runComposeValidate}
 														disabled={!composeContent}
-														title="Check this compose for problems before deploy"
+														title="部署前请检查此配置是否存在问题。"
 													>
 														{#if validateLoading}
 															<Loader2 class="w-3 h-3 animate-spin" />
@@ -2504,7 +2494,7 @@
 																<Tooltip.Trigger>
 																	<XCircle class="w-3 h-3 text-red-500" />
 																</Tooltip.Trigger>
-																<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+																<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 															</Tooltip.Root>
 															Failed
 														{:else if composeContentCopied === 'ok'}
@@ -2665,7 +2655,7 @@
 						<button
 							type="button"
 							onclick={closeOutput}
-							title="Close output"
+							title="关闭输出"
 							class="ml-auto p-0.5 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
 						>
 							<X class="w-3.5 h-3.5" />
@@ -2690,7 +2680,7 @@
 				{#if readonly}
 					Read-only
 				{:else if isDirty}
-					<span class="text-amber-600 dark:text-amber-500">Unsaved changes</span>
+					<span class="text-amber-600 dark:text-amber-500">未保存的更改</span>
 				{:else}
 					No changes
 				{/if}
@@ -2698,11 +2688,9 @@
 
 			<div class="flex items-center gap-2">
 				{#if readonly}
-					<Button onclick={tryClose}>Close</Button>
+					<Button onclick={tryClose}>关闭</Button>
 				{:else}
-					<Button variant="outline" onclick={tryClose} disabled={saving}>
-						Cancel
-					</Button>
+					<Button variant="outline" onclick={tryClose} disabled={saving}>取消</Button>
 				{/if}
 
 				{#if !readonly && mode === 'create'}
@@ -2799,24 +2787,20 @@
 	</Dialog.Content>
 </Dialog.Root>
 
-<IconPickerModal bind:open={showIconPicker} value={formIcon} onselect={onIconSelect} title="Choose a stack icon" />
+<IconPickerModal bind:open={showIconPicker} value={formIcon} onselect={onIconSelect} title="选择编排图标" />
 
 <!-- Unsaved changes confirmation dialog -->
 <Dialog.Root bind:open={showConfirmClose}>
 	<Dialog.Content class="max-w-sm">
 		<Dialog.Header>
-			<Dialog.Title>Unsaved changes</Dialog.Title>
-			<Dialog.Description>
-				You have unsaved changes. Are you sure you want to close without saving?
-			</Dialog.Description>
+			<Dialog.Title>未保存的更改</Dialog.Title>
+			<Dialog.Description>您有未保存的更改。您确定要在不保存的情况下关闭吗？</Dialog.Description>
 		</Dialog.Header>
 		<div class="flex justify-end gap-1.5 mt-4">
 			<Button variant="outline" size="sm" onclick={() => showConfirmClose = false}>
 				Continue editing
 			</Button>
-			<Button variant="destructive" size="sm" onclick={discardAndClose}>
-				Discard changes
-			</Button>
+			<Button variant="destructive" size="sm" onclick={discardAndClose}>放弃更改</Button>
 		</div>
 	</Dialog.Content>
 </Dialog.Root>
@@ -2825,7 +2809,7 @@
 <Dialog.Root bind:open={showPathChangeConfirm}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Move stack files?</Dialog.Title>
+			<Dialog.Title>移动编排文件？</Dialog.Title>
 			<Dialog.Description>
 				You've changed the stack location. There {pathChangeFileCount === 1 ? 'is' : 'are'} {pathChangeFileCount} file{pathChangeFileCount === 1 ? '' : 's'} in the old location that can be moved to the new location.
 			</Dialog.Description>
@@ -2838,20 +2822,12 @@
 				</div>
 			</div>
 		{/if}
-		<p class="text-sm text-muted-foreground">
-			Would you like to move all files to the new location, or leave them in place?
-		</p>
+		<p class="text-sm text-muted-foreground">您是想将所有文件移动到新位置，还是保留在原位置？</p>
 		<div class="flex justify-end gap-1.5 mt-4">
-			<Button variant="outline" size="sm" onclick={() => showPathChangeConfirm = false}>
-				Cancel
-			</Button>
-			<Button variant="secondary" size="sm" onclick={confirmPathChangeKeepFiles}>
-				Leave files
-			</Button>
+			<Button variant="outline" size="sm" onclick={() => showPathChangeConfirm = false}>取消</Button>
+			<Button variant="secondary" size="sm" onclick={confirmPathChangeKeepFiles}>留下文件</Button>
 			<Button variant="default" size="sm" onclick={confirmPathChangeAndMove}>
-				<ArrowRight class="w-3.5 h-3.5" />
-				Move files
-			</Button>
+				<ArrowRight class="w-3.5 h-3.5" />移动文件</Button>
 		</div>
 	</Dialog.Content>
 </Dialog.Root>
@@ -2860,33 +2836,27 @@
 <Dialog.Root bind:open={showBrowseConfirm}>
 	<Dialog.Content class="max-w-lg">
 		<Dialog.Header>
-			<Dialog.Title>Replace editor content?</Dialog.Title>
-			<Dialog.Description>
-				Loading a different compose file will replace the current editor content.
-			</Dialog.Description>
+			<Dialog.Title>替换编辑器内容？</Dialog.Title>
+			<Dialog.Description>加载不同的 compose 文件会替换当前编辑器内容。</Dialog.Description>
 		</Dialog.Header>
 		<div class="my-3 space-y-2 text-sm">
 			<div class="flex items-start gap-2 text-muted-foreground">
-				<span class="text-xs font-medium text-zinc-500 shrink-0 pt-0.5">Current:</span>
+				<span class="text-xs font-medium text-zinc-500 shrink-0 pt-0.5">当前的：</span>
 				<code class="text-xs font-mono bg-muted px-1.5 py-0.5 rounded break-all">
 					{workingComposePath || '(unsaved)'}
 				</code>
 			</div>
 			<div class="flex items-start gap-2">
 				<ArrowRight class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-				<span class="text-xs font-medium text-zinc-500 shrink-0 pt-0.5">New:</span>
+				<span class="text-xs font-medium text-zinc-500 shrink-0 pt-0.5">新的：</span>
 				<code class="text-xs font-mono bg-muted px-1.5 py-0.5 rounded break-all">
 					{pendingBrowsePath}
 				</code>
 			</div>
 		</div>
 		<div class="flex justify-end gap-1.5 mt-4">
-			<Button variant="outline" size="sm" onclick={cancelBrowseConfirm}>
-				Cancel
-			</Button>
-			<Button variant="default" size="sm" onclick={confirmBrowseAndLoad}>
-				Replace content
-			</Button>
+			<Button variant="outline" size="sm" onclick={cancelBrowseConfirm}>取消</Button>
+			<Button variant="default" size="sm" onclick={confirmBrowseAndLoad}>替换内容</Button>
 		</div>
 	</Dialog.Content>
 </Dialog.Root>
@@ -2896,20 +2866,14 @@
 	<Dialog.Content class="max-w-lg">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<TriangleAlert class="w-5 h-5 text-amber-500 shrink-0" />
-				This location isn't persisted
-			</Dialog.Title>
+				<TriangleAlert class="w-5 h-5 text-amber-500 shrink-0" />此位置信息不会被保存。</Dialog.Title>
 		</Dialog.Header>
 		<p class="text-sm text-muted-foreground mt-1">
 			{persistenceWarnText}
 		</p>
 		<div class="flex justify-end gap-1.5 mt-4">
-			<Button variant="default" size="sm" onclick={cancelPersistenceWarn}>
-				Pick another location
-			</Button>
-			<Button variant="outline" size="sm" onclick={confirmPersistenceWarn}>
-				Use it anyway
-			</Button>
+			<Button variant="default" size="sm" onclick={cancelPersistenceWarn}>选择其他地点</Button>
+			<Button variant="outline" size="sm" onclick={confirmPersistenceWarn}>无论如何都要用它</Button>
 		</div>
 	</Dialog.Content>
 </Dialog.Root>
@@ -2919,16 +2883,14 @@
 	<Dialog.Content class="max-w-lg">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<FolderSync class="w-5 h-5" />
-				Relocate stack?
-			</Dialog.Title>
+				<FolderSync class="w-5 h-5" />重定位编排？</Dialog.Title>
 			<Dialog.Description>
 				All {changeLocationFileCount} file{changeLocationFileCount === 1 ? '' : 's'} in the stack folder will be moved.
 			</Dialog.Description>
 		</Dialog.Header>
 		<div class="my-3 space-y-1 text-sm">
 			<div class="flex items-start gap-2 text-muted-foreground">
-				<span class="text-xs font-medium text-zinc-500 shrink-0 w-10">From</span>
+				<span class="text-xs font-medium text-zinc-500 shrink-0 w-10">从</span>
 				<code class="text-xs font-mono bg-muted px-1.5 py-0.5 rounded break-all">
 					{changeLocationOldDir}
 				</code>
@@ -2937,16 +2899,14 @@
 				<ArrowDown class="w-4 h-4 text-amber-500" />
 			</div>
 			<div class="flex items-start gap-2">
-				<span class="text-xs font-medium text-zinc-500 shrink-0 w-10">To</span>
+				<span class="text-xs font-medium text-zinc-500 shrink-0 w-10">到</span>
 				<code class="text-xs font-mono bg-muted px-1.5 py-0.5 rounded break-all">
 					{pendingNewLocation}
 				</code>
 			</div>
 		</div>
 		<div class="flex justify-end gap-1.5 mt-4">
-			<Button variant="outline" size="sm" onclick={cancelChangeLocation} disabled={movingLocation}>
-				Cancel
-			</Button>
+			<Button variant="outline" size="sm" onclick={cancelChangeLocation} disabled={movingLocation}>取消</Button>
 			<Button variant="default" size="sm" onclick={confirmChangeLocation} disabled={movingLocation}>
 				{#if movingLocation}
 					<Loader2 class="w-3.5 h-3.5 animate-spin" />
@@ -2965,9 +2925,7 @@
 	<Dialog.Content class="max-w-sm">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<TriangleAlert class="w-5 h-5 text-amber-500" />
-				Stack already exists
-			</Dialog.Title>
+				<TriangleAlert class="w-5 h-5 text-amber-500" />编排已存在</Dialog.Title>
 			<Dialog.Description>
 				A stack named "{newStackName}" already exists. Please choose a different name.
 			</Dialog.Description>

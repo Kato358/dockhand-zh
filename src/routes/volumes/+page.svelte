@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Volumes - Dockhand</title>
+	<title>存储卷 - Dockhand</title>
 </svelte:head>
 
 <script lang="ts">
@@ -69,8 +69,8 @@
 
 	// Usage filter options (static)
 	const usageOptions = [
-		{ value: 'in-use', label: 'In use', icon: CircleDot, color: 'text-emerald-500' },
-		{ value: 'unused', label: 'Unused', icon: Circle, color: 'text-muted-foreground' }
+		{ value: 'in-use', label: '使用中', icon: CircleDot, color: 'text-emerald-500' },
+		{ value: 'unused', label: '未使用', icon: Circle, color: 'text-muted-foreground' }
 	];
 
 	// Confirmation popover state
@@ -261,7 +261,7 @@
 			volumes = await response.json();
 		} catch (error) {
 			console.error('Failed to fetch volumes:', error);
-			toast.error('Failed to load volumes');
+			toast.error('卷加载失败');
 		} finally {
 			loading = false;
 		}
@@ -273,20 +273,20 @@
 			const response = await fetch(appendEnvParam(`/api/volumes/${encodeURIComponent(name)}?force=true`, envId), { method: 'DELETE' });
 			if (!response.ok) {
 				const data = await response.json();
-				deleteError = { name, message: data.details || data.error || 'Failed to remove volume' };
-				toast.error(`Failed to remove ${name}`);
+				deleteError = { name, message: data.details || data.error || '删除卷失败' };
+				toast.error(`删除 ${name} 失败`);
 				// Auto-hide error after 5 seconds
 				pendingTimeouts.push(setTimeout(() => {
 					if (deleteError?.name === name) deleteError = null;
 				}, 5000));
 				return;
 			}
-			toast.success(`Removed ${name}`);
+			toast.success(`已移除 ${name}`);
 			await fetchVolumes();
 		} catch (error) {
 			console.error('Failed to remove volume:', error);
-			deleteError = { name, message: 'Failed to remove volume' };
-			toast.error(`Failed to remove ${name}`);
+			deleteError = { name, message: '删除卷失败' };
+			toast.error(`删除 ${name} 失败`);
 			pendingTimeouts.push(setTimeout(() => {
 				if (deleteError?.name === name) deleteError = null;
 			}, 5000));
@@ -335,10 +335,10 @@
 			link.click();
 			document.body.removeChild(link);
 
-			toast.success(`Exporting ${volumeName}...`);
+			toast.success(`正在导出 ${volumeName}…`);
 		} catch (err) {
 			console.error('Failed to export volume:', err);
-			toast.error(`Failed to export ${volumeName}`);
+			toast.error(`导出 ${volumeName} 失败`);
 		} finally {
 			pendingTimeouts.push(setTimeout(() => {
 				if (exportingVolume === volumeName) exportingVolume = null;
@@ -355,15 +355,15 @@
 			});
 			if (response.ok) {
 				pruneStatus = 'success';
-				toast.success('Unused volumes pruned');
+				toast.success('已清理未使用的卷');
 				await fetchVolumes();
 			} else {
 				pruneStatus = 'error';
-				toast.error('Failed to prune volumes');
+				toast.error('卷清理失败');
 			}
 		} catch (error) {
 			pruneStatus = 'error';
-			toast.error('Failed to prune volumes');
+			toast.error('卷清理失败');
 		}
 		pendingTimeouts.push(setTimeout(() => {
 			pruneStatus = 'idle';
@@ -422,13 +422,13 @@
 
 <div class="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
-		<PageHeader icon={HardDrive} title="Volumes" count={volumes.length} />
+		<PageHeader icon={HardDrive} title="存储卷" count={volumes.length} />
 		<div class="flex flex-wrap items-center gap-2">
-			<SearchInput bind:value={searchInput} placeholder="Search volumes..." class="h-8 w-48 text-sm" />
+			<SearchInput bind:value={searchInput} placeholder="搜索量…" class="h-8 w-48 text-sm" />
 			<MultiSelectFilter
 				bind:value={driverFilter}
 				options={driverOptions}
-				placeholder="Driver"
+				placeholder="驱动"
 				pluralLabel="drivers"
 				width="w-28"
 				defaultIcon={Database}
@@ -436,7 +436,7 @@
 			<MultiSelectFilter
 				bind:value={usageFilter}
 				options={usageOptions}
-				placeholder="Usage"
+				placeholder="用法"
 				pluralLabel="usages"
 				width="w-28"
 				defaultIcon={CircleDot}
@@ -444,9 +444,9 @@
 			{#if $canAccess('volumes', 'remove')}
 			<ConfirmPopover
 				open={confirmPrune}
-				action="Prune"
+				action="清理"
 				itemType="unused volumes"
-				title="Prune volumes"
+				title="清理卷"
 				position="left"
 				onConfirm={pruneVolumes}
 				onOpenChange={(open) => confirmPrune = open}
@@ -468,12 +468,10 @@
 				{/snippet}
 			</ConfirmPopover>
 			{/if}
-			<Button size="sm" variant="outline" onclick={fetchVolumes}>Refresh</Button>
+			<Button size="sm" variant="outline" onclick={fetchVolumes}>刷新</Button>
 			{#if $canAccess('volumes', 'create')}
 			<Button size="sm" variant="secondary" onclick={() => showCreateModal = true}>
-				<Plus class="w-3.5 h-3.5" />
-				Create
-			</Button>
+				<Plus class="w-3.5 h-3.5" />创建</Button>
 			{/if}
 		</div>
 	</div>
@@ -487,13 +485,11 @@
 				type="button"
 				class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:border-foreground/30 hover:shadow transition-all"
 				onclick={selectNone}
-			>
-				Clear
-			</button>
+			>清空</button>
 			{#if $canAccess('volumes', 'remove')}
 			<ConfirmPopover
 				open={confirmBulkRemove}
-				action="Delete"
+				action="删除"
 				itemType="{selectedInFilter.length} volume{selectedInFilter.length !== 1 ? 's' : ''}"
 				title="Delete {selectedInFilter.length}"
 				unstyled
@@ -502,9 +498,7 @@
 			>
 				{#snippet children({ open })}
 					<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-destructive hover:border-destructive/40 hover:shadow transition-all cursor-pointer">
-						<Trash2 class="w-3 h-3" />
-						Delete
-					</span>
+						<Trash2 class="w-3 h-3" />删除</span>
 				{/snippet}
 			</ConfirmPopover>
 			{/if}
@@ -517,8 +511,8 @@
 	{:else if !loading && volumes.length === 0}
 		<EmptyState
 			icon={HardDrive}
-			title="No volumes found"
-			description="Create a volume to persist container data"
+			title="未找到卷"
+			description="创建卷以持久化容器数据"
 		/>
 	{:else}
 		<DataGrid
@@ -589,7 +583,7 @@
 						<button
 							type="button"
 							onclick={() => inspectVolume(volume.name)}
-							title="View details"
+							title="查看详情"
 							class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 						>
 							<Eye class="grid-action-icon grid-action-info text-muted-foreground hover:text-foreground" />
@@ -597,7 +591,7 @@
 						<button
 							type="button"
 							onclick={() => browseVolume(volume.name)}
-							title="Browse files"
+							title="浏览文件"
 							class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 						>
 							<FolderOpen class="grid-action-icon grid-action-info text-muted-foreground hover:text-foreground" />
@@ -616,7 +610,7 @@
 						<button
 							type="button"
 							onclick={() => cloneVolume(volume.name)}
-							title="Clone volume"
+							title="克隆存储卷"
 							class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 						>
 							<Stamp class="grid-action-icon grid-action-edit text-muted-foreground hover:text-foreground" />
@@ -626,10 +620,10 @@
 						<div class="relative">
 							<ConfirmPopover
 								open={confirmDeleteName === volume.name}
-								action="Delete"
+								action="删除"
 								itemType="volume"
 								itemName={volume.name}
-								title="Remove"
+								title="移除"
 								onConfirm={() => removeVolume(volume.name)}
 								onOpenChange={(open) => confirmDeleteName = open ? volume.name : null}
 							>

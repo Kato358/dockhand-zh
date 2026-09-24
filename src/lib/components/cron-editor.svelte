@@ -204,13 +204,13 @@
 	}));
 
 	const daysOfWeek = [
-		{ value: '1', label: 'Monday' },
-		{ value: '2', label: 'Tuesday' },
-		{ value: '3', label: 'Wednesday' },
-		{ value: '4', label: 'Thursday' },
-		{ value: '5', label: 'Friday' },
-		{ value: '6', label: 'Saturday' },
-		{ value: '0', label: 'Sunday' }
+		{ value: '1', label: '周一' },
+		{ value: '2', label: '周二' },
+		{ value: '3', label: '周三' },
+		{ value: '4', label: '周四' },
+		{ value: '5', label: '星期五' },
+		{ value: '6', label: '周六' },
+		{ value: '0', label: '星期日' }
 	];
 </script>
 
@@ -237,13 +237,13 @@
 			<div class="flex items-center gap-2">
 				{#if scheduleType === 'daily'}
 					<Calendar class="w-4 h-4" />
-					<span>Daily</span>
+					<span>每天</span>
 				{:else if scheduleType === 'weekly'}
 					<CalendarDays class="w-4 h-4" />
-					<span>Weekly</span>
+					<span>每周</span>
 				{:else}
 					<Clock class="w-4 h-4" />
-					<span>Custom</span>
+					<span>自定义</span>
 				{/if}
 			</div>
 		</Select.Trigger>
@@ -251,19 +251,19 @@
 			<Select.Item value="daily">
 				<div class="flex items-center gap-2">
 					<Calendar class="w-4 h-4" />
-					<span>Daily</span>
+					<span>每天</span>
 				</div>
 			</Select.Item>
 			<Select.Item value="weekly">
 				<div class="flex items-center gap-2">
 					<CalendarDays class="w-4 h-4" />
-					<span>Weekly</span>
+					<span>每周</span>
 				</div>
 			</Select.Item>
 			<Select.Item value="custom">
 				<div class="flex items-center gap-2">
 					<Clock class="w-4 h-4" />
-					<span>Custom</span>
+					<span>自定义</span>
 				</div>
 			</Select.Item>
 		</Select.Content>

@@ -752,7 +752,7 @@
 					<th class="text-right py-2 px-2 font-medium actions-col" style="width: {getDisplayWidth(colId)}px">
 						{#if colId === 'actions'}
 							<div class="flex items-center justify-end gap-1">
-								<span>Actions</span>
+								<span>操作</span>
 								<ColumnSettingsPopover {gridId} />
 							</div>
 						{/if}
@@ -805,7 +805,7 @@
 							type="button"
 							onclick={toggleSelectAll}
 							class="flex items-center justify-center transition-colors opacity-40 hover:opacity-100 cursor-pointer"
-							title={allSelected ? 'Deselect all' : 'Select all'}
+							title={allSelected ? 'Deselect all' : '全选'}
 						>
 							{#if allSelected}
 								<CheckSquare class="w-3.5 h-3.5 text-muted-foreground" />
@@ -890,7 +890,7 @@
 				<th class="text-right py-2 px-2 font-medium actions-col" style="width: {getDisplayWidth(colId)}px">
 					{#if colId === 'actions'}
 						<div class="flex items-center justify-end gap-1">
-							<span>Actions</span>
+							<span>操作</span>
 							<ColumnSettingsPopover {gridId} />
 						</div>
 					{:else if headerCell}

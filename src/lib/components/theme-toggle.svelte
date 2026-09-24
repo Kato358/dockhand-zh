@@ -56,5 +56,5 @@
 	{:else}
 		<Monitor class="h-4 w-4" />
 	{/if}
-	<span class="sr-only">Toggle theme</span>
+	<span class="sr-only">切换主题</span>
 </Button>

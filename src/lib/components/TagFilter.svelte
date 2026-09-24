@@ -56,7 +56,7 @@
 				onclick={() => (settingsExpanded = !settingsExpanded)}
 			>
 				<Settings2 class="h-3.5 w-3.5 shrink-0" />
-				<span class="text-xs flex-1 text-left">Settings</span>
+				<span class="text-xs flex-1 text-left">设置</span>
 				{#if settingsExpanded}
 					<ChevronDown class="h-3.5 w-3.5 shrink-0" />
 				{:else}
@@ -67,7 +67,7 @@
 				{#if groupBy !== undefined}
 					<div class="flex items-center gap-2 px-2 py-1.5">
 						<Rows3 class="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-						<span class="text-xs flex-1">Group by tag</span>
+						<span class="text-xs flex-1">按标签分组</span>
 						<TogglePill bind:checked={groupBy} />
 					</div>
 					{#if showBands !== undefined && groupBy}
@@ -75,7 +75,7 @@
 						     the icon column lines up on the left and the toggle on the right. -->
 						<div class="flex items-center gap-2 px-2 py-1.5">
 							<Paintbrush class="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-							<span class="text-xs flex-1 whitespace-nowrap">Color group bands</span>
+							<span class="text-xs flex-1 whitespace-nowrap">颜色分组带</span>
 							<TogglePill bind:checked={showBands} />
 						</div>
 					{/if}
@@ -83,7 +83,7 @@
 				{#if showTags !== undefined}
 					<div class="flex items-center gap-2 px-2 py-1.5">
 						<TagIcon class="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-						<span class="text-xs flex-1">Show tags</span>
+						<span class="text-xs flex-1">显示标签</span>
 						<TogglePill bind:checked={showTags} />
 					</div>
 				{/if}
@@ -98,11 +98,11 @@
 			<div class="my-1 h-px bg-border"></div>
 		{/if}
 		{#if tags.length === 0}
-			<div class="px-2 py-3 text-center text-xs text-muted-foreground">No tags yet</div>
+			<div class="px-2 py-3 text-center text-xs text-muted-foreground">暂无标签</div>
 		{:else}
 			<!-- ANY / ALL match mode (same pill as the dashboard env label filter) -->
 			<div class="flex items-center gap-2 px-1 pb-1">
-				<span class="text-2xs text-muted-foreground mr-auto">Match</span>
+				<span class="text-2xs text-muted-foreground mr-auto">匹配</span>
 				<ToggleSwitch value={mode} leftValue="any" rightValue="all" onchange={(m) => (mode = m as TagFilterMode)} />
 			</div>
 			<div class="max-h-64 overflow-y-auto">
@@ -124,9 +124,7 @@
 				{/each}
 			</div>
 			{#if selected.length > 0}
-				<button type="button" class="mt-1 w-full rounded px-2 py-1 text-2xs text-muted-foreground hover:bg-muted" onclick={() => (selected = [])}>
-					Clear
-				</button>
+				<button type="button" class="mt-1 w-full rounded px-2 py-1 text-2xs text-muted-foreground hover:bg-muted" onclick={() => (selected = [])}>清空</button>
 			{/if}
 		{/if}
 	</Popover.Content>

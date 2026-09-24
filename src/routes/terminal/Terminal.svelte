@@ -231,7 +231,7 @@
 		};
 
 		ws.onerror = () => {
-			error = 'Connection error';
+			error = '连接错误';
 			terminal?.writeln('\x1b[31mConnection error\x1b[0m');
 		};
 

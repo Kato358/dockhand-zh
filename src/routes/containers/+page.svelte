@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Containers - Dockhand</title>
+	<title>容器 - Dockhand</title>
 </svelte:head>
 
 <script lang="ts">
@@ -274,12 +274,12 @@
 
 	// Status types with icons for filter and table
 	const statusTypes = [
-		{ value: 'running', label: 'Running', icon: Play, color: 'text-emerald-500' },
-		{ value: 'paused', label: 'Paused', icon: Pause, color: 'text-amber-500' },
-		{ value: 'restarting', label: 'Restarting', icon: RotateCw, color: 'text-red-500' },
-		{ value: 'exited', label: 'Exited', icon: Square, color: 'text-rose-500' },
-		{ value: 'created', label: 'Created', icon: Plus, color: 'text-sky-500' },
-		{ value: 'dead', label: 'Dead', icon: Skull, color: 'text-gray-500' }
+		{ value: 'running', label: '运行中', icon: Play, color: 'text-emerald-500' },
+		{ value: 'paused', label: '已暂停', icon: Pause, color: 'text-amber-500' },
+		{ value: 'restarting', label: '正在重启', icon: RotateCw, color: 'text-red-500' },
+		{ value: 'exited', label: '已退出', icon: Square, color: 'text-rose-500' },
+		{ value: 'created', label: '已创建', icon: Plus, color: 'text-sky-500' },
+		{ value: 'dead', label: '已死', icon: Skull, color: 'text-gray-500' }
 	];
 
 	function getStatusIcon(state: string) {
@@ -495,7 +495,7 @@
 		...(containersWithUpdatesSet.size > 0
 			? [{
 					value: UPDATE_AVAILABLE_FILTER_VALUE,
-					label: 'Update available',
+					label: '更新可用',
 					icon: CircleArrowUp,
 					color: 'text-amber-500'
 				}]
@@ -503,7 +503,7 @@
 		...(hasNewerVersions
 			? [{
 					value: NEWER_VERSION_FILTER_VALUE,
-					label: 'Newer version',
+					label: '新版本',
 					icon: Tag,
 					color: 'text-amber-500'
 				}]
@@ -709,14 +709,14 @@
 			const response = await fetch(`/api/containers/pending-updates?env=${envId}`, { method: 'DELETE' });
 			if (response.ok) {
 				containerStore.setPendingUpdates([], new Map());
-				// Failed-check state is session-only — clear it here too so "Clear"
+				// Failed-check state is session-only — clear it here too so "清空"
 				// dismisses the red "check failed" icons alongside the amber ones.
 				containerStore.setFailedUpdates([], new Map());
 				// Newer-version (semver) badges are session-only too — dismiss them alongside.
 				containerStore.setNewerVersions(new Map());
 			}
 		} catch {
-			toast.error('Failed to clear update indicators');
+			toast.error('更新指示器清除失败');
 		}
 	}
 
@@ -752,13 +752,13 @@
 
 	function handleBatchUpdateComplete(results: { success: string[]; failed: string[]; blocked: string[] }) {
 		if (results.success.length > 0) {
-			toast.success(`Updated ${results.success.length} container(s)`);
+			toast.success(`已更新 ${results.success.length} 个容器`);
 		}
 		if (results.failed.length > 0) {
-			toast.error(`Failed to update ${results.failed.length} container(s)`);
+			toast.error(`更新 ${results.failed.length} 个容器失败`);
 		}
 		if (results.blocked.length > 0) {
-			toast.warning(`${results.blocked.length} update(s) blocked by vulnerability policy`);
+			toast.warning(`漏洞策略阻止了 ${results.blocked.length} 次更新`);
 		}
 		selectedContainers = new Set();
 
@@ -811,7 +811,7 @@
 				terminalShell = bestShell;
 			}
 		} catch (error) {
-			console.error('Failed to detect shells:', error);
+			console.error('未能检测到 shell：', error);
 		} finally {
 			detectingShellsFor = null;
 		}
@@ -1108,17 +1108,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${id}/start`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				operationError = { id, message: data.error || 'Failed to start container' };
-				toast.error(`Failed to start ${name}`);
+				operationError = { id, message: data.error || '容器启动失败' };
+				toast.error(`启动 ${name} 失败`);
 				clearErrorAfterDelay(id);
 				return;
 			}
-			toast.success(`Started ${name}`);
+			toast.success(`已启动 ${name}`);
 			await containerStore.refreshContainers(envId);
 		} catch (error) {
 			console.error('Failed to start container:', error);
-			operationError = { id, message: 'Failed to start container' };
-			toast.error(`Failed to start ${name}`);
+			operationError = { id, message: '容器启动失败' };
+			toast.error(`启动 ${name} 失败`);
 			clearErrorAfterDelay(id);
 		}
 	}
@@ -1132,17 +1132,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${id}/stop`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				operationError = { id, message: data.error || 'Failed to stop container' };
-				toast.error(`Failed to stop ${name}`);
+				operationError = { id, message: data.error || '停止容器失败' };
+				toast.error(`停止 ${name} 失败`);
 				clearErrorAfterDelay(id);
 				return;
 			}
-			toast.success(`Stopped ${name}`);
+			toast.success(`已停止 ${name}`);
 			await containerStore.refreshContainers(envId);
 		} catch (error) {
 			console.error('Failed to stop container:', error);
-			operationError = { id, message: 'Failed to stop container' };
-			toast.error(`Failed to stop ${name}`);
+			operationError = { id, message: '停止容器失败' };
+			toast.error(`停止 ${name} 失败`);
 			clearErrorAfterDelay(id);
 		} finally {
 			stoppingId = null;
@@ -1157,17 +1157,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${id}/pause`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				operationError = { id, message: data.error || 'Failed to pause container' };
-				toast.error(`Failed to pause ${name}`);
+				operationError = { id, message: data.error || '暂停容器失败' };
+				toast.error(`暂停 ${name} 失败`);
 				clearErrorAfterDelay(id);
 				return;
 			}
-			toast.success(`Paused ${name}`);
+			toast.success(`已暂停 ${name}`);
 			await containerStore.refreshContainers(envId);
 		} catch (error) {
 			console.error('Failed to pause container:', error);
-			operationError = { id, message: 'Failed to pause container' };
-			toast.error(`Failed to pause ${name}`);
+			operationError = { id, message: '暂停容器失败' };
+			toast.error(`暂停 ${name} 失败`);
 			clearErrorAfterDelay(id);
 		}
 	}
@@ -1180,17 +1180,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${id}/unpause`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				operationError = { id, message: data.error || 'Failed to unpause container' };
-				toast.error(`Failed to unpause ${name}`);
+				operationError = { id, message: data.error || '容器暂停失败' };
+				toast.error(`暂停 ${name} 失败`);
 				clearErrorAfterDelay(id);
 				return;
 			}
-			toast.success(`Resumed ${name}`);
+			toast.success(`还原了 ${name}`);
 			await containerStore.refreshContainers(envId);
 		} catch (error) {
 			console.error('Failed to unpause container:', error);
-			operationError = { id, message: 'Failed to unpause container' };
-			toast.error(`Failed to unpause ${name}`);
+			operationError = { id, message: '容器暂停失败' };
+			toast.error(`暂停 ${name} 失败`);
 			clearErrorAfterDelay(id);
 		}
 	}
@@ -1204,17 +1204,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${id}/restart`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				operationError = { id, message: data.error || 'Failed to restart container' };
-				toast.error(`Failed to restart ${name}`);
+				operationError = { id, message: data.error || '重启容器失败' };
+				toast.error(`重启 ${name} 失败`);
 				clearErrorAfterDelay(id);
 				return;
 			}
-			toast.success(`Restarted ${name}`);
+			toast.success(`重启了 ${name}`);
 			await containerStore.refreshContainers(envId);
 		} catch (error) {
 			console.error('Failed to restart container:', error);
-			operationError = { id, message: 'Failed to restart container' };
-			toast.error(`Failed to restart ${name}`);
+			operationError = { id, message: '重启容器失败' };
+			toast.error(`重启 ${name} 失败`);
 			clearErrorAfterDelay(id);
 		} finally {
 			restartingId = null;
@@ -1229,17 +1229,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${id}?force=true`, envId), { method: 'DELETE' });
 			if (!response.ok) {
 				const data = await response.json();
-				operationError = { id, message: data.error || 'Failed to remove container' };
-				toast.error(`Failed to remove ${name}`);
+				operationError = { id, message: data.error || '移除容器失败' };
+				toast.error(`删除 ${name} 失败`);
 				clearErrorAfterDelay(id);
 				return;
 			}
-			toast.success(`Removed ${name}`);
+			toast.success(`已移除 ${name}`);
 			await containerStore.refreshContainers(envId);
 		} catch (error) {
 			console.error('Failed to remove container:', error);
-			operationError = { id, message: 'Failed to remove container' };
-			toast.error(`Failed to remove ${name}`);
+			operationError = { id, message: '移除容器失败' };
+			toast.error(`删除 ${name} 失败`);
 			clearErrorAfterDelay(id);
 		}
 	}
@@ -1431,7 +1431,7 @@
 		const ok = await copyToClipboard(text);
 		if (ok) {
 			copiedCommand = text;
-			toast.success('Copied to clipboard');
+			toast.success('已复制到剪贴板');
 			setTimeout(() => { copiedCommand = null; }, 2000);
 		} else {
 			copyFailed = true;
@@ -1560,16 +1560,16 @@
 
 <div class="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
-		<PageHeader icon={Box} title="Containers" count={containers.length} />
+		<PageHeader icon={Box} title="容器" count={containers.length} />
 		<div class="flex flex-wrap items-center gap-2">
-			<SearchInput bind:value={searchQuery} placeholder="Search name, image, label..." class="h-8 w-64 text-sm" />
+			<SearchInput bind:value={searchQuery} placeholder="搜索名称、镜像、标签…" class="h-8 w-64 text-sm" />
 			<!-- Status filter (multi-select). The synthetic 'update-available'
 			     entry appears once at least one container has a pending update,
 			     and ANDs with selected real states (#1063). -->
 			<MultiSelectFilter
 				bind:value={statusFilter}
 				options={filterOptions}
-				placeholder="All statuses"
+				placeholder="所有状态"
 				pluralLabel="filters"
 				width="w-44"
 				defaultIcon={Box}
@@ -1581,9 +1581,7 @@
 			<div class="flex gap-2 overflow-x-auto min-w-0 max-w-full [&>*]:shrink-0">
 				{#if $canAccess('containers', 'create')}
 				<Button size="sm" variant="secondary" onclick={() => (showCreateModal = true)}>
-					<Plus class="w-3.5 h-3.5" />
-					Create
-				</Button>
+					<Plus class="w-3.5 h-3.5" />创建</Button>
 				{/if}
 				<CheckUpdatesButton
 					bind:this={checkUpdatesBtn}
@@ -1594,11 +1592,11 @@
 				{#if updatableContainersCount > 0}
 				<ConfirmPopover
 					open={confirmUpdateAll}
-					action="Update"
+					action="更新"
 					itemType="all {updatableContainersCount} containers"
-					confirmText="Update all"
+					confirmText="全部更新"
 					variant="default"
-					title="Update all containers with available updates"
+					title="使用可用更新更新所有容器"
 					position="left"
 					onConfirm={updateAllContainers}
 					onOpenChange={(open) => confirmUpdateAll = open}
@@ -1625,9 +1623,9 @@
 				{#if $canAccess('containers', 'remove')}
 				<ConfirmPopover
 					open={confirmPrune}
-					action="Prune"
+					action="清理"
 					itemType="stopped containers"
-					title="Prune containers"
+					title="清理容器"
 					position="left"
 					onConfirm={pruneContainers}
 					onOpenChange={(open) => confirmPrune = open}
@@ -1649,7 +1647,7 @@
 					{/snippet}
 				</ConfirmPopover>
 				{/if}
-				<Button size="sm" variant="outline" onclick={fetchContainers}>Refresh</Button>
+				<Button size="sm" variant="outline" onclick={fetchContainers}>刷新</Button>
 				<Button
 					size="sm"
 					variant="outline"
@@ -1677,13 +1675,11 @@
 				class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:border-foreground/30 hover:shadow transition-all"
 				onclick={selectNone}
 				disabled={bulkActionInProgress}
-			>
-				Clear
-			</button>
+			>清空</button>
 			{#if selectedStopped.length > 0 && $canAccess('containers', 'start')}
 				<ConfirmPopover
 					open={confirmBulkStart}
-					action="Start"
+					action="启动"
 					itemType="{selectedStopped.length} stopped container{selectedStopped.length !== 1 ? 's' : ''}"
 					title="Start {selectedStopped.length}"
 					variant="secondary"
@@ -1693,16 +1689,14 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-green-600 hover:border-green-500/40 hover:shadow transition-all cursor-pointer {bulkActionInProgress ? 'opacity-50' : ''}">
-							<Play class="w-3 h-3" />
-							Start
-						</span>
+							<Play class="w-3 h-3" />启动</span>
 					{/snippet}
 				</ConfirmPopover>
 			{/if}
 			{#if selectedRunning.length > 0 && $canAccess('containers', 'stop')}
 				<ConfirmPopover
 					open={confirmBulkStop}
-					action="Stop"
+					action="停止"
 					itemType="{selectedRunning.length} running container{selectedRunning.length !== 1 ? 's' : ''}"
 					title="Stop {selectedRunning.length}"
 					unstyled
@@ -1711,14 +1705,12 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-red-600 hover:border-red-500/40 hover:shadow transition-all cursor-pointer {bulkActionInProgress ? 'opacity-50' : ''}">
-							<Square class="w-3 h-3" />
-							Stop
-						</span>
+							<Square class="w-3 h-3" />停止</span>
 					{/snippet}
 				</ConfirmPopover>
 				<ConfirmPopover
 					open={confirmBulkPause}
-					action="Pause"
+					action="暂停"
 					itemType="{selectedRunning.length} running container{selectedRunning.length !== 1 ? 's' : ''}"
 					title="Pause {selectedRunning.length}"
 					variant="secondary"
@@ -1728,16 +1720,14 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-yellow-600 hover:border-yellow-500/40 hover:shadow transition-all cursor-pointer {bulkActionInProgress ? 'opacity-50' : ''}">
-							<Pause class="w-3 h-3" />
-							Pause
-						</span>
+							<Pause class="w-3 h-3" />暂停</span>
 					{/snippet}
 				</ConfirmPopover>
 			{/if}
 			{#if selectedPaused.length > 0 && $canAccess('containers', 'start')}
 				<ConfirmPopover
 					open={confirmBulkUnpause}
-					action="Unpause"
+					action="继续"
 					itemType="{selectedPaused.length} paused container{selectedPaused.length !== 1 ? 's' : ''}"
 					title="Unpause {selectedPaused.length}"
 					variant="secondary"
@@ -1747,16 +1737,14 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-blue-600 hover:border-blue-500/40 hover:shadow transition-all cursor-pointer {bulkActionInProgress ? 'opacity-50' : ''}">
-							<Play class="w-3 h-3" />
-							Unpause
-						</span>
+							<Play class="w-3 h-3" />继续</span>
 					{/snippet}
 				</ConfirmPopover>
 			{/if}
 			{#if selectedNonSystem.length > 0 && $canAccess('containers', 'restart')}
 			<ConfirmPopover
 				open={confirmBulkRestart}
-				action="Restart"
+				action="重启"
 				itemType="{selectedNonSystem.length} container{selectedNonSystem.length !== 1 ? 's' : ''}"
 				title="Restart {selectedNonSystem.length}"
 				variant="secondary"
@@ -1766,16 +1754,14 @@
 			>
 				{#snippet children({ open })}
 					<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:border-foreground/30 hover:shadow transition-all cursor-pointer {bulkActionInProgress ? 'opacity-50' : ''}">
-						<RotateCw class="w-3 h-3" />
-						Restart
-					</span>
+						<RotateCw class="w-3 h-3" />重启</span>
 				{/snippet}
 			</ConfirmPopover>
 			{/if}
 			{#if selectedNonSystem.length > 0 && $canAccess('containers', 'remove')}
 			<ConfirmPopover
 				open={confirmBulkRemove}
-				action="Remove"
+				action="移除"
 				itemType="{selectedNonSystem.length} container{selectedNonSystem.length !== 1 ? 's' : ''}"
 				title="Remove {selectedNonSystem.length}"
 				unstyled
@@ -1784,20 +1770,18 @@
 			>
 				{#snippet children({ open })}
 					<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-destructive hover:border-destructive/40 hover:shadow transition-all cursor-pointer {bulkActionInProgress ? 'opacity-50' : ''}">
-						<Trash2 class="w-3 h-3" />
-						Remove
-					</span>
+						<Trash2 class="w-3 h-3" />移除</span>
 				{/snippet}
 			</ConfirmPopover>
 			{/if}
 			{#if selectedHaveUpdates}
 			<ConfirmPopover
 				open={confirmUpdateSelected}
-				action="Update"
+				action="更新"
 				itemType="{selectedWithUpdatesCount} selected container(s)"
-				confirmText="Update"
+				confirmText="更新"
 				variant="default"
-				title="Update selected containers to latest image"
+				title="将选定的容器更新到最新镜像"
 				onConfirm={updateSelectedContainers}
 				onOpenChange={(open) => confirmUpdateSelected = open}
 				unstyled
@@ -1824,8 +1808,8 @@
 	{:else if !loading && containers.length === 0}
 		<EmptyState
 			icon={Box}
-			title="No containers found"
-			description="Create a new container to get started"
+			title="未找到容器"
+			description="创建一个新容器即可开始"
 		/>
 	{:else}
 		<!-- Main content area - changes based on layout mode -->
@@ -1893,19 +1877,15 @@
 									<Tooltip.Content side="right" class="w-auto p-3">
 										<div class="space-y-2">
 											<p class="font-medium text-sm flex items-center gap-1.5 whitespace-nowrap">
-												<CircleArrowUp class="w-4 h-4 text-amber-500" />
-												Update available
-											</p>
+												<CircleArrowUp class="w-4 h-4 text-amber-500" />更新可用</p>
 											{#if container.systemContainer === 'dockhand'}
 												<a
 													href="/settings?tab=about"
 													class="text-primary hover:underline text-xs flex items-center gap-1 whitespace-nowrap"
 													onclick={(e) => e.stopPropagation()}
-												>
-													Settings &gt; About
-												</a>
+												>设置 &gt; 关于</a>
 											{:else}
-												<p class="text-muted-foreground text-xs whitespace-nowrap">Update on the remote host where Hawser runs.</p>
+												<p class="text-muted-foreground text-xs whitespace-nowrap">Hawser运行所在的远程主机已更新。</p>
 												<a
 													href="https://github.com/Finsys/hawser"
 													target="_blank"
@@ -1913,9 +1893,7 @@
 													class="text-primary hover:underline text-xs flex items-center gap-1 whitespace-nowrap"
 													onclick={(e) => e.stopPropagation()}
 												>
-													<ExternalLink class="w-3 h-3" />
-													Update instructions on GitHub
-												</a>
+													<ExternalLink class="w-3 h-3" />GitHub 上的更新说明</a>
 											{/if}
 										</div>
 									</Tooltip.Content>
@@ -1940,21 +1918,21 @@
 								{#if container.systemContainer}
 									<!-- System containers cannot be updated from the UI - show the
 									     indicator but leave it non-clickable (matches the actions column). -->
-									<span title="Update available">
+									<span title="更新可用">
 										<CircleArrowUp class="w-3 h-3 text-amber-500 {$appSettings.highlightUpdates ? 'glow-amber' : ''} shrink-0" />
 									</span>
 								{:else}
 									<ConfirmPopover
 										open={confirmImageUpdateId === container.id}
-										action="Update"
+										action="更新"
 										itemType="container"
 										itemName={container.name}
-										title="Update available - click to update"
+										title="有可用更新，点击更新"
 										onConfirm={() => updateSingleContainer(container.id, container.name)}
 										onOpenChange={(open) => confirmImageUpdateId = open ? container.id : null}
 									>
 										{#snippet children({ open })}
-											<span title="Update available" class="cursor-pointer">
+											<span title="更新可用" class="cursor-pointer">
 												<CircleArrowUp class="w-3 h-3 text-amber-500 hover:text-amber-400 transition-colors {$appSettings.highlightUpdates ? 'glow-amber' : ''} shrink-0" />
 											</span>
 										{/snippet}
@@ -1968,7 +1946,7 @@
 											target="_blank"
 											rel="noopener noreferrer"
 											onclick={(e) => e.stopPropagation()}
-											title="View changelog"
+											title="查看更新日志"
 											class="shrink-0 text-amber-500 hover:text-amber-400 transition-colors"
 										>
 											<NotepadText class="w-3 h-3" />
@@ -1983,11 +1961,9 @@
 									<Tooltip.Content side="right" class="w-72 p-3">
 										<div class="space-y-1.5">
 											<p class="font-medium text-sm flex items-center gap-1.5 whitespace-nowrap">
-												<AlertTriangle class="w-4 h-4 text-red-500 shrink-0" />
-												Update check failed
-											</p>
+												<AlertTriangle class="w-4 h-4 text-red-500 shrink-0" />更新检查失败</p>
 											<p class="text-muted-foreground text-xs break-words">{failedUpdateErrors.get(container.id) ?? 'Could not query registry'}</p>
-											<p class="text-muted-foreground text-xs">Update status unknown — often a Docker Hub rate limit. Try again later.</p>
+											<p class="text-muted-foreground text-xs">更新状态未知——通常是 Docker Hub 的速率限制。请稍后再试。</p>
 										</div>
 									</Tooltip.Content>
 								</Tooltip.Root>
@@ -2200,7 +2176,7 @@
 									>+{remainingCount}</span>
 								{/if}
 								{#each exposedPorts as port}
-									<code class="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1 py-0.5 rounded shrink-0" title="Exposed (internal) port">{port.display}</code>
+									<code class="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1 py-0.5 rounded shrink-0" title="暴露的（内部）端口">{port.display}</code>
 								{/each}
 							</div>
 						{:else}
@@ -2249,10 +2225,10 @@
 							{#if containersWithUpdatesSet.has(container.id) && !container.systemContainer}
 								<ConfirmPopover
 									open={confirmUpdateId === container.id}
-									action="Update"
+									action="更新"
 									itemType="container"
 									itemName={container.name}
-									title="Update available - click to update"
+									title="有可用更新，点击更新"
 									onConfirm={() => updateSingleContainer(container.id, container.name)}
 									onOpenChange={(open) => confirmUpdateId = open ? container.id : null}
 								>
@@ -2266,7 +2242,7 @@
 								<button
 									type="button"
 									onclick={(e) => { e.stopPropagation(); currentLogsContainerId = container.id; }}
-									title="Show logs"
+									title="显示日志"
 									class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<FileText class="w-4 h-4 text-blue-400" style="filter: drop-shadow(0 0 4px rgba(96,165,250,0.9)) drop-shadow(0 0 8px rgba(96,165,250,0.6));" strokeWidth={2.5} />
@@ -2275,7 +2251,7 @@
 								<button
 									type="button"
 									onclick={(e) => { e.stopPropagation(); showLogs(container); }}
-									title="Open logs"
+									title="打开日志"
 									class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<FileText class="grid-action-icon grid-action-logs text-muted-foreground hover:text-foreground" />
@@ -2287,7 +2263,7 @@
 								<button
 									type="button"
 									onclick={(e) => { e.stopPropagation(); currentTerminalContainerId = container.id; }}
-									title="Show terminal"
+									title="显示终端"
 									class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<Terminal class="w-4 h-4 text-green-400" style="filter: drop-shadow(0 0 4px rgba(74,222,128,0.9)) drop-shadow(0 0 8px rgba(74,222,128,0.6));" strokeWidth={2.5} />
@@ -2321,18 +2297,18 @@
 										{#if terminalMode === 'exec' && detectingShellsFor === container.id}
 											<div class="p-4 text-center">
 												<Loader2 class="w-5 h-5 mx-auto mb-2 text-muted-foreground animate-spin" />
-												<p class="text-xs text-muted-foreground">Detecting shells...</p>
+												<p class="text-xs text-muted-foreground">探测炮弹…</p>
 											</div>
 										{:else if terminalMode === 'exec' && !anyShellAvailableFor(container.id)}
 											<div class="p-4 text-center">
 												<AlertCircle class="w-5 h-5 mx-auto mb-2 text-amber-500" />
-												<p class="text-xs font-medium text-amber-500">No shell available</p>
-												<p class="text-xs text-muted-foreground mt-1">This container has no shell installed.</p>
+												<p class="text-xs font-medium text-amber-500">没有可用的终端</p>
+												<p class="text-xs text-muted-foreground mt-1">此容器未安装 shell。</p>
 											</div>
 										{:else}
 											<div class="p-3 space-y-3">
 												<div class="space-y-1.5">
-													<Label class="text-xs">Mode</Label>
+													<Label class="text-xs">模式</Label>
 													<Select.Root type="single" value={terminalMode} onValueChange={(value) => {
 														terminalMode = value as TerminalMode;
 														if (terminalMode === 'exec') detectContainerShells(container.id);
@@ -2347,24 +2323,20 @@
 															{/if}
 														</Select.Trigger>
 														<Select.Content>
-															<Select.Item value="exec" label="Shell (exec)">
-																<Shell class="w-3 h-3 mr-1.5 text-muted-foreground" />
-																Shell (exec)
-															</Select.Item>
-															<Select.Item value="attach" label="Attach to process">
-																<Unplug class="w-3 h-3 mr-1.5 text-muted-foreground" />
-																Attach to process
-															</Select.Item>
+															<Select.Item value="exec" label="Shell（执行）">
+																<Shell class="w-3 h-3 mr-1.5 text-muted-foreground" />Shell（执行）</Select.Item>
+															<Select.Item value="attach" label="附加到流程">
+																<Unplug class="w-3 h-3 mr-1.5 text-muted-foreground" />附加到流程</Select.Item>
 														</Select.Content>
 													</Select.Root>
 													</div>
 													{#if terminalMode === 'exec'}
 														<div class="space-y-1.5">
-															<Label class="text-xs">Shell</Label>
+															<Label class="text-xs">终端</Label>
 															<Select.Root type="single" bind:value={terminalShell}>
 																<Select.Trigger class="w-full h-8 text-xs">
 																	<Shell class="w-3 h-3 mr-1.5 text-muted-foreground" />
-																	<span>{shellDetectionCache[container.id]?.allShells.find(o => o.path === terminalShell)?.label || 'Select'}</span>
+																	<span>{shellDetectionCache[container.id]?.allShells.find(o => o.path === terminalShell)?.label || '选择'}</span>
 																</Select.Trigger>
 																<Select.Content>
 																	{#if shellDetectionCache[container.id]}
@@ -2384,11 +2356,11 @@
 															</Select.Root>
 													</div>
 													<div class="space-y-1.5">
-														<Label class="text-xs">User</Label>
+														<Label class="text-xs">用户</Label>
 														<Select.Root type="single" bind:value={terminalUser}>
 															<Select.Trigger class="w-full h-8 text-xs">
 																<User class="w-3 h-3 mr-1.5 text-muted-foreground" />
-																<span>{userOptions.find(o => o.value === terminalUser)?.label || terminalUser || 'Select'}</span>
+																<span>{userOptions.find(o => o.value === terminalUser)?.label || terminalUser || '选择'}</span>
 															</Select.Trigger>
 															<Select.Content>
 																{#each userOptions as option}
@@ -2409,7 +2381,7 @@
 																				type="button"
 																				class="p-1 mr-1 opacity-0 group-hover:opacity-100 hover:text-destructive transition-opacity"
 																				onclick={(e) => { e.stopPropagation(); e.preventDefault(); removeCustomUser(cu); terminalCustomUsers = getCustomUsers(); if (terminalUser === cu) { terminalUser = 'root'; } }}
-																				title="Remove user"
+																				title="移除用户"
 																			>
 																				<Trash2 class="w-3 h-3" />
 																			</button>
@@ -2420,7 +2392,7 @@
 																<div class="px-2 py-1">
 																	<Input
 																		class="h-7 text-xs"
-																		placeholder="Add user... (Enter)"
+																		placeholder="添加用户…（回车）"
 																		bind:value={terminalCustomUser}
 																		onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Enter' && terminalCustomUser.trim()) { const u = terminalCustomUser.trim(); terminalUser = u; saveUserForContainer(container.id, u); terminalCustomUsers = getCustomUsers(); terminalCustomUser = ''; } }}
 																		onclick={(e) => e.stopPropagation()}
@@ -2431,9 +2403,7 @@
 													</div>
 												{/if}
 													<Button size="sm" class="w-full h-7 text-xs" onclick={() => startTerminal(container)}>
-													<Terminal class="w-3 h-3" />
-													Connect
-												</Button>
+													<Terminal class="w-3 h-3" />连接</Button>
 											</div>
 										{/if}
 									</Popover.Content>
@@ -2444,7 +2414,7 @@
 							<button
 								type="button"
 								onclick={() => browseFiles(container)}
-								title="Browse files"
+								title="浏览文件"
 								class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 							>
 								<FolderOpen class="grid-action-icon grid-action-info text-muted-foreground hover:text-foreground" />
@@ -2453,7 +2423,7 @@
 							<button
 								type="button"
 								onclick={() => inspectContainer(container)}
-								title="View details"
+								title="查看详情"
 								class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 							>
 								<Eye class="grid-action-icon grid-action-info text-muted-foreground hover:text-foreground" />
@@ -2462,7 +2432,7 @@
 							<button
 								type="button"
 								onclick={() => editContainer(container.id)}
-								title="Edit"
+								title="编辑"
 								class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 							>
 								<Pencil class="grid-action-icon grid-action-edit text-muted-foreground hover:text-foreground" />
@@ -2474,7 +2444,7 @@
 								<button
 									type="button"
 									onclick={() => unpauseContainer(container.id)}
-									title="Unpause"
+									title="继续"
 									class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<Play class="grid-action-icon grid-action-start text-muted-foreground hover:text-green-500" />
@@ -2485,7 +2455,7 @@
 								<button
 									type="button"
 									onclick={() => startContainer(container.id)}
-									title="Start"
+									title="启动"
 									class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<Play class="grid-action-icon grid-action-start text-muted-foreground hover:text-green-500" />
@@ -2495,10 +2465,10 @@
 							{#if $canAccess('containers', 'restart')}
 							<ConfirmPopover
 								open={confirmRestartId === container.id}
-								action="Restart"
+								action="重启"
 								itemType="container"
 								itemName={container.name}
-								title="Restart"
+								title="重启"
 								variant="secondary"
 								onConfirm={() => restartContainer(container.id)}
 								onOpenChange={(open) => confirmRestartId = open ? container.id : null}
@@ -2513,7 +2483,7 @@
 								<button
 									type="button"
 									onclick={() => pauseContainer(container.id)}
-									title="Pause"
+									title="暂停"
 									class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<Pause class="grid-action-icon grid-action-pause text-muted-foreground hover:text-yellow-500" />
@@ -2522,10 +2492,10 @@
 								{#if $canAccess('containers', 'stop')}
 								<ConfirmPopover
 									open={confirmStopId === container.id}
-									action="Stop"
+									action="停止"
 									itemType="container"
 									itemName={container.name}
-									title="Stop"
+									title="停止"
 									onConfirm={() => stopContainer(container.id)}
 									onOpenChange={(open) => confirmStopId = open ? container.id : null}
 								>
@@ -2539,10 +2509,10 @@
 							{#if !container.systemContainer && $canAccess('containers', 'remove')}
 							<ConfirmPopover
 								open={confirmDeleteId === container.id}
-								action="Delete"
+								action="删除"
 								itemType="container"
 								itemName={container.name}
-								title="Remove"
+								title="移除"
 								onConfirm={() => removeContainer(container.id)}
 								onOpenChange={(open) => confirmDeleteId = open ? container.id : null}
 							>

@@ -86,7 +86,7 @@
 </script>
 
 {#if results.length === 0}
-	<div class="text-sm text-muted-foreground">No scan results available</div>
+	<div class="text-sm text-muted-foreground">暂无扫描结果</div>
 {:else}
 	<div class="flex flex-col gap-2 h-full">
 		<!-- Scanner tabs (only if multiple results) -->
@@ -147,9 +147,7 @@
 				{/if}
 				{#if activeResult.vulnerabilities.length === 0}
 					<Badge variant="outline" class="bg-green-500/10 text-green-500 border-green-500/30 text-xs py-0">
-						<CheckCircle2 class="w-3 h-3 mr-1" />
-						No vulnerabilities
-					</Badge>
+						<CheckCircle2 class="w-3 h-3 mr-1" />无漏洞</Badge>
 				{/if}
 				<span class="text-xs text-muted-foreground ml-2">
 					{activeResult.scanner === 'grype' ? 'Grype' : 'Trivy'} • {activeResult.vulnerabilities.length} total
@@ -193,8 +191,8 @@
 										{/if}
 									</button>
 								</th>
-								<th class="text-left py-1.5 px-2 font-medium w-[18%]">Installed</th>
-								<th class="text-left py-1.5 px-2 font-medium w-[20%]">Fixed in</th>
+								<th class="text-left py-1.5 px-2 font-medium w-[18%]">已安装</th>
+								<th class="text-left py-1.5 px-2 font-medium w-[20%]">已修复</th>
 							</tr>
 						</thead>
 						<tbody>

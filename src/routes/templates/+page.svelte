@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Templates - Dockhand</title>
+	<title>模板 - Dockhand</title>
 </svelte:head>
 
 <script lang="ts">
@@ -81,11 +81,11 @@
 		loading = true;
 		try {
 			const response = await fetch('/api/templates');
-			if (!response.ok) throw new Error('Failed to fetch');
+			if (!response.ok) throw new Error('获取失败');
 			templates = await response.json();
 			cacheTimestamp = Date.now();
 		} catch {
-			toast.error('Failed to load library templates');
+			toast.error('加载库模板失败');
 		} finally {
 			loading = false;
 		}
@@ -102,7 +102,7 @@
 
 			if (!response.ok) {
 				const data = await response.json();
-				throw new Error(data.error || 'Failed to generate compose');
+				throw new Error(data.error || '生成 compose 文件失败');
 			}
 
 			const { compose } = await response.json();
@@ -110,7 +110,7 @@
 			stackModalCompose = compose;
 			showStackModal = true;
 		} catch (error) {
-			toast.error(error instanceof Error ? error.message : 'Failed to load template');
+			toast.error(error instanceof Error ? error.message : '模板加载失败');
 		} finally {
 			loadingTemplateId = null;
 		}
@@ -128,12 +128,12 @@
 <div class="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
 	<!-- Header -->
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
-		<PageHeader icon={LibraryBig} title="Templates" count={loading ? undefined : filteredTemplates.length} showConnection={false}>
+		<PageHeader icon={LibraryBig} title="模板" count={loading ? undefined : filteredTemplates.length} showConnection={false}>
 			<button
 				class="p-1 rounded hover:bg-muted transition-colors"
 				onclick={() => fetchTemplates(true)}
 				disabled={loading}
-				title="Refresh templates"
+				title="刷新模板"
 			>
 				{#if loading}
 					<Loader2 class="w-3.5 h-3.5 animate-spin text-emerald-500" />
@@ -149,16 +149,12 @@
 					class="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-colors {activeTab === 'browse' ? 'bg-white dark:bg-zinc-900 shadow-sm' : 'text-muted-foreground hover:text-foreground'}"
 					onclick={() => activeTab = 'browse'}
 				>
-					<Package class="w-3.5 h-3.5" />
-					Browse
-				</button>
+					<Package class="w-3.5 h-3.5" />浏览</button>
 				<button
 					class="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-colors {activeTab === 'sources' ? 'bg-white dark:bg-zinc-900 shadow-sm' : 'text-muted-foreground hover:text-foreground'}"
 					onclick={() => activeTab = 'sources'}
 				>
-					<Settings2 class="w-3.5 h-3.5" />
-					Sources
-				</button>
+					<Settings2 class="w-3.5 h-3.5" />来源</button>
 			</div>
 		</div>
 	</div>
@@ -170,7 +166,7 @@
 				<Search class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
 				<Input
 					type="text"
-					placeholder="Search templates..."
+					placeholder="搜索模板…"
 					class="pl-9 w-64 h-8 text-sm"
 					bind:value={searchQuery}
 					onkeydown={(e) => e.key === 'Escape' && (searchQuery = '')}

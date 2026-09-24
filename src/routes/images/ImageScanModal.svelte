@@ -100,7 +100,7 @@
 	function exportToCSV() {
 		if (exportResults.length === 0) return;
 
-		const headers = ['Scanner', 'CVE ID', 'Severity', 'Package', 'Installed Version', 'Fixed Version', 'Description', 'Link'];
+		const headers = ['扫描器', 'CVE ID', '严重程度', '包裹', 'Installed Version', 'Fixed Version', '描述', 'Link'];
 		const rows: string[][] = [];
 		for (const result of exportResults) {
 			for (const v of result.vulnerabilities) {
@@ -304,9 +304,7 @@
 						<DropdownMenu.Trigger>
 							{#snippet child({ props })}
 								<Button variant="outline" {...props}>
-									<Download class="w-4 h-4" />
-									Export
-								</Button>
+									<Download class="w-4 h-4" />导出</Button>
 							{/snippet}
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content align="start">
@@ -324,21 +322,13 @@
 								<DropdownMenu.Separator />
 							{/if}
 							<DropdownMenu.Item onclick={exportToMarkdown} disabled={exportResults.length === 0}>
-								<FileText class="w-4 h-4 mr-2 text-blue-500" />
-								Markdown report (.md)
-							</DropdownMenu.Item>
+								<FileText class="w-4 h-4 mr-2 text-blue-500" />Markdown 报告（.md）</DropdownMenu.Item>
 							<DropdownMenu.Item onclick={exportToCSV} disabled={exportResults.length === 0}>
-								<FileSpreadsheet class="w-4 h-4 mr-2 text-green-500" />
-								CSV spreadsheet (.csv)
-							</DropdownMenu.Item>
+								<FileSpreadsheet class="w-4 h-4 mr-2 text-green-500" />CSV 电子表格 (.csv)</DropdownMenu.Item>
 							<DropdownMenu.Item onclick={exportToJSON} disabled={exportResults.length === 0}>
-								<FileJson class="w-4 h-4 mr-2 text-amber-500" />
-								JSON data (.json)
-							</DropdownMenu.Item>
+								<FileJson class="w-4 h-4 mr-2 text-amber-500" />JSON 数据（.json）</DropdownMenu.Item>
 							<DropdownMenu.Item onclick={exportToSARIF} disabled={exportResults.length === 0}>
-								<ShieldPlus class="w-4 h-4 mr-2 text-blue-500" />
-								SARIF (.sarif)
-							</DropdownMenu.Item>
+								<ShieldPlus class="w-4 h-4 mr-2 text-blue-500" />SARIF（.sarif）</DropdownMenu.Item>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 				{/if}

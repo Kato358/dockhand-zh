@@ -33,8 +33,8 @@
 
 <div class="space-y-1">
 	<div class="flex items-center gap-3">
-		<Label>Indentation guides</Label>
+		<Label>缩进指南</Label>
 		<TogglePill {checked} onchange={onToggle} />
 	</div>
-	<p class="text-xs text-muted-foreground">Vertical guides showing nesting depth in the code editor.</p>
+	<p class="text-xs text-muted-foreground">代码编辑器中显示嵌套深度的垂直参考线。</p>
 </div>

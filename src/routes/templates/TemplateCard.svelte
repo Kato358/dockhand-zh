@@ -97,9 +97,7 @@
 							window.open(template.projectUrl, '_blank', 'noopener');
 						}}
 					>
-						<ExternalLink class="w-3 h-3" />
-						Project
-					</a>
+						<ExternalLink class="w-3 h-3" />项目</a>
 				{/if}
 				{#if template.detailsUrl}
 					<a
@@ -107,16 +105,14 @@
 						target="_blank"
 						rel="noopener"
 						class="flex items-center gap-0.5 hover:text-primary hover:underline"
-						title="Open the detailed guide on portainer-templates.as93.net"
+						title="请访问 portainer-templates.as93.net 打开详细指南"
 						onclick={(e: MouseEvent) => {
 							e.stopPropagation();
 							e.preventDefault();
 							window.open(template.detailsUrl, '_blank', 'noopener');
 						}}
 					>
-						<BookOpen class="w-3 h-3" />
-						Details
-					</a>
+						<BookOpen class="w-3 h-3" />详情</a>
 				{/if}
 				{#if template.stars}
 					<span class="flex items-center gap-0.5">

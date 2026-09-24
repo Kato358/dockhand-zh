@@ -59,7 +59,7 @@
 	const stackHelperFailed = $derived(stackListing?.kind === 'helper-failed');
 	let loadingStackListing = $state(false);
 	let excludedStackFiles = $state<string[]>([]);
-	// The user-set "Remote stack path (for backup)" for direct/hawser envs, shown in the picker
+	// The user-set "远程编排路径（用于备份）" for direct/hawser envs, shown in the picker
 	// tooltip so the user sees THEIR configured path (empty when not set / socket env).
 	let stackRemoteDir = $state<string>('');
 
@@ -199,7 +199,7 @@
 			if (run) {
 				onRun?.({ configId: result.configId, targetName: selectedItem.name });
 			} else {
-				toast.success('Schedule saved');
+				toast.success('已保存的日程');
 			}
 			open = false;
 		} catch (err: any) {
@@ -226,8 +226,7 @@
 	<Dialog.Content class="max-w-5xl h-[85vh] flex flex-col">
 		<Dialog.Header class="pb-0">
 			<Dialog.Title class="flex items-center gap-2 text-base">
-				<Package class="w-4 h-4" />Create backup
-			</Dialog.Title>
+				<Package class="w-4 h-4" />创建备份</Dialog.Title>
 			{#if selectedItem}
 				<Dialog.Description class="flex items-center gap-2 text-sm flex-wrap">
 					{#if selectedItem.type === 'container'}<Box class="w-4 h-4 text-blue-500" />{:else}<Layers class="w-4 h-4 text-purple-500" />{/if}
@@ -274,9 +273,7 @@
 				disabled={!selectedItem || !selectedDestId}
 				onclick={() => { if (selectedItem && selectedDestId) step = 3; }}
 			>
-				<Clock class="w-4 h-4" />
-				Schedule & run
-			</button>
+				<Clock class="w-4 h-4" />安排和运行</button>
 		</div>
 
 		<!-- Step content -->
@@ -299,7 +296,7 @@
 					</Select.Content>
 				</Select.Root>
 				{#if selectedEnvId}
-					<SearchInput bind:value={searchQuery} placeholder="Search containers and stacks..." class="h-8 text-xs" containerClass="flex-1" />
+					<SearchInput bind:value={searchQuery} placeholder="搜索容器和编排…" class="h-8 text-xs" containerClass="flex-1" />
 				{/if}
 			</div>
 		{/if}
@@ -328,9 +325,9 @@
 							{/each}
 						</div>
 					{:else if selectedEnvId}
-						<p class="text-xs text-muted-foreground py-4 text-center">No containers or stacks found</p>
+						<p class="text-xs text-muted-foreground py-4 text-center">未找到容器或编排物。</p>
 					{:else}
-						<p class="text-xs text-muted-foreground py-4 text-center">Select an environment to see available sources</p>
+						<p class="text-xs text-muted-foreground py-4 text-center">选择环境以查看可用资源</p>
 					{/if}
 				</div>
 
@@ -338,7 +335,7 @@
 				<!-- Step 2: Configure -->
 				<div class="space-y-4">
 					<div class="space-y-1">
-						<Label class="text-xs">Backup repository</Label>
+						<Label class="text-xs">备份仓库</Label>
 						<DestinationPicker
 							destinations={destinations}
 							bind:value={selectedDestId}
@@ -350,7 +347,7 @@
 						<TogglePill bind:checked={stopBeforeBackup} />
 						<div>
 							<Label class="text-xs">Stop {selectedItem?.type || 'container'} during backup</Label>
-							<p class="text-xs text-muted-foreground">Ensures data consistency (will restart after)</p>
+							<p class="text-xs text-muted-foreground">确保数据一致性（之后将重新启动）</p>
 						</div>
 					</div>
 
@@ -378,8 +375,7 @@
 					{/if}
 
 					<div class="flex justify-end pt-2">
-						<Button size="sm" onclick={() => step = 3} disabled={!selectedDestId}>
-							Next <ArrowBigRight class="w-3.5 h-3.5 ml-1" />
+						<Button size="sm" onclick={() => step = 3} disabled={!selectedDestId}>下一步<ArrowBigRight class="w-3.5 h-3.5 ml-1" />
 						</Button>
 					</div>
 				</div>
@@ -389,7 +385,7 @@
 				<div class="flex flex-col gap-4 h-full">
 					<div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground pb-2 border-b">
 						{#if allVolumes}
-							<span>All volumes</span>
+							<span>所有卷</span>
 						{:else}
 							<span>{selectedVolumes.length} volume{selectedVolumes.length !== 1 ? 's' : ''}</span>
 						{/if}
@@ -401,7 +397,7 @@
 
 					<div class="flex items-center gap-2">
 						<Checkbox checked={saveSchedule} onCheckedChange={() => { saveSchedule = !saveSchedule; }} />
-						<span class="text-xs">Save as recurring schedule</span>
+						<span class="text-xs">保存为周期性计划</span>
 					</div>
 
 					{#if saveSchedule}
@@ -409,13 +405,11 @@
 							<CronEditor bind:value={schedule} bind:invalid={scheduleInvalid} />
 						</div>
 					{:else}
-						<p class="pl-6 text-[11px] text-muted-foreground">
-							Runs once now. The backup stays on the list so you can re-run or remove it later — it just won't run on a schedule.
-						</p>
+						<p class="pl-6 text-[11px] text-muted-foreground">现在只运行一次。备份会保留在列表中，以便您稍后重新运行或将其删除——只是不会按计划运行。</p>
 					{/if}
 
 					<div class="flex items-center gap-2 pt-2">
-						<Button variant="outline" size="sm" onclick={() => step = 2} disabled={saving}>Back</Button>
+						<Button variant="outline" size="sm" onclick={() => step = 2} disabled={saving}>返回</Button>
 						<div class="flex-1"></div>
 						{#if saveSchedule}
 							<Button variant="outline" size="sm" onclick={() => saveAndMaybeRun(false)} disabled={saving || scheduleInvalid || stackHelperFailed}>
@@ -425,7 +419,7 @@
 						{/if}
 						<Button size="sm" onclick={() => saveAndMaybeRun(true)} disabled={saving || (saveSchedule && scheduleInvalid) || stackHelperFailed}>
 							{#if saving}<Loader2 class="w-3.5 h-3.5 mr-1.5 animate-spin" />{:else}<Play class="w-3.5 h-3.5 mr-1.5" />{/if}
-							{saveSchedule ? 'Run & save schedule' : 'Run backup now'}
+							{saveSchedule ? 'Run & save schedule' : '立即运行备份'}
 						</Button>
 					</div>
 				</div>

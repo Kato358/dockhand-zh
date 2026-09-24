@@ -161,7 +161,7 @@
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to start pull');
+				throw new Error('启动拉取失败');
 			}
 
 			const { jobId } = await response.json();
@@ -294,7 +294,7 @@
 	<!-- Image Input -->
 	{#if showImageInput}
 		<div class="space-y-2 shrink-0">
-			<Label for="pull-image" class="text-sm font-medium">Image name</Label>
+			<Label for="pull-image" class="text-sm font-medium">镜像名称</Label>
 			<div class="flex gap-2">
 				<Input
 					id="pull-image"
@@ -328,13 +328,13 @@
 				<div class="flex items-center gap-2">
 					{#if status === 'pulling'}
 						<Download class="w-4 h-4 animate-spin text-blue-600" />
-						<span class="text-sm">Pulling layers...</span>
+						<span class="text-sm">一层层剥开…</span>
 					{:else if status === 'complete'}
 						<CheckCircle2 class="w-4 h-4 text-green-600" />
-						<span class="text-sm text-green-600">Pull completed!</span>
+						<span class="text-sm text-green-600">拉取完成！</span>
 					{:else if status === 'error'}
 						<XCircle class="w-4 h-4 text-red-600" />
-						<span class="text-sm text-red-600">Failed</span>
+						<span class="text-sm text-red-600">失败</span>
 					{/if}
 				</div>
 				<div class="flex items-center gap-3">
@@ -382,9 +382,9 @@
 				<table class="w-full text-xs">
 					<thead class="bg-muted sticky top-0">
 						<tr>
-							<th class="text-left py-1.5 px-3 font-medium w-28">Layer ID</th>
-							<th class="text-left py-1.5 px-3 font-medium">Status</th>
-							<th class="text-right py-1.5 px-3 font-medium w-24">Progress</th>
+							<th class="text-left py-1.5 px-3 font-medium w-28">图层 ID</th>
+							<th class="text-left py-1.5 px-3 font-medium">状态</th>
+							<th class="text-right py-1.5 px-3 font-medium w-24">进度</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -424,7 +424,7 @@
 											<span class="text-muted-foreground w-8">{percentage}%</span>
 										</div>
 									{:else if isComplete}
-										<span class="text-green-600">Done</span>
+										<span class="text-green-600">完成</span>
 									{:else}
 										<span class="text-muted-foreground">-</span>
 									{/if}
@@ -443,7 +443,7 @@
 					<Terminal class="w-3.5 h-3.5" />
 					<span>Output ({outputLines.length} lines)</span>
 				</div>
-				<button type="button" onclick={toggleLogTheme} class="p-1 rounded hover:bg-muted transition-colors cursor-pointer" title="Toggle log theme">
+				<button type="button" onclick={toggleLogTheme} class="p-1 rounded hover:bg-muted transition-colors cursor-pointer" title="切换日志主题">
 					{#if logDarkMode}
 						<Sun class="w-3.5 h-3.5" />
 					{:else}
@@ -478,7 +478,7 @@
 	<!-- Idle state -->
 	{#if status === 'idle' && !showImageInput}
 		<div class="flex-1 flex items-center justify-center text-muted-foreground">
-			<p class="text-sm">Enter an image name to start pulling</p>
+			<p class="text-sm">输入镜像名称以开始提取</p>
 		</div>
 	{/if}
 </div>

@@ -3,7 +3,7 @@
 	import { cn } from '$lib/utils.js';
 
 	interface Props {
-		/** Optional label under the spinner, e.g. "Loading snapshots...". */
+		/** Optional label under the spinner, e.g. "正在加载快照…". */
 		label?: string;
 		/** Extra classes on the wrapper (e.g. `h-full` to fill a flex parent). */
 		class?: string;

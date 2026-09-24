@@ -350,7 +350,7 @@
 		<!-- Header row: title + info + view toggle + validation pills + actions -->
 		<div class="flex items-center gap-2 justify-between">
 			<div class="flex items-center gap-2 flex-wrap min-w-0">
-				<span class="text-xs text-zinc-500 dark:text-zinc-400 shrink-0">Environment variables</span>
+				<span class="text-xs text-zinc-500 dark:text-zinc-400 shrink-0">环境变量</span>
 			{#if infoText}
 				<Tooltip.Root>
 					<Tooltip.Trigger>
@@ -369,7 +369,7 @@
 					type="button"
 					class="flex items-center gap-1 px-1.5 py-0.5 rounded text-2xs transition-colors {viewMode === 'form' ? 'bg-white dark:bg-zinc-700 text-zinc-800 dark:text-zinc-100 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'}"
 					onclick={() => handleViewModeChange('form')}
-					title="Form view"
+					title="表单视图"
 				>
 					<List class="w-3 h-3" />
 				</button>
@@ -377,7 +377,7 @@
 					type="button"
 					class="flex items-center gap-1 px-1.5 py-0.5 rounded text-2xs transition-colors {viewMode === 'text' ? 'bg-white dark:bg-zinc-700 text-zinc-800 dark:text-zinc-100 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'}"
 					onclick={() => handleViewModeChange('text')}
-					title="Text view (raw .env file)"
+					title="文本视图（原始 .env 文件）"
 				>
 					<FileText class="w-3 h-3" />
 				</button>
@@ -410,21 +410,17 @@
 						{@render headerActions()}
 					{/if}
 					<Button type="button" size="sm" variant="ghost" onclick={handleLoadFromFile} class="h-6 text-xs px-2">
-						<Upload class="w-3.5 h-3.5" />
-						Load
-					</Button>
+						<Upload class="w-3.5 h-3.5" />加载</Button>
 					{#if viewMode === 'form'}
 						<Button type="button" size="sm" variant="ghost" onclick={addEnvVariable} class="h-6 text-xs px-2">
-							<Plus class="w-3.5 h-3.5" />
-							Add
-						</Button>
+							<Plus class="w-3.5 h-3.5" />添加</Button>
 					{/if}
 					<ConfirmPopover
 						bind:open={confirmClearOpen}
-						title="Clear all variables?"
+						title="清除所有变量？"
 						action="clear"
 						itemType="environment variables"
-						confirmText="Clear all"
+						confirmText="全部清除"
 						onConfirm={clearAll}
 						onOpenChange={(o) => confirmClearOpen = o}
 					>
@@ -436,9 +432,7 @@
 								class="h-6 text-xs px-2 {hasContent ? 'text-destructive hover:text-destructive' : 'text-muted-foreground/50 cursor-not-allowed'}"
 								disabled={!hasContent}
 							>
-								<Trash2 class="w-3.5 h-3.5" />
-								Clear
-							</Button>
+								<Trash2 class="w-3.5 h-3.5" />清空</Button>
 						{/snippet}
 					</ConfirmPopover>
 				</div>
@@ -456,8 +450,7 @@
 			{#if showInterpolationHint}
 				<div class="flex items-start gap-2 px-2.5 py-2 rounded bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50">
 					<Info class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-					<p class="text-xs text-blue-700 dark:text-blue-300">
-						These variables are available for <strong>compose file interpolation</strong> using <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">${'{VAR_NAME}'}</code> syntax.
+					<p class="text-xs text-blue-700 dark:text-blue-300">这些变量可用于<strong>compose file interpolation</strong> using <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">${'{VAR_NAME}'}</code> syntax.
 						To pass them to containers, reference them in the compose file's <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">environment:</code> section.
 					</p>
 				</div>
@@ -472,8 +465,7 @@
 			<div class="flex flex-col gap-1.5">
 				<div class="flex items-start gap-2 px-2.5 py-2 rounded bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50">
 					<Info class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-					<p class="text-xs text-blue-700 dark:text-blue-300">
-						These variables are available for <strong>compose file interpolation</strong> using <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">${'{VAR_NAME}'}</code> syntax.
+					<p class="text-xs text-blue-700 dark:text-blue-300">这些变量可用于<strong>compose file interpolation</strong> using <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">${'{VAR_NAME}'}</code> syntax.
 						To pass them to containers, reference them in the compose file's <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">environment:</code> section.
 					</p>
 				</div>
@@ -481,7 +473,7 @@
 					<ShieldAlert class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
 					<div class="text-xs text-amber-700 dark:text-amber-300">
 						<span class="font-medium">{secretCount} secret{secretCount === 1 ? '' : 's'} not shown.</span>
-						<span class="text-amber-600 dark:text-amber-400">Secrets are never written to disk and are injected via shell environment when the stack starts.</span>
+						<span class="text-amber-600 dark:text-amber-400">密钥永远不会写入磁盘，而是在编排启动时通过 shell 环境注入。</span>
 					</div>
 				</div>
 			</div>
@@ -489,8 +481,7 @@
 			<!-- Interpolation hint only (no secrets) -->
 			<div class="flex items-start gap-2 px-2.5 py-2 rounded bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50">
 				<Info class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-				<p class="text-xs text-blue-700 dark:text-blue-300">
-					These variables are available for <strong>compose file interpolation</strong> using <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">${'{VAR_NAME}'}</code> syntax.
+				<p class="text-xs text-blue-700 dark:text-blue-300">这些变量可用于<strong>compose file interpolation</strong> using <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">${'{VAR_NAME}'}</code> syntax.
 					To pass them to containers, reference them in the compose file's <code class="bg-blue-100 dark:bg-blue-800/40 px-1 rounded">environment:</code> section.
 				</p>
 			</div>
@@ -500,7 +491,7 @@
 				<ShieldAlert class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
 				<div class="text-xs text-amber-700 dark:text-amber-300">
 					<span class="font-medium">{secretCount} secret{secretCount === 1 ? '' : 's'} not shown.</span>
-					<span class="text-amber-600 dark:text-amber-400">Secrets are never written to disk and are injected via shell environment when the stack starts.</span>
+					<span class="text-amber-600 dark:text-amber-400">密钥永远不会写入磁盘，而是在编排启动时通过 shell 环境注入。</span>
 				</div>
 			</div>
 		{/if}
@@ -518,7 +509,7 @@
 			<div class="flex items-start gap-2 px-2 py-1.5 rounded bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50">
 				<AlertTriangle class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
 				<div class="text-2xs text-amber-700 dark:text-amber-300">
-					<span class="font-medium">Some lines couldn't be parsed:</span>
+					<span class="font-medium">部分代码行无法解析：</span>
 					<ul class="mt-0.5 list-disc list-inside">
 						{#each parseWarnings.slice(0, 3) as warning}
 							<li>{warning}</li>
@@ -527,7 +518,7 @@
 							<li>...and {parseWarnings.length - 3} more</li>
 						{/if}
 					</ul>
-					<p class="mt-1 text-amber-600 dark:text-amber-400">Switch to text view to edit these lines.</p>
+					<p class="mt-1 text-amber-600 dark:text-amber-400">切换到文本视图来编辑这些行。</p>
 				</div>
 			</div>
 		{/if}
@@ -550,7 +541,7 @@
 							<span class="font-medium">the provider</span>
 						{/if}
 					</div>
-					<p class="text-emerald-600 dark:text-emerald-400 mt-0.5">Injected into the container at last deploy &mdash; never written to <code>.env</code>.</p>
+					<p class="text-emerald-600 dark:text-emerald-400 mt-0.5">上次部署时注入到容器中的 &mdash; 从未写入<code>.env</code>.</p>
 					<div class="flex flex-wrap gap-1.5 mt-1.5">
 						{#each injectedSecretKeys as key}
 							<span class="inline-flex items-center gap-1 font-mono text-2xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-800/40 border border-emerald-300 dark:border-emerald-700">
@@ -565,7 +556,7 @@
 			<div class="flex items-start gap-2 px-2.5 py-2 rounded bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50">
 				<AlertTriangle class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
 				<div class="text-xs text-amber-700 dark:text-amber-300 min-w-0">
-					<div class="font-semibold">No secret provider is bound</div>
+					<div class="font-semibold">未绑定任何密钥提供商</div>
 					<p class="text-amber-600 dark:text-amber-400 mt-0.5">
 						These {injectedSecretKeys.length} secret{injectedSecretKeys.length === 1 ? ' was' : 's were'} injected on the last deploy but the stack is no longer bound to a provider. The next deploy will drop {injectedSecretKeys.length === 1 ? 'it' : 'them'}. Reselect a provider to keep them.
 					</p>
@@ -591,7 +582,7 @@
 		<!-- Add missing variables (form mode only) -->
 		{#if viewMode === 'form' && effectiveValidation && effectiveValidation.missing.length > 0 && !readonly}
 			<div class="flex flex-wrap gap-1 items-center">
-				<span class="text-xs text-muted-foreground mr-1">Add missing:</span>
+				<span class="text-xs text-muted-foreground mr-1">添加缺失项：</span>
 				{#each effectiveValidation.missing as missing}
 					<button
 						type="button"

@@ -80,7 +80,7 @@
 		</div>
 
 		<Dialog.Footer>
-			<Button onclick={onDismiss}>Got it</Button>
+			<Button onclick={onDismiss}>知道了</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

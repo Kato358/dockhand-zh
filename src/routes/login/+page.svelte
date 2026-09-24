@@ -51,12 +51,12 @@
 		try {
 			const response = await fetch('/api/auth/providers');
 			const data = await response.json();
-			providers = data.providers || [{ id: 'local', name: 'Local', type: 'local' }];
+			providers = data.providers || [{ id: 'local', name: '本地', type: 'local' }];
 			// Set default to first credential provider or first provider
 			const defaultProvider = data.defaultProvider || 'local';
 			selectedProvider = credentialProviders.find(p => p.id === defaultProvider)?.id || credentialProviders[0]?.id || 'local';
 		} catch {
-			providers = [{ id: 'local', name: 'Local', type: 'local' }];
+			providers = [{ id: 'local', name: '本地', type: 'local' }];
 		} finally {
 			loadingProviders = false;
 		}
@@ -111,7 +111,7 @@
 			}
 
 			if (!result.success) {
-				error = result.error || 'Login failed';
+				error = result.error || '登录失败';
 				loading = false;
 				return;
 			}
@@ -121,7 +121,7 @@
 			await environments.refresh();
 			goto(redirectUrl);
 		} catch (e) {
-			error = 'An unexpected error occurred';
+			error = '发生意外错误';
 			loading = false;
 		}
 	}
@@ -137,7 +137,7 @@
 			const initiateUrl = `${provider.initiateUrl}?redirect=${encodeURIComponent(redirectUrl)}`;
 			window.location.href = initiateUrl;
 		} catch (e) {
-			error = 'Failed to initiate SSO login';
+			error = '单点登录 (SSO) 发起失败';
 			ssoLoading = null;
 		}
 	}
@@ -150,7 +150,7 @@
 </script>
 
 <svelte:head>
-	<title>Login - Dockhand</title>
+	<title>登录 - Dockhand</title>
 </svelte:head>
 
 <div class="min-h-screen flex items-center justify-center bg-background p-4">
@@ -159,11 +159,11 @@
 			<div class="flex justify-center mb-4">
 				<img
 					src="/logo.svg"
-					alt="Dockhand Logo"
+					alt="Dockhand标志"
 					class="h-16 w-auto object-contain"
 				/>
 			</div>
-			<Card.Title class="text-2xl font-bold">Welcome back</Card.Title>
+			<Card.Title class="text-2xl font-bold">欢迎回来</Card.Title>
 			<Card.Description>
 				{#if requiresMfa}
 					Enter your two-factor authentication code
@@ -218,7 +218,7 @@
 					{#if !requiresMfa}
 						{#if credentialProviders.length > 1}
 							<div class="space-y-2">
-								<Label>Sign in with</Label>
+								<Label>使用以下方式登录</Label>
 								<div class="grid gap-2">
 									{#each credentialProviders as provider}
 										{@const Icon = getProviderIcon(provider.type)}
@@ -253,11 +253,11 @@
 						{/if}
 
 						<div class="space-y-2">
-							<Label for="username">Username</Label>
+							<Label for="username">用户名</Label>
 							<Input
 								id="username"
 								type="text"
-								placeholder="Enter your username"
+								placeholder="请输入您的用户名"
 								bind:value={username}
 								required
 								disabled={loading}
@@ -267,11 +267,11 @@
 						</div>
 
 						<div class="space-y-2">
-							<Label for="password">Password</Label>
+							<Label for="password">密码</Label>
 							<Input
 								id="password"
 								type="password"
-								placeholder="Enter your password"
+								placeholder="请输入您的密码"
 								bind:value={password}
 								required
 								disabled={loading}
@@ -282,23 +282,21 @@
 						<div class="space-y-2">
 							<div class="flex items-center gap-2 text-sm text-muted-foreground mb-4">
 								<Shield class="h-4 w-4" />
-								<span>Two-factor authentication required</span>
+								<span>需要双因素身份验证</span>
 							</div>
-							<Label for="mfaToken">Authentication code</Label>
+							<Label for="mfaToken">验证码</Label>
 							<Input
 								id="mfaToken"
 								name="totp"
 								type="text"
-								placeholder="Enter code"
+								placeholder="输入代码"
 								bind:value={mfaToken}
 								required
 								disabled={loading}
 								autocomplete="one-time-code"
 								autofocus
 							/>
-							<p class="text-xs text-muted-foreground">
-								Enter the 6-digit code from your authenticator app, or use a backup code
-							</p>
+							<p class="text-xs text-muted-foreground">输入身份验证器应用中显示的 6 位数验证码，或使用备份验证码</p>
 						</div>
 					{/if}
 
@@ -331,7 +329,7 @@
 		</Card.Content>
 
 		<Card.Footer class="flex flex-col space-y-2 text-center text-sm text-muted-foreground">
-			<p>Dockhand Docker Management</p>
+			<p>Docker Docker 管理</p>
 		</Card.Footer>
 	</Card.Root>
 </div>

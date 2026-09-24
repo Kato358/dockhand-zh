@@ -22,6 +22,6 @@
 		<span class="text-xs font-medium truncate">{restarting} restarting</span>
 	{:else}
 		<CircleCheck class="w-3.5 h-3.5" />
-		<span class="text-xs font-medium truncate">All containers healthy</span>
+		<span class="text-xs font-medium truncate">所有容器均健康</span>
 	{/if}
 </div>

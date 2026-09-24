@@ -49,84 +49,84 @@
 	const NOTIFICATION_EVENT_GROUPS: EventGroup[] = [
 		{
 			id: 'container',
-			label: 'Container events',
+			label: '容器事件',
 			icon: Box,
 			events: [
-				{ id: 'container_started', label: 'Container started', description: 'When a container starts running' },
-				{ id: 'container_stopped', label: 'Container stopped', description: 'When a container is stopped' },
-				{ id: 'container_restarted', label: 'Container restarted', description: 'When a container restarts' },
-				{ id: 'container_exited', label: 'Container exited', description: 'When a container exits unexpectedly' },
-				{ id: 'container_unhealthy', label: 'Container unhealthy', description: 'When a container health check fails' },
-				{ id: 'container_healthy', label: 'Container healthy', description: 'When a container health check recovers' },
-				{ id: 'container_oom', label: 'Container OOM killed', description: 'When a container is killed due to out of memory' },
-				{ id: 'container_updated', label: 'Container updated', description: 'When a container image is updated' }
+				{ id: 'container_started', label: '容器已启动', description: '当容器开始运行时' },
+				{ id: 'container_stopped', label: '容器已停止', description: '当容器停止运行时' },
+				{ id: 'container_restarted', label: '容器已重启', description: '容器重启时' },
+				{ id: 'container_exited', label: '容器已退出', description: '容器意外退出时' },
+				{ id: 'container_unhealthy', label: '容器不健康', description: '当容器健康检查失败时' },
+				{ id: 'container_healthy', label: '容器健康', description: '容器健康检查还原时' },
+				{ id: 'container_oom', label: '容器内存不足终止', description: '当容器因内存不足而被终止时' },
+				{ id: 'container_updated', label: '容器已更新', description: '当容器镜像更新时' }
 			]
 		},
 		{
 			id: 'auto_update',
-			label: 'Auto-update events',
+			label: '自动更新事件',
 			icon: RefreshCw,
 			events: [
-				{ id: 'auto_update_success', label: 'Update succeeded', description: 'Container successfully updated to new image' },
-				{ id: 'auto_update_failed', label: 'Update failed', description: 'Container auto-update failed' },
-				{ id: 'auto_update_blocked', label: 'Update blocked', description: 'Update blocked due to vulnerability criteria' },
-				{ id: 'updates_detected', label: 'Updates detected', description: 'Container image updates are available' },
-				{ id: 'batch_update_success', label: 'Batch update completed', description: 'Scheduled container updates completed' }
+				{ id: 'auto_update_success', label: '更新成功', description: '容器已成功更新到新镜像' },
+				{ id: 'auto_update_failed', label: '更新失败', description: '容器自动更新失败' },
+				{ id: 'auto_update_blocked', label: '更新被阻止', description: '由于漏洞标准，更新被阻止' },
+				{ id: 'updates_detected', label: '检测到更新', description: '容器镜像更新可用' },
+				{ id: 'batch_update_success', label: '批量更新完成', description: '计划容器更新已完成' }
 			]
 		},
 		{
 			id: 'git_stack',
-			label: 'Git stack events',
+			label: 'Git 编排事件',
 			icon: GitBranch,
 			events: [
-				{ id: 'git_sync_success', label: 'Git sync succeeded', description: 'Git stack synced and deployed successfully' },
-				{ id: 'git_sync_failed', label: 'Git sync failed', description: 'Git stack sync or deploy failed' },
-				{ id: 'git_sync_skipped', label: 'Git sync skipped', description: 'Git stack sync skipped (no changes)' }
+				{ id: 'git_sync_success', label: 'Git 同步成功', description: 'Git编排已成功同步和部署' },
+				{ id: 'git_sync_failed', label: 'Git 同步失败', description: 'Git编排同步或部署失败' },
+				{ id: 'git_sync_skipped', label: 'Git 同步已跳过', description: 'Git 编排同步已跳过（无更改）' }
 			]
 		},
 		{
 			id: 'stack',
-			label: 'Stack events',
+			label: '编排事件',
 			icon: Layers,
 			events: [
-				{ id: 'stack_started', label: 'Stack started', description: 'When a compose stack starts' },
-				{ id: 'stack_stopped', label: 'Stack stopped', description: 'When a compose stack stops' },
-				{ id: 'stack_deployed', label: 'Stack deployed', description: 'Stack deployed (new or update)' },
-				{ id: 'stack_deploy_failed', label: 'Stack deploy failed', description: 'Stack deployment failed' }
+				{ id: 'stack_started', label: '编排已启动', description: '当编排启动时' },
+				{ id: 'stack_stopped', label: '编排已停止', description: '当编排停止时' },
+				{ id: 'stack_deployed', label: '编排已部署', description: '编排已部署（新建或更新）' },
+				{ id: 'stack_deploy_failed', label: '编排部署失败', description: '编排部署失败' }
 			]
 		},
 		{
 			id: 'security',
-			label: 'Security events',
+			label: '安全事件',
 			icon: Shield,
 			events: [
-				{ id: 'vulnerability_critical', label: 'Critical vulns found', description: 'Critical vulnerabilities found in image scan' },
-				{ id: 'vulnerability_high', label: 'High vulns found', description: 'High severity vulnerabilities found' },
-				{ id: 'vulnerability_any', label: 'Any vulns found', description: 'Any vulnerabilities found (medium/low)' }
+				{ id: 'vulnerability_critical', label: '发现关键漏洞', description: '镜像扫描中发现严重漏洞' },
+				{ id: 'vulnerability_high', label: '发现高漏洞', description: '发现高危漏洞' },
+				{ id: 'vulnerability_any', label: '发现的任何漏洞', description: '发现的漏洞（中/低）' }
 			]
 		},
 		{
 			id: 'backup',
-			label: 'Backup events',
+			label: '备份事件',
 			icon: Archive,
 			events: [
-				{ id: 'backup_success', label: 'Backup succeeded', description: 'Backup completed successfully' },
-				{ id: 'backup_failed', label: 'Backup failed', description: 'Backup failed' },
-				{ id: 'restore_success', label: 'Restore succeeded', description: 'Restore completed successfully' },
-				{ id: 'restore_failed', label: 'Restore failed', description: 'Restore failed' }
+				{ id: 'backup_success', label: '备份成功', description: '备份已成功完成' },
+				{ id: 'backup_failed', label: '备份失败', description: '备份失败' },
+				{ id: 'restore_success', label: '还原成功。', description: '还原已成功完成' },
+				{ id: 'restore_failed', label: '还原失败', description: '还原失败' }
 			]
 		},
 		{
 			id: 'system',
-			label: 'System events',
+			label: '系统事件',
 			icon: HardDrive,
 			events: [
-				{ id: 'image_pulled', label: 'Image pulled', description: 'When a new image is pulled' },
-				{ id: 'image_prune_success', label: 'Image prune completed', description: 'Scheduled image prune completed successfully' },
-				{ id: 'image_prune_failed', label: 'Image prune failed', description: 'Scheduled image prune failed' },
-				{ id: 'environment_offline', label: 'Environment offline', description: 'Environment became unreachable' },
-				{ id: 'environment_online', label: 'Environment online', description: 'Environment came back online' },
-				{ id: 'disk_space_warning', label: 'Disk space warning', description: 'Docker disk usage exceeds threshold' }
+				{ id: 'image_pulled', label: '镜像已拉取', description: '当拉取新镜像时' },
+				{ id: 'image_prune_success', label: '镜像清理完成', description: '计划镜像清理已成功完成' },
+				{ id: 'image_prune_failed', label: '镜像清理失败', description: '计划镜像清理失败' },
+				{ id: 'environment_offline', label: '环境离线', description: '环境变得无法到达' },
+				{ id: 'environment_online', label: '在线环境', description: '环境已还原在线' },
+				{ id: 'disk_space_warning', label: '磁盘空间警告', description: 'Docker 磁盘使用量超过阈值' }
 			]
 		}
 	];
@@ -199,7 +199,7 @@
 					onclick={(e) => { e.stopPropagation(); toggleGroupAll(group); }}
 					{disabled}
 				>
-					{allSelected ? 'All' : someSelected ? 'Some' : 'None'}
+					{allSelected ? '全部' : someSelected ? 'Some' : '无'}
 				</button>
 			</div>
 

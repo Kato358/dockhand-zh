@@ -44,7 +44,7 @@
 			licenseInfo = await response.json();
 		} catch (error) {
 			console.error('Failed to fetch license info:', error);
-			licenseInfo = { valid: false, active: false, error: 'Failed to fetch license info' };
+			licenseInfo = { valid: false, active: false, error: '获取许可证信息失败' };
 		} finally {
 			licenseLoading = false;
 		}
@@ -72,21 +72,21 @@
 			const result = await response.json();
 
 			if (!response.ok || result.error) {
-				licenseFormError = result.error || 'Failed to activate license';
+				licenseFormError = result.error || '许可证激活失败';
 				return;
 			}
 
 			// Refresh license info and update global store
 			await fetchLicenseInfo();
 			await licenseStore.check();
-			toast.success('License activated successfully');
+			toast.success('许可证已成功激活');
 
 			// Clear form
 			licenseFormName = '';
 			licenseFormKey = '';
 		} catch (error) {
-			licenseFormError = 'Failed to activate license';
-			toast.error('Failed to activate license');
+			licenseFormError = '许可证激活失败';
+			toast.error('许可证激活失败');
 		} finally {
 			licenseFormSaving = false;
 		}
@@ -97,10 +97,10 @@
 			await fetch('/api/license', { method: 'DELETE' });
 			await fetchLicenseInfo();
 			await licenseStore.check();
-			toast.success('License deactivated');
+			toast.success('许可证已停用');
 		} catch (error) {
 			console.error('Failed to deactivate license:', error);
-			toast.error('Failed to deactivate license');
+			toast.error('停用许可证失败');
 		}
 	}
 
@@ -115,9 +115,8 @@
 			<div class="flex items-start gap-3">
 				<Crown class="w-5 h-5 text-amber-500 mt-0.5" />
 				<div>
-					<p class="text-sm font-medium">License management</p>
-					<p class="text-xs text-muted-foreground">
-						Activate your license to validate commercial use. <span class="font-medium">Enterprise</span> licenses unlock premium features including RBAC, LDAP and audit logs.
+					<p class="text-sm font-medium">许可证管理</p>
+					<p class="text-xs text-muted-foreground">激活您的许可证以验证其商业用途。<span class="font-medium">企业</span> licenses unlock premium features including RBAC, LDAP and audit logs.
 					</p>
 				</div>
 			</div>
@@ -128,7 +127,7 @@
 		<Card.Root>
 			<Card.Content class="py-8 text-center">
 				<RefreshCw class="w-6 h-6 mx-auto mb-2 animate-spin text-muted-foreground" />
-				<p class="text-sm text-muted-foreground">Loading license information...</p>
+				<p class="text-sm text-muted-foreground">正在加载许可证信息…</p>
 			</Card.Content>
 		</Card.Root>
 	{:else if licenseInfo?.valid && licenseInfo?.active}
@@ -149,15 +148,15 @@
 			<Card.Content class="space-y-4">
 				<div class="grid grid-cols-2 gap-4 text-sm">
 					<div>
-						<p class="text-muted-foreground">Licensed to</p>
+						<p class="text-muted-foreground">获得许可</p>
 						<p class="font-medium">{licenseInfo.payload?.name}</p>
 					</div>
 					<div>
-						<p class="text-muted-foreground">License type</p>
+						<p class="text-muted-foreground">许可证类型</p>
 						<p class="font-medium flex items-center gap-1">
 							{#if isEnterprise}
 								<Crown class="w-3.5 h-3.5 text-amber-500" />
-								<span class="text-amber-600 dark:text-amber-400">Enterprise</span>
+								<span class="text-amber-600 dark:text-amber-400">企业</span>
 							{:else}
 								<Building2 class="w-3.5 h-3.5 text-blue-500" />
 								<span class="text-blue-600 dark:text-blue-400">SMB</span>
@@ -165,28 +164,26 @@
 						</p>
 					</div>
 					<div>
-						<p class="text-muted-foreground">Licensed host</p>
+						<p class="text-muted-foreground">授权主机</p>
 						<p class="font-medium font-mono text-xs">{licenseInfo.payload?.host}</p>
 					</div>
 					<div>
-						<p class="text-muted-foreground">Issued</p>
+						<p class="text-muted-foreground">发布</p>
 						<p class="font-medium">{formatDate(licenseInfo.payload?.issued || '')}</p>
 					</div>
 					<div>
-						<p class="text-muted-foreground">Expires</p>
+						<p class="text-muted-foreground">过期时间</p>
 						<p class="font-medium">{licenseInfo.payload?.expires ? formatDate(licenseInfo.payload.expires) : 'Never (Perpetual)'}</p>
 					</div>
 				</div>
 				<div class="pt-2 border-t">
-					<p class="text-xs text-muted-foreground mb-2">Current hostname</p>
+					<p class="text-xs text-muted-foreground mb-2">当前主机名</p>
 					<code class="text-xs bg-muted px-2 py-1 rounded">{licenseInfo.hostname}</code>
 				</div>
 				{#if $canAccess('settings', 'edit')}
 				<div class="flex justify-end">
 					<Button variant="outline" size="sm" onclick={deactivateLicense}>
-						<XCircle class="w-4 h-4" />
-						Deactivate license
-					</Button>
+						<XCircle class="w-4 h-4" />停用许可证</Button>
 				</div>
 				{/if}
 			</Card.Content>
@@ -196,9 +193,7 @@
 		<Card.Root>
 			<Card.Header>
 				<Card.Title class="text-sm font-medium flex items-center gap-2">
-					<Key class="w-4 h-4" />
-					Activate license
-				</Card.Title>
+					<Key class="w-4 h-4" />激活许可证</Card.Title>
 			</Card.Header>
 			<Card.Content class="space-y-4">
 				{#if licenseFormError}
@@ -214,30 +209,30 @@
 				{/if}
 
 				<div class="space-y-2">
-					<Label for="license-name">License name</Label>
+					<Label for="license-name">许可证名称</Label>
 					<Input
 						id="license-name"
 						bind:value={licenseFormName}
-						placeholder="Your Company Name"
+						placeholder="您的公司名称"
 						disabled={!$canAccess('settings', 'edit')}
 					/>
-					<p class="text-xs text-muted-foreground">Enter the name exactly as provided with your license</p>
+					<p class="text-xs text-muted-foreground">请准确输入驾照上的名称。</p>
 				</div>
 
 				<div class="space-y-2">
-					<Label for="license-key">License key</Label>
+					<Label for="license-key">许可证密钥</Label>
 					<textarea
 						id="license-key"
 						bind:value={licenseFormKey}
-						placeholder="Paste your license key here..."
+						placeholder="将您的许可证密钥粘贴到此处…"
 						class="flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-mono"
 						disabled={!$canAccess('settings', 'edit')}
 					></textarea>
 				</div>
 
 				<div class="pt-2 border-t">
-					<p class="text-xs text-muted-foreground mb-2">Current hostname (for license validation)</p>
-					<code class="text-xs bg-muted px-2 py-1 rounded">{licenseInfo?.hostname || 'Unknown'}</code>
+					<p class="text-xs text-muted-foreground mb-2">当前主机名（用于许可证验证）</p>
+					<code class="text-xs bg-muted px-2 py-1 rounded">{licenseInfo?.hostname || '未知'}</code>
 				</div>
 
 				{#if $canAccess('settings', 'edit')}

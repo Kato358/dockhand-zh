@@ -14,13 +14,13 @@
 
 	// System-only events (configured at channel level, not per-environment)
 	const SYSTEM_EVENTS = [
-		{ id: 'license_expiring', label: 'License expiring', description: 'Enterprise license expiring soon' },
-		{ id: 'repo_prune_success', label: 'Backup repository prune success', description: 'Scheduled repository prune completed successfully' },
-		{ id: 'repo_prune_failed', label: 'Backup repository prune failed', description: 'Scheduled repository prune failed' },
-		{ id: 'repo_check_success', label: 'Backup repository check success', description: 'Scheduled integrity check completed successfully' },
-		{ id: 'repo_check_failed', label: 'Backup repository check failed', description: 'Scheduled integrity check found errors or failed' },
-		{ id: 'repo_verify_success', label: 'Backup repository data verification success', description: 'Scheduled data verification completed successfully' },
-		{ id: 'repo_verify_failed', label: 'Backup repository data verification failed', description: 'Scheduled data verification found corruption or failed' }
+		{ id: 'license_expiring', label: '许可证到期', description: '企业许可证即将到期' },
+		{ id: 'repo_prune_success', label: '备份仓库清理成功', description: '计划的仓库清理工作已成功完成' },
+		{ id: 'repo_prune_failed', label: '备份仓库清理失败', description: '计划的仓库清理失败' },
+		{ id: 'repo_check_success', label: '备份仓库检查成功', description: '计划完整性检查已成功完成' },
+		{ id: 'repo_check_failed', label: '备份仓库检查失败', description: '计划完整性检查发现错误或失败' },
+		{ id: 'repo_verify_success', label: '备份仓库数据验证成功', description: '计划数据验证已成功完成' },
+		{ id: 'repo_verify_failed', label: '备份仓库数据验证失败', description: '计划的数据验证发现数据损坏或失败' }
 	] as const;
 
 	export interface NotificationSetting {
@@ -200,7 +200,7 @@
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						type: formType,
-						name: formName.trim() || 'Test',
+						name: formName.trim() || '测试',
 						config
 					})
 				});
@@ -210,7 +210,7 @@
 
 			if (data.success) {
 				testResult = 'success';
-				toast.success('Test notification sent successfully');
+				toast.success('测试通知已成功发送');
 				setTimeout(() => { testResult = 'idle'; }, 3000);
 			} else {
 				testResult = 'error';
@@ -219,7 +219,7 @@
 			}
 		} catch {
 			testResult = 'error';
-			formError = 'Failed to test notification';
+			formError = '通知测试失败';
 			setTimeout(() => { testResult = 'idle'; }, 3000);
 		} finally {
 			formTesting = false;
@@ -228,7 +228,7 @@
 
 	async function save() {
 		if (!formName.trim()) {
-			formError = 'Name is required';
+			formError = '名称（必填）';
 			return;
 		}
 
@@ -301,7 +301,7 @@
 <Dialog.Root bind:open onOpenChange={(o) => { if (o) { formError = ''; focusFirstInput(); } }}>
 	<Dialog.Content class="max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
 		<Dialog.Header>
-			<Dialog.Title>{isEditing ? 'Edit' : 'Add'} notification channel</Dialog.Title>
+			<Dialog.Title>{isEditing ? '编辑' : '添加'} notification channel</Dialog.Title>
 		</Dialog.Header>
 
 		{#if formError}
@@ -311,9 +311,7 @@
 		<Tabs.Root bind:value={activeTab} class="flex-1 flex flex-col overflow-hidden mt-2">
 			<Tabs.List class="flex-shrink-0 mb-0 w-full grid grid-cols-2">
 				<Tabs.Trigger value="channel" class="flex items-center justify-center gap-1.5">
-					<Settings class="w-3.5 h-3.5" />
-					Channel
-				</Tabs.Trigger>
+					<Settings class="w-3.5 h-3.5" />渠道</Tabs.Trigger>
 				<Tabs.Trigger value="events" class="flex items-center justify-center gap-1.5">
 					<Bell class="w-3.5 h-3.5" />
 					System events
@@ -327,14 +325,14 @@
 				<Tabs.Content value="channel" class="space-y-4 mt-0">
 			<div class="grid grid-cols-2 gap-4">
 				<div class="space-y-2">
-					<Label for="notif-name">Name *</Label>
-					<Input id="notif-name" bind:value={formName} placeholder="My notification channel" />
+					<Label for="notif-name">名称 *</Label>
+					<Input id="notif-name" bind:value={formName} placeholder="我的通知频道" />
 				</div>
 				<div class="space-y-2">
-					<Label>Type</Label>
+					<Label>类型</Label>
 					{#if isEditing}
 						<Badge variant="secondary" class="h-9 flex items-center justify-center">
-							{formType === 'smtp' ? 'SMTP (Email)' : 'Webhooks'}
+							{formType === 'smtp' ? 'SMTP（电子邮件）' : 'Webhook'}
 						</Badge>
 					{:else}
 						<Select.Root
@@ -353,10 +351,10 @@
 							</Select.Trigger>
 							<Select.Content>
 								<Select.Item value="smtp">
-									<span class="flex items-center gap-2"><Mail class="w-4 h-4" />SMTP (Email)</span>
+									<span class="flex items-center gap-2"><Mail class="w-4 h-4" />SMTP（电子邮件）</span>
 								</Select.Item>
 								<Select.Item value="apprise">
-									<span class="flex items-center gap-2"><Zap class="w-4 h-4" />Webhooks</span>
+									<span class="flex items-center gap-2"><Zap class="w-4 h-4" />Webhook</span>
 								</Select.Item>
 							</Select.Content>
 						</Select.Root>
@@ -365,76 +363,76 @@
 			</div>
 
 			<div class="flex items-center gap-2">
-				<Label>Status</Label>
-				<TogglePill bind:checked={formEnabled} onLabel="Enabled" offLabel="Disabled" />
+				<Label>状态</Label>
+				<TogglePill bind:checked={formEnabled} onLabel="已启用" offLabel="已禁用" />
 			</div>
 
 			{#if formType === 'smtp'}
 				<div class="space-y-4 border-t pt-4 min-h-[380px]">
 					<div class="flex items-center gap-2">
-						<p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">SMTP configuration</p>
+						<p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">SMTP 配置</p>
 						<Tooltip.Root>
 							<Tooltip.Trigger>
 								<HelpCircle class="w-3.5 h-3.5 text-muted-foreground hover:text-foreground cursor-help" />
 							</Tooltip.Trigger>
 							<Tooltip.Portal>
 								<Tooltip.Content side="right" class="w-80">
-									<p class="text-xs"><span class="font-semibold">Gmail:</span> smtp.gmail.com, port 587, TLS/SSL off. Use an App Password.</p>
-									<p class="text-xs mt-1"><span class="font-semibold">Outlook:</span> smtp.office365.com, port 587, TLS/SSL off.</p>
+									<p class="text-xs"><span class="font-semibold">Gmail：</span> smtp.gmail.com, port 587, TLS/SSL off. Use an App Password.</p>
+									<p class="text-xs mt-1"><span class="font-semibold">前景：</span> smtp.office365.com, port 587, TLS/SSL off.</p>
 								</Tooltip.Content>
 							</Tooltip.Portal>
 						</Tooltip.Root>
 					</div>
 					<div class="grid grid-cols-3 gap-4">
 						<div class="space-y-2 col-span-2">
-							<Label for="notif-smtp-host">SMTP host *</Label>
+							<Label for="notif-smtp-host">SMTP主机*</Label>
 							<Input id="notif-smtp-host" bind:value={formSmtpHost} placeholder="smtp.gmail.com" />
 						</div>
 						<div class="space-y-2">
-							<Label for="notif-smtp-port">Port *</Label>
+							<Label for="notif-smtp-port">端口 *</Label>
 							<Input id="notif-smtp-port" type="number" bind:value={formSmtpPort} />
 						</div>
 					</div>
 					<div class="flex items-center gap-4">
 						<div class="flex items-center gap-2">
 							<Label>TLS/SSL</Label>
-							<TogglePill bind:checked={formSmtpSecure} onLabel="Yes" offLabel="No" />
+							<TogglePill bind:checked={formSmtpSecure} onLabel="是" offLabel="否" />
 						</div>
 						<div class="flex items-center gap-2">
-							<Label class="text-muted-foreground">Skip TLS verify</Label>
-							<TogglePill bind:checked={formSmtpSkipTlsVerify} onLabel="Yes" offLabel="No" />
+							<Label class="text-muted-foreground">跳过 TLS 验证</Label>
+							<TogglePill bind:checked={formSmtpSkipTlsVerify} onLabel="是" offLabel="否" />
 						</div>
 					</div>
 					<div class="grid grid-cols-2 gap-4">
 						<div class="space-y-2">
-							<Label for="notif-smtp-username">Username</Label>
+							<Label for="notif-smtp-username">用户名</Label>
 							<Input id="notif-smtp-username" bind:value={formSmtpUsername} placeholder="user@example.com" />
 						</div>
 						<div class="space-y-2">
-							<Label for="notif-smtp-password">Password</Label>
+							<Label for="notif-smtp-password">密码</Label>
 							<Input id="notif-smtp-password" type="password" bind:value={formSmtpPassword} placeholder={isEditing ? 'Leave blank to keep existing' : 'App password or token'} />
 						</div>
 					</div>
 					<div class="grid grid-cols-2 gap-4">
 						<div class="space-y-2">
-							<Label for="notif-smtp-from-email">From email *</Label>
+							<Label for="notif-smtp-from-email">来自电子邮件*</Label>
 							<Input id="notif-smtp-from-email" bind:value={formSmtpFromEmail} placeholder="alerts@example.com" />
 						</div>
 						<div class="space-y-2">
-							<Label for="notif-smtp-from-name">From name</Label>
-							<Input id="notif-smtp-from-name" bind:value={formSmtpFromName} placeholder="Dockhand Alerts" />
+							<Label for="notif-smtp-from-name">名字</Label>
+							<Input id="notif-smtp-from-name" bind:value={formSmtpFromName} placeholder="Dockhand警报" />
 						</div>
 					</div>
 					<div class="space-y-2">
-						<Label for="notif-smtp-to">Recipients * (comma-separated)</Label>
+						<Label for="notif-smtp-to">收件人*（以逗号分隔）</Label>
 						<Input id="notif-smtp-to" bind:value={formSmtpToEmails} placeholder="admin@example.com, ops@example.com" />
 					</div>
 				</div>
 			{:else}
 				<div class="space-y-4 border-t pt-4 min-h-[380px]">
-					<p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Webhook configuration</p>
+					<p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Webhook 配置</p>
 					<div class="space-y-2">
-						<Label for="notif-apprise-urls">Webhook URLs * (one per line)</Label>
+						<Label for="notif-apprise-urls">Webhook URL *（每行一个）</Label>
 						<textarea
 							id="notif-apprise-urls"
 							bind:value={formAppriseUrls}
@@ -464,12 +462,10 @@ zabbix://hostname/api_jsonrpc.php?token=TOKEN&amp;host=HOST&amp;key=ITEM_KEY
 zabbixs://hostname/api_jsonrpc.php?token=TOKEN&amp;host=HOST&amp;key=ITEM_KEY"
 						class="flex min-h-[220px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
 					></textarea>
-					<p class="text-xs text-muted-foreground">
-						Built-in channels: Discord, Slack, Mattermost, Telegram, ntfy, Gotify, Pushover, MQTT, Bark, Signal (via signal-cli-rest-api), Microsoft Teams (via Workflows), Zabbix (via history.push), and generic JSON.
-					</p>
+					<p class="text-xs text-muted-foreground">内置频道：Discord、Slack、Mattermost、Telegram、ntfy、Gotify、Pushover、MQTT、Bark、Signal（通过 signal-cli-rest-api）、Microsoft Teams（通过 Workflows）、Zabbix（通过 history.push）和通用 JSON。</p>
 					<p class="flex gap-1.5 text-xs text-muted-foreground">
 						<HelpCircle class="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-500" />
-						<span>Need a provider that is not in the list (Matrix, Nextcloud, Pushbullet, Home Assistant, ...)? Run a <a href="https://github.com/caronc/apprise-api" target="_blank" rel="noopener">caronc/apprise-api</a> server, configure the provider there, and point Dockhand at it with <code>apprise://host/key</code> (or <code>apprises://</code> for TLS). Every provider Apprise supports is then reachable.</span>
+						<span>需要列表中没有的提供商（Matrix、Nextcloud、Pushbullet、Home Assistant 等）？运行<a href="https://github.com/caronc/apprise-api" target="_blank" rel="noopener">caronc/apprise-api</a> server, configure the provider there, and point Dockhand at it with <code>apprise://host/key</code> (or <code>apprises://</code> for TLS). Every provider Apprise supports is then reachable.</span>
 					</p>
 					</div>
 				</div>
@@ -517,7 +513,7 @@ zabbixs://hostname/api_jsonrpc.php?token=TOKEN&amp;host=HOST&amp;key=ITEM_KEY"
 				{/if}
 			</Button>
 			<div class="flex gap-2">
-				<Button variant="outline" onclick={handleClose}>Cancel</Button>
+				<Button variant="outline" onclick={handleClose}>取消</Button>
 				<Button onclick={save} disabled={formSaving || formTesting}>
 					{#if formSaving}
 						<RefreshCw class="w-4 h-4 mr-1 animate-spin" />
@@ -526,7 +522,7 @@ zabbixs://hostname/api_jsonrpc.php?token=TOKEN&amp;host=HOST&amp;key=ITEM_KEY"
 					{:else}
 						<Plus class="w-4 h-4" />
 					{/if}
-					{isEditing ? 'Save' : 'Add'}
+					{isEditing ? '保存' : '添加'}
 				</Button>
 			</div>
 		</Dialog.Footer>

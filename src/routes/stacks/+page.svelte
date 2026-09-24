@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Stacks - Dockhand</title>
+	<title>编排 - Dockhand</title>
 </svelte:head>
 
 <script lang="ts">
@@ -262,9 +262,9 @@
 	}
 
 	function handleSingleUpdateComplete(results: { success: string[]; failed: string[]; blocked: string[] }) {
-		if (results.success.length > 0) toast.success(`Updated ${results.success.length} container(s)`);
-		if (results.failed.length > 0) toast.error(`Failed to update ${results.failed.length} container(s)`);
-		if (results.blocked.length > 0) toast.warning(`${results.blocked.length} update(s) blocked by vulnerability policy`);
+		if (results.success.length > 0) toast.success(`已更新 ${results.success.length} 个容器`);
+		if (results.failed.length > 0) toast.error(`更新 ${results.failed.length} 个容器失败`);
+		if (results.blocked.length > 0) toast.warning(`漏洞策略阻止了 ${results.blocked.length} 次更新`);
 		singleUpdateContainerId = null;
 		singleUpdateContainerName = null;
 		fetchStacks();
@@ -405,8 +405,8 @@
 				}
 			}
 		} catch (error: any) {
-			if (error?.name !== 'AbortError') {
-				console.error('Failed to fetch container stats:', error);
+			if (error?.name !== '中止错误') {
+				console.error('获取容器统计信息失败：', error);
 			}
 		} finally {
 			statsFetching = false;
@@ -497,12 +497,12 @@
 
 	// Stack status types with icons and colors
 	const stackStatusTypes = [
-		{ value: 'running', label: 'Running', icon: Play, color: 'text-emerald-500' },
-		{ value: 'partial', label: 'Partial', icon: CircleDashed, color: 'text-amber-500' },
-		{ value: 'restarting', label: 'Restarting', icon: RotateCw, color: 'text-orange-500' },
-		{ value: 'stopped', label: 'Stopped', icon: Square, color: 'text-rose-500' },
-		{ value: 'created', label: 'Created', icon: CircleDashed, color: 'text-slate-500' },
-		{ value: 'not deployed', label: 'Not deployed', icon: Rocket, color: 'text-violet-500' }
+		{ value: 'running', label: '运行中', icon: Play, color: 'text-emerald-500' },
+		{ value: 'partial', label: '部分', icon: CircleDashed, color: 'text-amber-500' },
+		{ value: 'restarting', label: '正在重启', icon: RotateCw, color: 'text-orange-500' },
+		{ value: 'stopped', label: '已停止', icon: Square, color: 'text-rose-500' },
+		{ value: 'created', label: '已创建', icon: CircleDashed, color: 'text-slate-500' },
+		{ value: 'not deployed', label: '未部署', icon: Rocket, color: 'text-violet-500' }
 	];
 
 	function getStackStatusIcon(status: string) {
@@ -694,7 +694,7 @@
 		}
 		// On failure the reason lives in `error` (compose's stderr), which the streamed
 		// log lines don't carry -- append it so the modal shows WHY it failed instead of
-		// ending on a bare "Started" with the cause hidden in a separate dialog.
+		// ending on a bare "已启动" with the cause hidden in a separate dialog.
 		if (!ok && error) {
 			const errLines = error.split('\n').map((l) => l.trimEnd()).filter(Boolean);
 			const already = new Set(composeOutputLines.map((l) => l.trim()));
@@ -1028,7 +1028,7 @@
 				await fetchStacks();
 			}
 		} catch {
-			toast.error('Failed to clear update indicators');
+			toast.error('更新指示器清除失败');
 		}
 	}
 
@@ -1107,7 +1107,7 @@
 			stackEnvVarCounts = counts;
 		} catch (error) {
 			console.error('Failed to fetch stacks:', error);
-			toast.error('Failed to load stacks');
+			toast.error('编排加载失败');
 		} finally {
 			loading = false;
 			lastLoadedEnvId = envId;
@@ -1167,16 +1167,16 @@
 				typeof data.error === 'string' ? data.error : undefined
 			);
 			if (!data.success) {
-				toast.error(`Failed to start ${name}`);
+				toast.error(`启动 ${name} 失败`);
 				return;
 			}
-			toast.success(`Started ${name}`);
+			toast.success(`已启动 ${name}`);
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to start stack:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to start stack';
+			const errorMsg = error instanceof Error ? error.message : '启动编排失败';
 			finishComposeOutput(undefined, false, undefined, errorMsg);
-			toast.error(`Failed to start ${name}`);
+			toast.error(`启动 ${name} 失败`);
 		} finally {
 			stackActionLoading = null;
 		}
@@ -1196,16 +1196,16 @@
 				typeof data.error === 'string' ? data.error : undefined
 			);
 			if (!data.success) {
-				toast.error(`Failed to stop ${name}`);
+				toast.error(`停止 ${name} 失败`);
 				return;
 			}
-			toast.success(`Stopped ${name}`);
+			toast.success(`已停止 ${name}`);
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to stop stack:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to stop stack';
+			const errorMsg = error instanceof Error ? error.message : '停止编排失败';
 			finishComposeOutput(undefined, false, undefined, errorMsg);
-			toast.error(`Failed to stop ${name}`);
+			toast.error(`停止 ${name} 失败`);
 		} finally {
 			stackActionLoading = null;
 		}
@@ -1231,16 +1231,16 @@
 			if (!data.success) {
 				// The reason is now in the output modal's log; a toast points the user to it
 				// without a second, redundant error dialog stacked over the same modal.
-				toast.error(`Failed to restart ${name}`);
+				toast.error(`重启 ${name} 失败`);
 				return;
 			}
-			toast.success(mode === 'recreate' ? `Recreated ${name}` : `Restarted ${name}`);
+			toast.success(mode === 'recreate' ? `重新创建 ${name}` : `重启了 ${name}`);
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to restart stack:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to restart stack';
+			const errorMsg = error instanceof Error ? error.message : '重启编排失败';
 			finishComposeOutput(undefined, false, undefined, errorMsg);
-			toast.error(`Failed to restart ${name}`);
+			toast.error(`重启 ${name} 失败`);
 		} finally {
 			stackActionLoading = null;
 		}
@@ -1274,18 +1274,18 @@
 			if (!data.success) {
 				// The compose output window carries the full log (incl. the failure reason)
 				// plus the failed status, so a separate error dialog would duplicate it.
-				toast.error(`Failed to redeploy ${name}`);
+				toast.error(`重新部署 ${name} 失败`);
 				return;
 			}
-			toast.success(`Redeployed ${name}`);
+			toast.success(`重新部署 ${name}`);
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to redeploy stack:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to redeploy stack';
+			const errorMsg = error instanceof Error ? error.message : '重新部署编排失败';
 			// A throw before any output streams would otherwise leave the window with
 			// only the Options line and a red status, so put the error text in it.
 			finishComposeOutput(undefined, false, undefined, errorMsg);
-			toast.error(`Failed to redeploy ${name}`);
+			toast.error(`重新部署 ${name} 失败`);
 		} finally {
 			stackActionLoading = null;
 		}
@@ -1306,16 +1306,16 @@
 				typeof data.error === 'string' ? data.error : undefined
 			);
 			if (!data.success) {
-				toast.error(`Failed to bring down ${name}`);
+				toast.error(`未能击落 ${name}`);
 				return;
 			}
-			toast.success(`Brought down ${name}`);
+			toast.success(`击败了 ${name}`);
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to bring down stack:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to bring down stack';
+			const errorMsg = error instanceof Error ? error.message : '编排关闭失败';
 			finishComposeOutput(undefined, false, undefined, errorMsg);
-			toast.error(`Failed to bring down ${name}`);
+			toast.error(`未能击落 ${name}`);
 		} finally {
 			stackActionLoading = null;
 			stackDownLoading = null;
@@ -1342,17 +1342,17 @@
 			const response = await fetch(appendEnvParam(`/api/stacks/${encodeURIComponent(name)}?${params}`, envId), { method: 'DELETE' });
 			if (!response.ok) {
 				const data = await response.json();
-				const errorMsg = data.error || 'Failed to remove stack';
-				showErrorDialog(`Failed to remove ${name}`, errorMsg);
+				const errorMsg = data.error || '移除编排失败';
+				showErrorDialog(`删除 ${name} 失败`, errorMsg);
 				return;
 			}
 			const bits = [opts.deleteFiles ? 'files deleted' : 'files kept', ...(opts.deleteVolumes ? ['volumes deleted'] : [])];
-			toast.success(`Removed ${name} (${bits.join(', ')})`);
+			toast.success(`已移除 ${name} (${bits.join(', ')})`);
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to remove stack:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to remove stack';
-			showErrorDialog(`Failed to remove ${name}`, errorMsg);
+			const errorMsg = error instanceof Error ? error.message : '移除编排失败';
+			showErrorDialog(`删除 ${name} 失败`, errorMsg);
 		}
 	}
 
@@ -1417,17 +1417,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${containerId}/start`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				const errorMsg = data.error || 'Failed to start container';
+				const errorMsg = data.error || '容器启动失败';
 				operationError = { id: containerId, message: errorMsg };
 				toast.error(errorMsg);
 				clearErrorAfterDelay(containerId);
 				return;
 			}
-			toast.success('Container started');
+			toast.success('容器已启动');
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to start container:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to start container';
+			const errorMsg = error instanceof Error ? error.message : '容器启动失败';
 			operationError = { id: containerId, message: errorMsg };
 			toast.error(errorMsg);
 			clearErrorAfterDelay(containerId);
@@ -1443,17 +1443,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${containerId}/stop`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				const errorMsg = data.error || 'Failed to stop container';
+				const errorMsg = data.error || '停止容器失败';
 				operationError = { id: containerId, message: errorMsg };
 				toast.error(errorMsg);
 				clearErrorAfterDelay(containerId);
 				return;
 			}
-			toast.success('Container stopped');
+			toast.success('容器已停止');
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to stop container:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to stop container';
+			const errorMsg = error instanceof Error ? error.message : '停止容器失败';
 			operationError = { id: containerId, message: errorMsg };
 			toast.error(errorMsg);
 			clearErrorAfterDelay(containerId);
@@ -1469,17 +1469,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${containerId}/restart`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				const errorMsg = data.error || 'Failed to restart container';
+				const errorMsg = data.error || '重启容器失败';
 				operationError = { id: containerId, message: errorMsg };
 				toast.error(errorMsg);
 				clearErrorAfterDelay(containerId);
 				return;
 			}
-			toast.success('Container restarted');
+			toast.success('容器已重启');
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to restart container:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to restart container';
+			const errorMsg = error instanceof Error ? error.message : '重启容器失败';
 			operationError = { id: containerId, message: errorMsg };
 			toast.error(errorMsg);
 			clearErrorAfterDelay(containerId);
@@ -1495,17 +1495,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${containerId}/pause`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				const errorMsg = data.error || 'Failed to pause container';
+				const errorMsg = data.error || '暂停容器失败';
 				operationError = { id: containerId, message: errorMsg };
 				toast.error(errorMsg);
 				clearErrorAfterDelay(containerId);
 				return;
 			}
-			toast.success('Container paused');
+			toast.success('容器已暂停');
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to pause container:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to pause container';
+			const errorMsg = error instanceof Error ? error.message : '暂停容器失败';
 			operationError = { id: containerId, message: errorMsg };
 			toast.error(errorMsg);
 			clearErrorAfterDelay(containerId);
@@ -1522,17 +1522,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${containerId}/unpause`, envId), { method: 'POST' });
 			if (!response.ok) {
 				const data = await response.json();
-				const errorMsg = data.error || 'Failed to unpause container';
+				const errorMsg = data.error || '容器暂停失败';
 				operationError = { id: containerId, message: errorMsg };
 				toast.error(errorMsg);
 				clearErrorAfterDelay(containerId);
 				return;
 			}
-			toast.success('Container unpaused');
+			toast.success('容器已解冻');
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to unpause container:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to unpause container';
+			const errorMsg = error instanceof Error ? error.message : '容器暂停失败';
 			operationError = { id: containerId, message: errorMsg };
 			toast.error(errorMsg);
 			clearErrorAfterDelay(containerId);
@@ -1548,17 +1548,17 @@
 			const response = await fetch(appendEnvParam(`/api/containers/${containerId}?force=true`, envId), { method: 'DELETE' });
 			if (!response.ok) {
 				const data = await response.json();
-				const errorMsg = data.error || 'Failed to remove container';
+				const errorMsg = data.error || '移除容器失败';
 				operationError = { id: containerId, message: errorMsg };
 				toast.error(errorMsg);
 				clearErrorAfterDelay(containerId);
 				return;
 			}
-			toast.success('Container removed');
+			toast.success('容器已移除');
 			await fetchStacks();
 		} catch (error) {
 			console.error('Failed to remove container:', error);
-			const errorMsg = error instanceof Error ? error.message : 'Failed to remove container';
+			const errorMsg = error instanceof Error ? error.message : '移除容器失败';
 			operationError = { id: containerId, message: errorMsg };
 			toast.error(errorMsg);
 			clearErrorAfterDelay(containerId);
@@ -1710,7 +1710,7 @@
 
 <div class="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
-		<PageHeader icon={Layers} title="Compose stacks" count={stacks.length}>
+		<PageHeader icon={Layers} title="编排" count={stacks.length}>
 			{#if stacks.length > 0}
 				<button
 					type="button"
@@ -1729,20 +1729,18 @@
 			{/if}
 		</PageHeader>
 		<div class="flex flex-wrap items-center gap-2">
-			<SearchInput bind:value={searchInput} placeholder="Search stacks..." class="h-8 w-48 text-sm" />
+			<SearchInput bind:value={searchInput} placeholder="搜索编排…" class="h-8 w-48 text-sm" />
 			<MultiSelectFilter
 				bind:value={statusFilter}
 				options={stackStatusTypes}
-				placeholder="All statuses"
+				placeholder="所有状态"
 				pluralLabel="statuses"
 				width="w-44"
 				defaultIcon={Layers}
 			/>
 			<TagFilter tags={tagCatalog} bind:selected={tagFilter} bind:mode={tagFilterMode} bind:groupBy={groupByTag} bind:showTags={showTags} bind:showBands={showBands} bind:inlineEditing={inlineTagEditing} bind:settingsExpanded={tagSettingsExpanded} />
 			<Button size="sm" variant="outline" onclick={fetchStacks}>
-				<RefreshCw class="w-3.5 h-3.5" />
-				Refresh
-			</Button>
+				<RefreshCw class="w-3.5 h-3.5" />刷新</Button>
 			<CheckUpdatesButton
 				{envId}
 				hasPendingUpdates={stacks.some((s) => s.updatesAvailable)}
@@ -1776,17 +1774,11 @@
 			</Button>
 			{#if $canAccess('stacks', 'create')}
 				<Button size="sm" variant="outline" onclick={() => openGitModal()}>
-					<GitBranch class="w-3.5 h-3.5" />
-					From Git
-				</Button>
+					<GitBranch class="w-3.5 h-3.5" />来自 Git</Button>
 				<Button size="sm" variant="secondary" onclick={() => showCreateModal = true}>
-					<Plus class="w-3.5 h-3.5" />
-					Create
-				</Button>
+					<Plus class="w-3.5 h-3.5" />创建</Button>
 				<Button size="sm" variant="outline" onclick={() => showImportModal = true}>
-					<Import class="w-3.5 h-3.5" />
-					Adopt
-				</Button>
+					<Import class="w-3.5 h-3.5" />采纳</Button>
 			{/if}
 		</div>
 	</div>
@@ -1800,13 +1792,11 @@
 				type="button"
 				class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:border-foreground/30 hover:shadow transition-all"
 				onclick={selectNone}
-			>
-				Clear
-			</button>
+			>清空</button>
 			{#if selectedStopped.length > 0 && $canAccess('stacks', 'start')}
 				<ConfirmPopover
 					open={confirmBulkStart}
-					action="Start"
+					action="启动"
 					itemType="stacks"
 					itemName="{selectedStopped.length} stack{selectedStopped.length !== 1 ? 's' : ''}"
 					title="Start {selectedStopped.length}"
@@ -1817,16 +1807,14 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-green-600 hover:border-green-500/40 hover:shadow transition-all cursor-pointer">
-							<Play class="w-3 h-3" />
-							Start
-						</span>
+							<Play class="w-3 h-3" />启动</span>
 					{/snippet}
 				</ConfirmPopover>
 			{/if}
 			{#if selectedRunning.length > 0 && $canAccess('stacks', 'restart')}
 				<ConfirmPopover
 					open={confirmBulkRestart}
-					action="Restart"
+					action="重启"
 					itemType="stacks"
 					itemName="{selectedRunning.length} stack{selectedRunning.length !== 1 ? 's' : ''}"
 					title="Restart {selectedRunning.length}"
@@ -1837,16 +1825,14 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-amber-600 hover:border-amber-500/40 hover:shadow transition-all cursor-pointer">
-							<RotateCcw class="w-3 h-3" />
-							Restart
-						</span>
+							<RotateCcw class="w-3 h-3" />重启</span>
 					{/snippet}
 				</ConfirmPopover>
 			{/if}
 			{#if selectedRunning.length > 0 && $canAccess('stacks', 'stop')}
 				<ConfirmPopover
 					open={confirmBulkStop}
-					action="Stop"
+					action="停止"
 					itemType="stacks"
 					itemName="{selectedRunning.length} stack{selectedRunning.length !== 1 ? 's' : ''}"
 					title="Stop {selectedRunning.length}"
@@ -1856,16 +1842,14 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-red-600 hover:border-red-500/40 hover:shadow transition-all cursor-pointer">
-							<Square class="w-3 h-3" />
-							Stop
-						</span>
+							<Square class="w-3 h-3" />停止</span>
 					{/snippet}
 				</ConfirmPopover>
 			{/if}
 			{#if selectedRunning.length > 0 && $canAccess('stacks', 'stop')}
 				<ConfirmPopover
 					open={confirmBulkDown}
-					action="Down"
+					action="向下"
 					itemType="stacks"
 					itemName="{selectedRunning.length} stack{selectedRunning.length !== 1 ? 's' : ''}"
 					title="Down {selectedRunning.length}"
@@ -1875,16 +1859,14 @@
 				>
 					{#snippet children({ open })}
 						<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-orange-600 hover:border-orange-500/40 hover:shadow transition-all cursor-pointer">
-							<ArrowBigDown class="w-3 h-3" />
-							Down
-						</span>
+							<ArrowBigDown class="w-3 h-3" />向下</span>
 					{/snippet}
 				</ConfirmPopover>
 			{/if}
 			{#if $canAccess('stacks', 'remove')}
 			<ConfirmPopover
 				open={confirmBulkRemove}
-				action="Remove"
+				action="移除"
 				itemType="stacks"
 				itemName="{selectedInFilter.length} stack{selectedInFilter.length !== 1 ? 's' : ''}"
 				title="Remove {selectedInFilter.length}"
@@ -1894,9 +1876,7 @@
 			>
 				{#snippet children({ open })}
 					<span class="inline-flex items-center gap-1 px-1.5 py-0 rounded border border-border hover:text-destructive hover:border-destructive/40 hover:shadow transition-all cursor-pointer">
-						<Trash2 class="w-3 h-3" />
-						Remove
-					</span>
+						<Trash2 class="w-3 h-3" />移除</span>
 				{/snippet}
 			</ConfirmPopover>
 			{/if}
@@ -1909,8 +1889,8 @@
 	{:else if !loading && stacks.length === 0}
 		<EmptyState
 			icon={Layers}
-			title="No compose stacks found"
-			description="Create a stack or deploy from Git to get started"
+			title="未找到编排"
+			description="创建编排或从 Git 部署即可开始"
 		/>
 	{:else}
 		<!-- Main content area - changes layout based on mode -->
@@ -2014,7 +1994,7 @@
 								{#snippet children()}
 									<button
 										type="button"
-										title="Image updates available — deploy from Git to apply"
+										title="镜像更新可用——从 Git 部署以应用"
 										onclick={(e) => e.stopPropagation()}
 										class="shrink-0 rounded hover:bg-muted transition-colors cursor-pointer inline-flex items-center gap-0.5"
 									>
@@ -2052,9 +2032,7 @@
 										<span class="text-2xs font-medium text-amber-500 leading-none">{stack.updateCount}</span>
 									{/if}
 								</Tooltip.Trigger>
-								<Tooltip.Content>
-									External stack - update possible for individual containers only.
-								</Tooltip.Content>
+								<Tooltip.Content>外部编排 - 仅可对单个容器进行更新。</Tooltip.Content>
 							</Tooltip.Root>
 						{/if}
 					{/if}
@@ -2091,11 +2069,9 @@
 								<span
 									class="inline-flex items-center justify-center gap-1 text-xs px-1.5 py-0.5 rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 shadow-sm min-w-[5.5rem]"
 								>
-									<FileCode class="w-3 h-3" />
-									Internal
-								</span>
+									<FileCode class="w-3 h-3" />内部</span>
 							</Tooltip.Trigger>
-							<Tooltip.Content>Managed by Dockhand</Tooltip.Content>
+							<Tooltip.Content>由 Dockhand 管理</Tooltip.Content>
 						</Tooltip.Root>
 					{:else}
 						<Tooltip.Root>
@@ -2103,13 +2079,9 @@
 								<span
 									class="inline-flex items-center justify-center gap-1 text-xs px-1.5 py-0.5 rounded-sm bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200 shadow-sm min-w-[5.5rem]"
 								>
-									<ExternalLink class="w-3 h-3" />
-									Untracked
-								</span>
+									<ExternalLink class="w-3 h-3" />未追踪</span>
 							</Tooltip.Trigger>
-							<Tooltip.Content>
-								Compose file location unknown. Click the stack name or edit button to locate it.
-							</Tooltip.Content>
+							<Tooltip.Content>Compose 文件位置未知。单击编排名称或编辑按钮查找该文件。</Tooltip.Content>
 						</Tooltip.Root>
 					{/if}
 				{:else if column.id === 'webhook'}
@@ -2132,7 +2104,7 @@
 								</button>
 							</Tooltip.Trigger>
 							<Tooltip.Content class="max-w-md">
-								<p class="text-xs mb-1">Copy webhook URL</p>
+								<p class="text-xs mb-1">复制 webhook URL</p>
 								<code class="text-2xs text-muted-foreground break-all">{webhookUrl}</code>
 							</Tooltip.Content>
 						</Tooltip.Root>
@@ -2151,7 +2123,7 @@
 							</Tooltip.Content>
 						</Tooltip.Root>
 					{:else}
-						<span class="text-xs text-muted-foreground/50 italic">Not set</span>
+						<span class="text-xs text-muted-foreground/50 italic">未设置</span>
 					{/if}
 				{:else if column.id === 'containers'}
 					<div class="flex items-center gap-1">
@@ -2163,7 +2135,7 @@
 										<span class="text-xs font-medium">{getContainerStateCounts(stack).running}</span>
 									</span>
 								</Tooltip.Trigger>
-								<Tooltip.Content>Running</Tooltip.Content>
+								<Tooltip.Content>运行中</Tooltip.Content>
 							</Tooltip.Root>
 						{/if}
 						{#if getContainerStateCounts(stack).exited}
@@ -2174,7 +2146,7 @@
 										<span class="text-xs font-medium">{getContainerStateCounts(stack).exited}</span>
 									</span>
 								</Tooltip.Trigger>
-								<Tooltip.Content>Exited</Tooltip.Content>
+								<Tooltip.Content>已退出</Tooltip.Content>
 							</Tooltip.Root>
 						{/if}
 						{#if getContainerStateCounts(stack).paused}
@@ -2185,7 +2157,7 @@
 										<span class="text-xs font-medium">{getContainerStateCounts(stack).paused}</span>
 									</span>
 								</Tooltip.Trigger>
-								<Tooltip.Content>Paused</Tooltip.Content>
+								<Tooltip.Content>已暂停</Tooltip.Content>
 							</Tooltip.Root>
 						{/if}
 						{#if getContainerStateCounts(stack).restarting}
@@ -2196,7 +2168,7 @@
 										<span class="text-xs font-medium">{getContainerStateCounts(stack).restarting}</span>
 									</span>
 								</Tooltip.Trigger>
-								<Tooltip.Content>Restarting</Tooltip.Content>
+								<Tooltip.Content>正在重启</Tooltip.Content>
 							</Tooltip.Root>
 						{/if}
 						{#if getContainerStateCounts(stack).created}
@@ -2207,7 +2179,7 @@
 										<span class="text-xs font-medium">{getContainerStateCounts(stack).created}</span>
 									</span>
 								</Tooltip.Trigger>
-								<Tooltip.Content>Created</Tooltip.Content>
+								<Tooltip.Content>已创建</Tooltip.Content>
 							</Tooltip.Root>
 						{/if}
 						{#if getContainerStateCounts(stack).dead}
@@ -2218,7 +2190,7 @@
 										<span class="text-xs font-medium">{getContainerStateCounts(stack).dead}</span>
 									</span>
 								</Tooltip.Trigger>
-								<Tooltip.Content>Dead</Tooltip.Content>
+								<Tooltip.Content>已死</Tooltip.Content>
 							</Tooltip.Root>
 						{/if}
 						{#if stack.containers.length === 0}
@@ -2307,7 +2279,7 @@
 								<button
 									type="button"
 									onclick={() => openGitModal(source.gitStack)}
-									title="Edit git stack"
+									title="编辑 Git 编排"
 									class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<Pencil class="grid-action-icon grid-action-edit text-muted-foreground hover:text-purple-500" />
@@ -2323,7 +2295,7 @@
 								{#snippet children()}
 									<button
 										type="button"
-										title={(stack.status === 'not deployed' || stack.status === 'created') ? 'Deploy' : 'Sync from Git'}
+										title={(stack.status === 'not deployed' || stack.status === 'created') ? '部署' : 'Sync from Git'}
 										class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 									>
 										{#if stack.status === 'not deployed' || stack.status === 'created'}
@@ -2341,7 +2313,7 @@
 									<button
 										type="button"
 										onclick={(e) => { e.stopPropagation(); openGitModal(source.gitStack); }}
-										title="Edit git stack"
+										title="编辑 Git 编排"
 										class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 									>
 										<Pencil class="grid-action-icon grid-action-edit text-muted-foreground hover:text-purple-500" />
@@ -2351,7 +2323,7 @@
 									<button
 										type="button"
 										onclick={(e) => { e.stopPropagation(); editStack(stack.name); }}
-										title="Edit"
+										title="编辑"
 										class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 									>
 										<Pencil class="grid-action-icon grid-action-edit text-muted-foreground hover:text-blue-500" />
@@ -2362,7 +2334,7 @@
 								<button
 									type="button"
 									onclick={(e) => { e.stopPropagation(); viewStackLogs(stack); }}
-									title="View logs"
+									title="查看日志"
 									class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 								>
 									<ScrollText class="grid-action-icon grid-action-logs text-muted-foreground hover:text-blue-500" />
@@ -2390,7 +2362,7 @@
 									<button
 										type="button"
 										onclick={(e) => { e.stopPropagation(); startStack(stack.name); }}
-										title="Start"
+										title="启动"
 										class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 									>
 										<Play class="grid-action-icon grid-action-start text-muted-foreground hover:text-green-500" />
@@ -2403,7 +2375,7 @@
 											{#snippet child({ props })}
 												<button
 													type="button"
-													title="Restart"
+													title="重启"
 													{...props}
 													onclick={(e) => { e.stopPropagation(); restartPopoverOpen[stack.name] = !restartPopoverOpen[stack.name]; }}
 													class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer inline-flex items-center"
@@ -2421,19 +2393,19 @@
 											<div class="flex flex-col gap-2 w-72">
 												<span class="flex items-center gap-1.5 text-xs text-muted-foreground">
 													<StackIcon icon={stackSources[stack.name]?.icon} stackName={stack.name} envId={$currentEnvironment?.id ?? null} class="w-4 h-4 shrink-0" />
-													<span class="truncate">Restart stack <strong class="font-semibold text-foreground">{stack.name}</strong></span>
+													<span class="truncate">重启编排<strong class="font-semibold text-foreground">{stack.name}</strong></span>
 												</span>
 												<button class="flex flex-col items-start gap-0.5 rounded px-2 py-1.5 text-left hover:bg-muted" onclick={() => { restartPopoverOpen[stack.name] = false; restartStack(stack.name, 'restart'); }}>
-													<span class="text-xs font-medium">Restart</span>
-													<span class="text-[11px] text-muted-foreground">Fast in-place restart. Ignores depends_on ordering.</span>
+													<span class="text-xs font-medium">重启</span>
+													<span class="text-[11px] text-muted-foreground">快速原地重启。忽略 depends_on 的顺序。</span>
 												</button>
 												<button class="flex flex-col items-start gap-0.5 rounded px-2 py-1.5 text-left hover:bg-muted" onclick={() => { restartPopoverOpen[stack.name] = false; restartStack(stack.name, 'ordered'); }}>
-													<span class="text-xs font-medium">Restart in order</span>
-													<span class="text-[11px] text-muted-foreground">Stop then start in depends_on order. Same container IDs.</span>
+													<span class="text-xs font-medium">按顺序重新启动</span>
+													<span class="text-[11px] text-muted-foreground">先停止，然后按照 depends_on 顺序启动。容器 ID 相同。</span>
 												</button>
 												<button class="flex flex-col items-start gap-0.5 rounded px-2 py-1.5 text-left hover:bg-muted" onclick={() => { restartPopoverOpen[stack.name] = false; restartStack(stack.name, 'recreate'); }}>
-													<span class="text-xs font-medium">Recreate (stop &amp; up)</span>
-													<span class="text-[11px] text-muted-foreground">Recreate containers in order. New IDs, re-pulls newer images.</span>
+													<span class="text-xs font-medium">重新创建（停止 &amp; 启动）</span>
+													<span class="text-[11px] text-muted-foreground">按顺序重新创建容器。使用新的 ID，重新拉取更新的镜像。</span>
 												</button>
 											</div>
 										</Popover.Content>
@@ -2442,10 +2414,10 @@
 								{#if $canAccess('stacks', 'stop')}
 									<ConfirmPopover
 										open={confirmStopName === stack.name}
-										action="Stop"
+										action="停止"
 										itemType="stack"
 										itemName={stack.name}
-										title="Stop"
+										title="停止"
 										onConfirm={() => stopStack(stack.name)}
 										onOpenChange={(open) => confirmStopName = open ? stack.name : null}
 									>
@@ -2462,10 +2434,10 @@
 						{#if $canAccess('stacks', 'stop') && stack.status !== 'created' && stack.status !== 'not deployed'}
 							<ConfirmPopover
 								open={confirmDownName === stack.name}
-								action="Down"
+								action="向下"
 								itemType="stack"
 								itemName={stack.name}
-								title="Down (remove containers)"
+								title="向下（移除容器）"
 								onConfirm={() => downStack(stack.name)}
 								onOpenChange={(open) => confirmDownName = open ? stack.name : null}
 							>
@@ -2480,7 +2452,7 @@
 						{#if $canAccess('stacks', 'remove')}
 							<button
 								type="button"
-								title="Remove"
+								title="移除"
 								onclick={(e) => { e.stopPropagation(); deleteStackName = stack.name; showDeleteModal = true; }}
 								class="p-0.5 rounded hover:bg-muted transition-colors cursor-pointer"
 							>
@@ -2521,11 +2493,11 @@
 											<span class="inline-flex items-center gap-0.5 shrink-0">
 												{#if $canAccess('containers', 'manage')}
 													<ConfirmPopover
-														action="Update"
+														action="更新"
 														itemType="container"
 														itemName={container.name}
 														position="left"
-														title="Update available - click to update"
+														title="有可用更新，点击更新"
 														onConfirm={() => updateSingleContainer(container.id, container.name)}
 													>
 														{#snippet children({ open })}
@@ -2541,7 +2513,7 @@
 															target="_blank"
 															rel="noopener noreferrer"
 															onclick={(e) => e.stopPropagation()}
-															title="View changelog"
+															title="查看更新日志"
 															class="shrink-0 text-amber-500 hover:text-amber-400 transition-colors"
 														>
 															<NotepadText class="w-3 h-3" />
@@ -2557,11 +2529,9 @@
 												<Tooltip.Content side="right" class="w-72 p-3">
 													<div class="space-y-1.5">
 														<p class="font-medium text-sm flex items-center gap-1.5 whitespace-nowrap">
-															<AlertTriangle class="w-4 h-4 text-red-500 shrink-0" />
-															Update check failed
-														</p>
+															<AlertTriangle class="w-4 h-4 text-red-500 shrink-0" />更新检查失败</p>
 														<p class="text-muted-foreground text-xs break-words">{failedUpdateCheckErrors.get(container.id) ?? 'Could not query registry'}</p>
-														<p class="text-muted-foreground text-xs">Update status unknown — often a Docker Hub rate limit. Try again later.</p>
+														<p class="text-muted-foreground text-xs">更新状态未知——通常是 Docker Hub 的速率限制。请稍后再试。</p>
 													</div>
 												</Tooltip.Content>
 											</Tooltip.Root>
@@ -2626,7 +2596,7 @@
 											<!-- Memory sparkline -->
 											<div class="space-y-0">
 												<div class="flex justify-between text-2xs">
-													<span class="text-muted-foreground">Mem</span>
+													<span class="text-muted-foreground">记忆</span>
 													<span class="font-mono text-muted-foreground">{stats ? formatBytesCompact(stats.memoryUsage) : '-'}</span>
 												</div>
 												{#if history?.mem && history.mem.length >= 2}
@@ -2641,7 +2611,7 @@
 											<!-- Network I/O sparkline -->
 											<div class="space-y-0">
 												<div class="flex justify-between text-2xs">
-													<span class="text-muted-foreground">Net</span>
+													<span class="text-muted-foreground">网</span>
 													<span class="font-mono text-muted-foreground">{stats ? formatBytesCompact(stats.networkRx + stats.networkTx) : '-'}</span>
 												</div>
 												{#if history?.netRx && history.netRx.length >= 2}
@@ -2656,7 +2626,7 @@
 											<!-- Disk I/O sparkline -->
 											<div class="space-y-0">
 												<div class="flex justify-between text-2xs">
-													<span class="text-muted-foreground">Disk</span>
+													<span class="text-muted-foreground">磁盘</span>
 													<span class="font-mono text-muted-foreground">{stats ? formatBytesCompact(stats.blockRead + stats.blockWrite) : '-'}</span>
 												</div>
 												{#if history?.diskR && history.diskR.length >= 2}
@@ -2792,7 +2762,7 @@
 										<div class="flex gap-1">
 											<button
 												type="button"
-												title="Open logs inline"
+												title="直接打开日志"
 												onclick={(e) => { e.stopPropagation(); showContainerLogs(container); }}
 												class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer {currentLogsContainerId === container.id ? 'bg-muted text-blue-500' : ''}"
 											>
@@ -2800,7 +2770,7 @@
 											</button>
 											<button
 												type="button"
-												title="Open logs in full view"
+												title="完整查看日志"
 												onclick={(e) => { e.stopPropagation(); goto(appendEnvParam(`/logs?container=${container.id}`, envId)); }}
 												class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 											>
@@ -2809,7 +2779,7 @@
 											{#if container.state === 'running' && $canAccess('containers', 'exec')}
 												<button
 													type="button"
-													title="Open terminal"
+													title="打开终端"
 													onclick={(e) => { e.stopPropagation(); goto(appendEnvParam(`/terminal?container=${container.id}`, envId)); }}
 													class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 												>
@@ -2819,7 +2789,7 @@
 											{#if container.state === 'running' && $canAccess('containers', 'files')}
 												<button
 													type="button"
-													title="Browse files"
+													title="浏览文件"
 													onclick={(e) => { e.stopPropagation(); browseFiles(container.id, container.name); }}
 													class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 												>
@@ -2828,7 +2798,7 @@
 											{/if}
 											<button
 												type="button"
-												title="Inspect container"
+												title="检查容器"
 												onclick={(e) => { e.stopPropagation(); inspectContainer(container.id, container.name); }}
 												class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 											>
@@ -2852,7 +2822,7 @@
 													{#if $canAccess('containers', 'unpause')}
 														<button
 															type="button"
-															title="Unpause"
+															title="继续"
 															onclick={(e) => unpauseContainer(container.id, e)}
 															class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 														>
@@ -2863,7 +2833,7 @@
 													{#if $canAccess('containers', 'start')}
 														<button
 															type="button"
-															title="Start"
+															title="启动"
 															onclick={(e) => startContainer(container.id, e)}
 															class="p-1 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100 cursor-pointer"
 														>
@@ -2875,10 +2845,10 @@
 													{#if $canAccess('containers', 'restart')}
 														<ConfirmPopover
 															open={confirmRestartContainerId === container.id}
-															action="Restart"
+															action="重启"
 															itemType="container"
 															itemName={container.service}
-															title="Restart"
+															title="重启"
 															onConfirm={() => restartContainer(container.id)}
 															onOpenChange={(open) => confirmRestartContainerId = open ? container.id : null}
 														>
@@ -2890,10 +2860,10 @@
 													{#if $canAccess('containers', 'pause')}
 														<ConfirmPopover
 															open={confirmPauseContainerId === container.id}
-															action="Pause"
+															action="暂停"
 															itemType="container"
 															itemName={container.service}
-															title="Pause"
+															title="暂停"
 															onConfirm={() => pauseContainer(container.id)}
 															onOpenChange={(open) => confirmPauseContainerId = open ? container.id : null}
 														>
@@ -2905,10 +2875,10 @@
 													{#if $canAccess('containers', 'stop')}
 														<ConfirmPopover
 															open={confirmStopContainerId === container.id}
-															action="Stop"
+															action="停止"
 															itemType="container"
 															itemName={container.service}
-															title="Stop"
+															title="停止"
 															onConfirm={() => stopContainer(container.id)}
 															onOpenChange={(open) => confirmStopContainerId = open ? container.id : null}
 														>
@@ -2922,10 +2892,10 @@
 											{#if $canAccess('containers', 'remove')}
 												<ConfirmPopover
 													open={confirmRemoveContainerId === container.id}
-													action="Remove"
+													action="移除"
 													itemType="container"
 													itemName={container.service}
-													title="Remove"
+													title="移除"
 													onConfirm={() => removeContainer(container.id)}
 													onOpenChange={(open) => confirmRemoveContainerId = open ? container.id : null}
 												>
@@ -2944,7 +2914,7 @@
 					<div class="p-4 pl-12 shadow-inner bg-muted/30">
 						<div class="flex items-center justify-center gap-2 py-4 text-muted-foreground text-sm">
 							<Box class="w-4 h-4" />
-							<span>No containers</span>
+							<span>无容器</span>
 						</div>
 					</div>
 				{/if}

@@ -60,11 +60,11 @@
 
 	async function createToken() {
 		if (!name.trim()) {
-			error = 'Token name is required';
+			error = '令牌名称为必填项';
 			return;
 		}
 		if (isLocalUser && !password) {
-			error = 'Password is required';
+			error = '需要密码';
 			return;
 		}
 
@@ -91,10 +91,10 @@
 				createdToken = data.token;
 			} else {
 				const data = await response.json();
-				error = data.error || 'Failed to create token';
+				error = data.error || '创建令牌失败';
 			}
 		} catch {
-			error = 'Failed to create token';
+			error = '创建令牌失败';
 		} finally {
 			creating = false;
 		}
@@ -138,9 +138,7 @@
 			<div class="space-y-4">
 				<Alert.Root variant="destructive">
 					<TriangleAlert class="h-4 w-4" />
-					<Alert.Description>
-						Copy this token now. It will not be shown again.
-					</Alert.Description>
+					<Alert.Description>请立即复制此令牌。它将不会再次显示。</Alert.Description>
 				</Alert.Root>
 
 				<div class="flex gap-2">
@@ -159,14 +157,14 @@
 				</div>
 
 				<div class="flex justify-end">
-					<Button onclick={handleClose}>Done</Button>
+					<Button onclick={handleClose}>完成</Button>
 				</div>
 			</div>
 		{:else}
 			<!-- Token creation form -->
 			<div class="space-y-4">
 				<div class="space-y-2">
-					<Label for="token-name">Name</Label>
+					<Label for="token-name">名称</Label>
 					<Input
 						id="token-name"
 						bind:value={name}
@@ -177,18 +175,18 @@
 
 				{#if isLocalUser}
 					<div class="space-y-2">
-						<Label for="token-password">Password</Label>
+						<Label for="token-password">密码</Label>
 						<Input
 							id="token-password"
 							type="password"
 							bind:value={password}
-							placeholder="Confirm your password"
+							placeholder="确认密码"
 						/>
 					</div>
 				{/if}
 
 				<div class="space-y-2">
-					<Label>Expiration</Label>
+					<Label>到期日</Label>
 					<Select.Root type="single" bind:value={expirationOption}>
 						<Select.Trigger class="w-full">
 							{#if expirationOption === 'none'}No expiration
@@ -199,11 +197,11 @@
 							{/if}
 						</Select.Trigger>
 						<Select.Content>
-							<Select.Item value="none">No expiration</Select.Item>
+							<Select.Item value="none">无有效期</Select.Item>
 							<Select.Item value="30d">30 days</Select.Item>
 							<Select.Item value="90d">90 days</Select.Item>
 							<Select.Item value="1y">1 year</Select.Item>
-							<Select.Item value="custom">Custom date</Select.Item>
+							<Select.Item value="custom">自定义日期</Select.Item>
 						</Select.Content>
 					</Select.Root>
 
@@ -224,9 +222,9 @@
 				{/if}
 
 				<div class="flex justify-end gap-2">
-					<Button variant="outline" onclick={handleClose}>Cancel</Button>
+					<Button variant="outline" onclick={handleClose}>取消</Button>
 					<Button onclick={createToken} disabled={creating || !name.trim() || (isLocalUser && !password)}>
-						{creating ? 'Creating...' : 'Generate token'}
+						{creating ? 'Creating...' : '生成令牌'}
 					</Button>
 				</div>
 			</div>

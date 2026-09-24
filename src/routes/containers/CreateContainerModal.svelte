@@ -476,9 +476,9 @@
 			}
 
 			if (result.imagePulled) {
-				toast.success(`Container created (image ${image.trim()} was pulled automatically)`);
+				toast.success(`容器已创建（镜像 ${image.trim()} 已自动拉取）`);
 			} else {
-				toast.success('Container created successfully');
+				toast.success('容器创建成功');
 			}
 
 			open = false;
@@ -486,7 +486,7 @@
 			onSuccess?.();
 			onClose?.();
 		} catch (err) {
-			toast.error('Failed to create container: ' + String(err));
+			toast.error('创建容器失败：' + String(err));
 		} finally {
 			loading = false;
 		}
@@ -592,7 +592,7 @@
 				class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-30"
 			>
 				<X class="h-4 w-4" />
-				<span class="sr-only">Close</span>
+				<span class="sr-only">关闭</span>
 			</button>
 		</Dialog.Header>
 
@@ -643,9 +643,7 @@
 				class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors cursor-pointer flex items-center gap-2 {activeTab === 'container' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
 				onclick={() => activeTab = 'container'}
 			>
-				<Settings2 class="w-4 h-4" />
-				Container
-			</button>
+				<Settings2 class="w-4 h-4" />容器</button>
 		</div>
 		{/if}
 
@@ -682,8 +680,8 @@
 				<div class="flex-1 flex items-center justify-center">
 					<div class="text-center">
 						<Shield class="w-12 h-12 text-muted-foreground/50 mx-auto mb-2" />
-						<p class="text-sm text-muted-foreground">Vulnerability scanning is disabled for this environment.</p>
-						<p class="text-xs text-muted-foreground mt-1">Enable it in Settings -> Environments to scan images.</p>
+						<p class="text-sm text-muted-foreground">此环境已禁用漏洞扫描。</p>
+						<p class="text-xs text-muted-foreground mt-1">在“设置”->“环境”中启用此功能以扫描镜像。</p>
 					</div>
 				</div>
 			{/if}
@@ -759,14 +757,12 @@
 				{#if activeTab === 'container' && hasCriticalOrHigh}
 					<div class="flex items-center gap-2 text-amber-600 text-xs">
 						<AlertTriangle class="w-4 h-4" />
-						<span>Critical/high vulnerabilities found in image</span>
+						<span>镜像中发现严重/高危漏洞</span>
 					</div>
 				{/if}
 			</div>
 			<div class="flex gap-2">
-				<Button type="button" variant="outline" onclick={handleClose} disabled={loading || isPulling || isScanning}>
-					Cancel
-				</Button>
+				<Button type="button" variant="outline" onclick={handleClose} disabled={loading || isPulling || isScanning}>取消</Button>
 				<Button type="button" disabled={loading || isPulling || isScanning || activeTab !== 'container'} onclick={handleSubmit}>
 					{#if loading}
 						<Loader2 class="w-4 h-4 animate-spin" />

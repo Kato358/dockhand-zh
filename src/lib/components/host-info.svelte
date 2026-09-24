@@ -200,7 +200,7 @@
 			}
 		} catch (error) {
 			// Ignore abort errors
-			if (error instanceof Error && error.name !== 'AbortError') {
+			if (error instanceof Error && error.name !== '中止错误') {
 				console.error('Failed to fetch host info:', error);
 			}
 		}
@@ -222,7 +222,7 @@
 			}
 		} catch (error) {
 			// Ignore abort errors
-			if (error instanceof Error && error.name !== 'AbortError') {
+			if (error instanceof Error && error.name !== '中止错误') {
 				console.error('Failed to fetch disk usage:', error);
 			}
 			diskUsage = null;
@@ -273,7 +273,7 @@
 			if (!response.ok) {
 				offlineEnvIds.add(envId);
 				offlineEnvIds = new Set(offlineEnvIds);
-				toast.error(`Cannot switch to "${envName}" - environment is offline`);
+				toast.error(`无法切换到“${envName}” - 环境已离线`);
 				return;
 			}
 
@@ -282,7 +282,7 @@
 			if (newHostInfo.error) {
 				offlineEnvIds.add(envId);
 				offlineEnvIds = new Set(offlineEnvIds);
-				toast.error(`Cannot switch to "${envName}" - ${newHostInfo.error}`);
+				toast.error(`无法切换到“${envName}” - ${newHostInfo.error}`);
 				return;
 			}
 
@@ -306,12 +306,12 @@
 			}
 		} catch (error) {
 			// Ignore abort errors
-			if (error instanceof Error && error.name === 'AbortError') {
+			if (error instanceof Error && error.name === '中止错误') {
 				return;
 			}
 			offlineEnvIds.add(envId);
 			offlineEnvIds = new Set(offlineEnvIds);
-			toast.error(`Cannot switch to "${envName}" - connection failed`);
+			toast.error(`无法切换到“${envName}” - 连接失败`);
 		} finally {
 			switchingEnvId = null;
 		}
@@ -395,11 +395,11 @@
 					<span class="font-medium text-foreground">{currentEnv.name}</span>
 				{:else}
 					<Globe class="{iconSizeLargeClass()} text-muted-foreground" />
-					<span class="font-medium text-foreground">Select environment</span>
+					<span class="font-medium text-foreground">选择环境</span>
 				{/if}
 			{:else}
 				<Globe class="{iconSizeLargeClass()} text-muted-foreground" />
-				<span class="font-medium text-foreground">No environments</span>
+				<span class="font-medium text-foreground">无环境</span>
 			{/if}
 			<ChevronDown class="{iconSizeClass()}" />
 		</button>
@@ -414,7 +414,7 @@
 								bind:this={searchInputRef}
 								bind:value={searchTerm}
 								type="text"
-								placeholder="Search environments..."
+								placeholder="搜索环境…"
 								class="w-full pl-7 pr-7 py-1 text-sm bg-transparent border rounded focus:outline-none focus:ring-1 focus:ring-ring"
 								onclick={(e) => e.stopPropagation()}
 								onkeydown={(e) => {
@@ -463,9 +463,7 @@
 							{/if}
 						</button>
 					{:else}
-						<div class="px-3 py-2 text-sm text-muted-foreground">
-							No matching environments
-						</div>
+						<div class="px-3 py-2 text-sm text-muted-foreground">没有匹配的环境</div>
 					{/each}
 				</div>
 			</div>
@@ -478,7 +476,7 @@
 		<!-- Hostname / IP (#962) — first info segment after the env dropdown.
 		     Hidden on narrow viewports to keep the strip readable. -->
 		{#if hostLabel}
-			<div class="hidden xl:flex items-center gap-1" title="Daemon hostname / IP">
+			<div class="hidden xl:flex items-center gap-1" title="守护进程主机名/IP">
 				<Server class="{iconSizeClass()}" />
 				<span>{hostLabel}</span>
 			</div>
@@ -505,7 +503,7 @@
 				<span>Hawser (edge){hostInfo.environment.hawserVersion ? ` ${hostInfo.environment.hawserVersion}` : ''}</span>
 			{:else}
 				<Icon iconNode={whale} class="{iconSizeClass()}" />
-				<span>Socket</span>
+				<span>套接字</span>
 			{/if}
 		</div>
 
@@ -552,7 +550,7 @@
 			>{formatClock(now, currentTimezone)}</span>
 			{#if isConnected}
 				<Wifi class="{iconSizeLargeClass()}" />
-				<span class="font-medium">Live</span>
+				<span class="font-medium">实时</span>
 			{:else}
 				<WifiOff class="{iconSizeLargeClass()}" />
 			{/if}

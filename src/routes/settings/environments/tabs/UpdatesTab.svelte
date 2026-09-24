@@ -48,12 +48,8 @@
 
 <!-- Scheduled Update Check Section -->
 <div class="space-y-4">
-	<div class="text-sm font-medium">
-		Scheduled update check
-	</div>
-	<p class="text-xs text-muted-foreground">
-		Periodically check all containers in this environment for available image updates.
-	</p>
+	<div class="text-sm font-medium">计划更新检查</div>
+	<p class="text-xs text-muted-foreground">定期检查此环境中所有容器是否有可用的镜像更新。</p>
 
 	{#if updateCheckLoading}
 		<div class="flex items-center justify-center py-4">
@@ -63,8 +59,8 @@
 		<div class="flex items-start gap-2">
 			<CircleFadingArrowUp class="w-4 h-4 text-green-500 glow-green mt-0.5 shrink-0" />
 			<div class="flex-1">
-				<Label>Enable scheduled update check</Label>
-				<p class="text-xs text-muted-foreground">Automatically check for container updates on a schedule</p>
+				<Label>启用计划更新检查</Label>
+				<p class="text-xs text-muted-foreground">按计划自动检查容器更新</p>
 			</div>
 			<TogglePill bind:checked={updateCheckEnabled} />
 		</div>
@@ -73,7 +69,7 @@
 			<div class="flex items-start gap-2">
 				<div class="w-4 shrink-0"></div>
 				<div class="flex-1 space-y-2">
-					<Label>Schedule</Label>
+					<Label>计划任务</Label>
 					<CronEditor value={updateCheckCron} onchange={(cron) => updateCheckCron = cron} />
 				</div>
 			</div>
@@ -81,7 +77,7 @@
 			<div class="flex items-start gap-2">
 				<CircleArrowUp class="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
 				<div class="flex-1">
-					<Label>Automatically update containers</Label>
+					<Label>自动更新容器</Label>
 					<p class="text-xs text-muted-foreground">
 						When enabled, containers will be updated automatically when new images are found.
 						When disabled, only sends notifications about available updates.
@@ -94,10 +90,8 @@
 				<div class="flex items-start gap-2">
 					<div class="w-4 shrink-0"></div>
 					<div class="flex-1">
-						<Label>Block updates with vulnerabilities</Label>
-						<p class="text-xs text-muted-foreground">
-							Block auto-updates if the new image has vulnerabilities exceeding this criteria
-						</p>
+						<Label>存在漏洞的阻止更新</Label>
+						<p class="text-xs text-muted-foreground">如果新镜像存在超出此标准的漏洞，则阻止自动更新。</p>
 					</div>
 					<VulnerabilityCriteriaSelector
 						bind:value={updateCheckVulnerabilityCriteria}
@@ -110,12 +104,12 @@
 				<Info class="w-3 h-3 mt-0.5 shrink-0" />
 				{#if updateCheckAutoUpdate}
 					{#if scannerEnabled && updateCheckVulnerabilityCriteria !== 'never'}
-						<span>New images are pulled to a temporary tag, scanned, then deployed if they pass the vulnerability check. Blocked images are deleted automatically.</span>
+						<span>新镜像会被拉取到临时标签，进行扫描，如果通过漏洞检查则会部署。被阻止的镜像会被自动删除。</span>
 					{:else}
-						<span>Containers will be updated automatically when new images are available.</span>
+						<span>当有新镜像可用时，容器将自动更新。</span>
 					{/if}
 				{:else}
-					<span>You'll receive notifications when updates are available. Containers won't be modified.</span>
+					<span>更新可用时，您将收到通知。容器不会被修改。</span>
 				{/if}
 			</div>
 		{/if}
@@ -124,12 +118,8 @@
 
 <!-- Image Pruning Section -->
 <div class="space-y-4 pt-4 border-t">
-	<div class="text-sm font-medium">
-		Automatic image pruning
-	</div>
-	<p class="text-xs text-muted-foreground">
-		Automatically remove unused Docker images on a schedule to free up disk space.
-	</p>
+	<div class="text-sm font-medium">自动镜像清理</div>
+	<p class="text-xs text-muted-foreground">按计划自动删除未使用的 Docker 镜像，以释放磁盘空间。</p>
 
 	{#if imagePruneLoading}
 		<div class="flex items-center justify-center py-4">
@@ -139,8 +129,8 @@
 		<div class="flex items-start gap-2">
 			<Trash2 class="w-4 h-4 text-amber-500 glow-amber mt-0.5 shrink-0" />
 			<div class="flex-1">
-				<Label>Enable automatic image pruning</Label>
-				<p class="text-xs text-muted-foreground">Automatically remove unused images on a schedule</p>
+				<Label>启用自动镜像清理</Label>
+				<p class="text-xs text-muted-foreground">按计划自动删除未使用的镜像</p>
 			</div>
 			<TogglePill bind:checked={imagePruneEnabled} />
 		</div>
@@ -149,7 +139,7 @@
 			<div class="flex items-start gap-2">
 				<div class="w-4 shrink-0"></div>
 				<div class="flex-1 space-y-2">
-					<Label>Schedule</Label>
+					<Label>计划任务</Label>
 					<CronEditor value={imagePruneCron} onchange={(cron) => imagePruneCron = cron} />
 				</div>
 			</div>
@@ -157,14 +147,14 @@
 			<div class="flex items-start gap-2">
 				<div class="w-4 shrink-0"></div>
 				<div class="flex-1 space-y-2">
-					<Label>Prune mode</Label>
+					<Label>清理模式</Label>
 					<Select.Root type="single" bind:value={imagePruneMode}>
 						<Select.Trigger class="w-full">
-							{imagePruneMode === 'dangling' ? 'Dangling images only' : 'All unused images'}
+							{imagePruneMode === 'dangling' ? '仅悬挂镜像' : '所有未使用的镜像'}
 						</Select.Trigger>
 						<Select.Content>
-							<Select.Item value="dangling">Dangling images only</Select.Item>
-							<Select.Item value="all">All unused images</Select.Item>
+							<Select.Item value="dangling">仅悬挂镜像</Select.Item>
+							<Select.Item value="all">所有未使用的镜像</Select.Item>
 						</Select.Content>
 					</Select.Root>
 					<p class="text-xs text-muted-foreground">
@@ -193,7 +183,7 @@
 
 			<div class="text-xs text-muted-foreground bg-muted/50 rounded-md p-2 flex items-start gap-2">
 				<Info class="w-3 h-3 mt-0.5 shrink-0" />
-				<span>Images in use by running or stopped containers will never be removed.</span>
+				<span>正在运行或已停止的容器所使用的镜像将永远不会被删除。</span>
 			</div>
 		{/if}
 	{/if}
@@ -201,12 +191,10 @@
 
 <!-- Timezone selector -->
 <div class="space-y-2">
-	<Label>Timezone</Label>
+	<Label>时区</Label>
 	<TimezoneSelector
 		bind:value={timezone}
 		id="edit-env-timezone"
 	/>
-	<p class="text-xs text-muted-foreground">
-		Used for scheduling auto-updates, git syncs, and image pruning
-	</p>
+	<p class="text-xs text-muted-foreground">用于安排自动更新、git 同步和镜像清理</p>
 </div>

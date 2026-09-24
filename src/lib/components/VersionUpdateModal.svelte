@@ -104,7 +104,7 @@
 		const ok = await copyToClipboard(`${repoBase}:${newerVersion.tag}`);
 		if (ok) {
 			copied = true;
-			toast.success('New image tag copied');
+			toast.success('已复制新镜像标签');
 			setTimeout(() => (copied = false), 1500);
 		}
 	}
@@ -116,7 +116,7 @@
 		const ok = await copyToClipboard(`${repoBase}:${newerVersion.tag}@${newerVersion.digest}`);
 		if (ok) {
 			copiedPinned = true;
-			toast.success('New tag with digest copied');
+			toast.success('已复制带有摘要的新标签');
 			setTimeout(() => (copiedPinned = false), 1500);
 		}
 	}
@@ -159,7 +159,7 @@
 						<button
 							type="button"
 							onclick={copyTag}
-							title={copied ? 'Copied!' : 'Copy new tag'}
+							title={copied ? '已复制！' : 'Copy new tag'}
 							class="inline-flex items-center p-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
 						>
 							{#if copied}
@@ -185,7 +185,7 @@
 				<button
 					type="button"
 					onclick={copyPinnedTag}
-					title={copiedPinned ? 'Copied!' : 'Copy the new tag pinned to its digest (tag@sha256)'}
+					title={copiedPinned ? '已复制！' : 'Copy the new tag pinned to its digest (tag@sha256)'}
 					class="group flex items-center gap-1.5 w-full text-left px-2 py-1.5 rounded-md border border-border bg-muted/30 hover:bg-muted/60 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
 				>
 					<ShieldCheck class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
@@ -201,7 +201,7 @@
 			<!-- Version path. A version with release notes is a link that opens + scrolls to them. -->
 			{#if versionPath.length > 1}
 				<div class="flex items-center gap-1.5 flex-wrap text-xs px-1">
-					<span class="text-muted-foreground">Path:</span>
+					<span class="text-muted-foreground">路径：</span>
 					<span class="font-mono text-muted-foreground">{currentTag}</span>
 					{#each versionPath as v, i}
 						{@const isTarget = i === versionPath.length - 1}
@@ -225,7 +225,7 @@
 				{#if loading}
 					<div class="flex items-center justify-center py-10 text-muted-foreground">
 						<RefreshCw class="w-5 h-5 animate-spin" />
-						<span class="ml-2 text-sm">Loading release notes...</span>
+						<span class="ml-2 text-sm">正在加载发行说明…</span>
 					</div>
 				{:else if notes.length > 0}
 					{#each versionPath.slice().reverse() as version}
@@ -244,7 +244,7 @@
 										rel="noopener noreferrer"
 										onclick={(e) => e.stopPropagation()}
 										class="text-muted-foreground hover:text-foreground shrink-0 {note.publishedAt ? '' : 'ml-auto'}"
-										title="Open on GitHub"
+										title="在 GitHub 上打开"
 									>
 										<ExternalLink class="w-3.5 h-3.5" />
 									</a>
@@ -261,16 +261,13 @@
 						<div class="flex flex-col items-start gap-3 py-8">
 							<div class="flex items-start gap-2.5">
 								<Info class="w-5 h-5 shrink-0 text-amber-500 mt-0.5" />
-								<p class="text-sm text-muted-foreground">
-									GitHub's rate limit was hit while fetching release notes. Set a
-									<code class="text-xs">DOCKHAND_GITHUB_TOKEN</code> (a personal access token, no scopes needed)
+								<p class="text-sm text-muted-foreground">获取发行说明时，GitHub 的速率限制已达到。请设置一个<code class="text-xs">DOCKHAND_GITHUB_TOKEN</code> (a personal access token, no scopes needed)
 									to raise the limit from 60 to 5000 requests/hour.
 								</p>
 							</div>
 							{#if changelogUrl}
 								<Button variant="outline" size="sm" href={changelogUrl} target="_blank" rel="noopener noreferrer">
-									<ExternalLink class="w-3.5 h-3.5 mr-1.5" /> View changelog
-								</Button>
+									<ExternalLink class="w-3.5 h-3.5 mr-1.5" />查看更新日志</Button>
 							{/if}
 						</div>
 					{:else}
@@ -286,8 +283,7 @@
 							</p>
 							{#if changelogUrl}
 								<Button variant="outline" size="sm" href={changelogUrl} target="_blank" rel="noopener noreferrer">
-									<ExternalLink class="w-3.5 h-3.5 mr-1.5" /> View changelog
-								</Button>
+									<ExternalLink class="w-3.5 h-3.5 mr-1.5" />查看更新日志</Button>
 							{/if}
 						</div>
 					{/if}
@@ -301,7 +297,7 @@
 					{/if}
 				</div>
 				<div class="flex gap-2">
-					<Button variant="outline" size="sm" onclick={close}>Close</Button>
+					<Button variant="outline" size="sm" onclick={close}>关闭</Button>
 				</div>
 			</Dialog.Footer>
 		{/if}

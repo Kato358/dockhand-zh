@@ -82,30 +82,30 @@
 	let loading = $state(false);
 
 	const navigationItems: NavItem[] = [
-		{ name: 'Dashboard', href: '/', icon: LayoutDashboard, keywords: ['home', 'overview'] },
-		{ name: 'Containers', href: '/containers', icon: Box, keywords: ['docker', 'running'] },
-		{ name: 'Logs', href: '/logs', icon: ScrollText, keywords: ['output', 'debug'] },
-		{ name: 'Shell', href: '/terminal', icon: Terminal, keywords: ['exec', 'bash', 'sh'] },
-		{ name: 'Stacks', href: '/stacks', icon: Layers, keywords: ['compose', 'docker-compose'] },
-		{ name: 'Images', href: '/images', icon: Images, keywords: ['pull', 'build'] },
-		{ name: 'Volumes', href: '/volumes', icon: HardDrive, keywords: ['storage', 'data'] },
-		{ name: 'Networks', href: '/networks', icon: Network, keywords: ['bridge', 'host'] },
-		{ name: 'Registry', href: '/registry', icon: Download, keywords: ['hub', 'pull'] },
-		{ name: 'Activity', href: '/activity', icon: Eye, keywords: ['events', 'history'] },
-		{ name: 'Schedules', href: '/schedules', icon: Timer, keywords: ['cron', 'auto'] },
-		{ name: 'Settings', href: '/settings', icon: Settings, keywords: ['config', 'preferences'] }
+		{ name: '仪表盘', href: '/', icon: LayoutDashboard, keywords: ['home', 'overview'] },
+		{ name: '容器', href: '/containers', icon: Box, keywords: ['docker', 'running'] },
+		{ name: '日志', href: '/logs', icon: ScrollText, keywords: ['output', 'debug'] },
+		{ name: '终端', href: '/terminal', icon: Terminal, keywords: ['exec', 'bash', 'sh'] },
+		{ name: '编排', href: '/stacks', icon: Layers, keywords: ['compose', 'docker-compose'] },
+		{ name: '镜像', href: '/images', icon: Images, keywords: ['pull', 'build'] },
+		{ name: '存储卷', href: '/volumes', icon: HardDrive, keywords: ['storage', 'data'] },
+		{ name: '网络', href: '/networks', icon: Network, keywords: ['bridge', 'host'] },
+		{ name: '镜像仓库', href: '/registry', icon: Download, keywords: ['hub', 'pull'] },
+		{ name: '活动', href: '/activity', icon: Eye, keywords: ['events', 'history'] },
+		{ name: '计划任务', href: '/schedules', icon: Timer, keywords: ['cron', 'auto'] },
+		{ name: '设置', href: '/settings', icon: Settings, keywords: ['config', 'preferences'] }
 	];
 
 	// Group headings (source order drives render order).
-	const G_NAV = 'Navigation';
-	const G_ENT = 'Enterprise';
-	const G_LIGHT = 'Light theme';
-	const G_DARK = 'Dark theme';
-	const G_FONT = 'Font';
-	const G_EDITOR = 'Editor theme';
+	const G_NAV = '导航';
+	const G_ENT = '企业';
+	const G_LIGHT = '浅色主题';
+	const G_DARK = '深色主题';
+	const G_FONT = '字体';
+	const G_EDITOR = '编辑器主题';
 	const G_ENV = 'Switch environment';
-	const G_STACK = 'Stacks';
-	const G_CONT = 'Containers';
+	const G_STACK = '编排';
+	const G_CONT = '容器';
 
 	// Presentation + action for each item, resolved by id (kept out of the pure model).
 	interface Meta {
@@ -137,7 +137,7 @@
 
 		if ($licenseStore.isEnterprise && $authStore.authEnabled) {
 			add(
-				{ id: 'ent:audit', group: G_ENT, label: 'Audit log', keywords: 'compliance audit' },
+				{ id: 'ent:audit', group: G_ENT, label: '审计日志', keywords: 'compliance audit' },
 				{ icon: ClipboardList, run: () => select('/audit') }
 			);
 		}
@@ -441,8 +441,8 @@
 		class="p-0 gap-0 max-w-2xl overflow-hidden"
 		showCloseButton={false}
 	>
-		<Dialog.Title class="sr-only">Command palette</Dialog.Title>
-		<Dialog.Description class="sr-only">Search for pages, themes, environments, stacks and containers</Dialog.Description>
+		<Dialog.Title class="sr-only">命令面板</Dialog.Title>
+		<Dialog.Description class="sr-only">搜索页面、主题、环境、编排和容器</Dialog.Description>
 
 		<div class="flex items-center gap-2 border-b px-3">
 			<Search class="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -450,7 +450,7 @@
 				bind:this={inputEl}
 				bind:value={query}
 				onkeydown={onListKeydown}
-				placeholder="Search..."
+				placeholder="搜索…"
 				role="combobox"
 				aria-expanded="true"
 				aria-controls="palette-list"
@@ -460,7 +460,7 @@
 		</div>
 
 		{#if rows.length === 0}
-			<div class="py-6 text-center text-sm text-muted-foreground">No results found.</div>
+			<div class="py-6 text-center text-sm text-muted-foreground">未找到结果。</div>
 		{:else}
 			<div
 				id="palette-list"
@@ -510,12 +510,12 @@
 									{#if isActive}
 										<div class="ml-auto flex items-center gap-1">
 											{#if c.state === 'running'}
-												<button class="rounded p-1 hover:bg-muted" title="View logs" onclick={(e) => { e.stopPropagation(); containerAction(c, 'logs'); }}><FileText class="h-3 w-3" /></button>
-												<button class="rounded p-1 hover:bg-muted" title="Open terminal" onclick={(e) => { e.stopPropagation(); containerAction(c, 'terminal'); }}><Terminal class="h-3 w-3" /></button>
-												<button class="rounded p-1 hover:bg-muted" title="Restart" onclick={(e) => { e.stopPropagation(); containerAction(c, 'restart'); }}><RotateCcw class="h-3 w-3" /></button>
-												<button class="rounded p-1 text-destructive hover:bg-muted" title="Stop" onclick={(e) => { e.stopPropagation(); containerAction(c, 'stop'); }}><Square class="h-3 w-3" /></button>
+												<button class="rounded p-1 hover:bg-muted" title="查看日志" onclick={(e) => { e.stopPropagation(); containerAction(c, 'logs'); }}><FileText class="h-3 w-3" /></button>
+												<button class="rounded p-1 hover:bg-muted" title="打开终端" onclick={(e) => { e.stopPropagation(); containerAction(c, 'terminal'); }}><Terminal class="h-3 w-3" /></button>
+												<button class="rounded p-1 hover:bg-muted" title="重启" onclick={(e) => { e.stopPropagation(); containerAction(c, 'restart'); }}><RotateCcw class="h-3 w-3" /></button>
+												<button class="rounded p-1 text-destructive hover:bg-muted" title="停止" onclick={(e) => { e.stopPropagation(); containerAction(c, 'stop'); }}><Square class="h-3 w-3" /></button>
 											{:else}
-												<button class="rounded p-1 text-green-500 hover:bg-muted" title="Start" onclick={(e) => { e.stopPropagation(); containerAction(c, 'start'); }}><Play class="h-3 w-3" /></button>
+												<button class="rounded p-1 text-green-500 hover:bg-muted" title="启动" onclick={(e) => { e.stopPropagation(); containerAction(c, 'start'); }}><Play class="h-3 w-3" /></button>
 											{/if}
 										</div>
 									{/if}

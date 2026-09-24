@@ -21,7 +21,7 @@
 	let containerId = $derived($page.params.id);
 	let shell = $derived($page.url.searchParams.get('shell') || '/bin/bash');
 	let user = $derived($page.url.searchParams.get('user') || 'root');
-	let name = $derived($page.url.searchParams.get('name') || 'Container');
+	let name = $derived($page.url.searchParams.get('name') || '容器');
 
 	function initTerminal() {
 		if (!terminalRef || terminal || !xtermLoaded) return;
@@ -97,7 +97,7 @@
 
 		ws.onopen = () => {
 			connected = true;
-			document.title = `Terminal - ${name}`;
+			document.title = `终端 - ${name}`;
 			terminal?.focus();
 			// Send initial resize
 			if (fitAddon && terminal) {
@@ -131,7 +131,7 @@
 
 		ws.onerror = (e) => {
 			console.error('WebSocket error:', e);
-			error = 'Connection error';
+			error = '连接错误';
 			terminal?.writeln('\x1b[31mConnection error\x1b[0m');
 		};
 
@@ -194,7 +194,7 @@
 </script>
 
 <svelte:head>
-	<title>Terminal - {containerName || 'Loading...'}</title>
+	<title>Terminal - {containerName || '加载中…'}</title>
 </svelte:head>
 
 <div class="h-screen w-screen flex flex-col bg-[#0c0c0c]">
@@ -205,13 +205,11 @@
 			<span class="text-sm text-zinc-200 font-medium">{containerName}</span>
 			{#if connected}
 				<span class="inline-flex items-center gap-1 text-xs text-green-500">
-					<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-					Connected
-				</span>
+					<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>已连接</span>
 			{:else if error}
 				<span class="text-xs text-red-500">{error}</span>
 			{:else}
-				<span class="text-xs text-zinc-500">Connecting...</span>
+				<span class="text-xs text-zinc-500">连接中…</span>
 			{/if}
 		</div>
 		<div class="flex items-center gap-2 text-xs text-zinc-500">
@@ -227,7 +225,7 @@
 			<div bind:this={terminalRef} class="h-full w-full"></div>
 		{:else}
 			<div class="h-full w-full flex items-center justify-center">
-				<span class="text-zinc-500">Loading terminal...</span>
+				<span class="text-zinc-500">正在加载终端…</span>
 			</div>
 		{/if}
 	</div>

@@ -218,10 +218,10 @@
 				await fetchEnvironments();
 			} else {
 				const data = await response.json();
-				alert(data.error || 'Failed to delete environment');
+				alert(data.error || '删除环境失败');
 			}
 		} catch (error) {
-			alert('Failed to delete environment');
+			alert('删除环境失败');
 		}
 	}
 
@@ -236,7 +236,7 @@
 			const result = await response.json();
 			testResults[id] = result;
 		} catch (error) {
-			testResults[id] = { success: false, error: 'Connection failed' };
+			testResults[id] = { success: false, error: '连接失败' };
 		}
 		testResults = { ...testResults };
 	}
@@ -248,22 +248,20 @@
 
 <div class="space-y-4">
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
-		<PageHeader icon={Globe} title="Environments">
+		<PageHeader icon={Globe} title="环境">
 			<Badge variant="secondary" class="text-xs">{environments.length} total</Badge>
 		</PageHeader>
 		<div class="flex gap-2">
 			<Button size="sm" onclick={openAddModal}>
-				<Plus class="w-4 h-4" />
-				Add environment
-			</Button>
-			<Button size="sm" variant="outline" onclick={fetchEnvironments}>Refresh</Button>
+				<Plus class="w-4 h-4" />添加环境</Button>
+			<Button size="sm" variant="outline" onclick={fetchEnvironments}>刷新</Button>
 		</div>
 	</div>
 
 	{#if loading && environments.length === 0}
-		<p class="text-muted-foreground text-sm">Loading environments...</p>
+		<p class="text-muted-foreground text-sm">正在加载环境…</p>
 	{:else if environments.length === 0}
-		<p class="text-muted-foreground text-sm">No environments found</p>
+		<p class="text-muted-foreground text-sm">未找到环境</p>
 	{:else}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each environments as env (env.id)}
@@ -282,7 +280,7 @@
 							{#if env.connectionType === 'socket' || !env.connectionType}
 								<span>{env.socketPath || '/var/run/docker.sock'}</span>
 							{:else if env.connectionType === 'hawser-edge'}
-								<span>Edge connection (outbound)</span>
+								<span>边缘连接（出站）</span>
 							{:else}
 								<span>{env.protocol || 'http'}://{env.host}:{env.port || 2375}</span>
 							{/if}
@@ -293,12 +291,12 @@
 								{#if testResult === 'testing'}
 									<div class="flex items-center gap-2 text-muted-foreground">
 										<RefreshCw class="w-4 h-4 animate-spin" />
-										<span>Testing connection...</span>
+										<span>正在测试连接…</span>
 									</div>
 								{:else if testResult.success}
 									<div class="flex items-center gap-2 text-green-600 dark:text-green-400">
 										<Wifi class="w-4 h-4" />
-										<span>Connected</span>
+										<span>已连接</span>
 									</div>
 									{#if testResult.info}
 										<div class="mt-2 text-xs text-muted-foreground space-y-0.5">
@@ -310,7 +308,7 @@
 								{:else}
 									<div class="flex items-center gap-2 text-red-600 dark:text-red-400">
 										<WifiOff class="w-4 h-4" />
-										<span>Failed</span>
+										<span>失败</span>
 									</div>
 									{#if testResult.error}
 										<div class="mt-1 text-xs text-muted-foreground">{testResult.error}</div>
@@ -359,7 +357,7 @@
 <Dialog.Root bind:open={showAddModal}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Add environment</Dialog.Title>
+			<Dialog.Title>添加环境</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4">
 			{#if formError}
@@ -368,7 +366,7 @@
 
 			<!-- Quick URL parser -->
 			<div class="space-y-2 pb-3 border-b">
-				<Label for="quick-url">Quick URL (optional)</Label>
+				<Label for="quick-url">快速链接（可选）</Label>
 				<div class="flex gap-2">
 					<Input
 						id="quick-url"
@@ -381,30 +379,26 @@
 						size="sm"
 						onclick={() => parseDockerUrl(quickUrl)}
 						disabled={!quickUrl.trim()}
-					>
-						Parse
-					</Button>
+					>解析</Button>
 				</div>
-				<p class="text-xs text-muted-foreground">
-					Paste a full Docker URL to auto-fill the fields below
-				</p>
+				<p class="text-xs text-muted-foreground">粘贴完整的 Docker URL 即可自动填充以下字段。</p>
 			</div>
 
 			<div class="space-y-2">
-				<Label for="name">Name</Label>
-				<Input id="name" bind:value={formName} placeholder="Production server" />
+				<Label for="name">名称</Label>
+				<Input id="name" bind:value={formName} placeholder="生产服务器" />
 			</div>
 			<div class="space-y-2">
-				<Label for="host">Host</Label>
+				<Label for="host">主机</Label>
 				<Input id="host" bind:value={formHost} placeholder="192.168.1.100 or docker.example.com" />
 			</div>
 			<div class="grid grid-cols-2 gap-4">
 				<div class="space-y-2">
-					<Label for="port">Port</Label>
+					<Label for="port">端口</Label>
 					<Input id="port" type="number" bind:value={formPort} />
 				</div>
 				<div class="space-y-2">
-					<Label for="protocol">Protocol</Label>
+					<Label for="protocol">协议</Label>
 					<Select.Root type="single" bind:value={formProtocol}>
 						<Select.Trigger class="w-full h-9">
 							{#if formProtocol === 'https'}
@@ -429,9 +423,9 @@
 			</div>
 			{#if formProtocol === 'https'}
 				<div class="space-y-4 pt-2 border-t">
-					<p class="text-xs text-muted-foreground">TLS certificates (optional)</p>
+					<p class="text-xs text-muted-foreground">TLS证书（可选）</p>
 					<div class="space-y-2">
-						<Label for="tls_ca">CA certificate</Label>
+						<Label for="tls_ca">CA证书</Label>
 						<textarea
 							id="tls_ca"
 							bind:value={formTlsCa}
@@ -440,7 +434,7 @@
 						></textarea>
 					</div>
 					<div class="space-y-2">
-						<Label for="tls_cert">Client certificate</Label>
+						<Label for="tls_cert">客户端证书</Label>
 						<textarea
 							id="tls_cert"
 							bind:value={formTlsCert}
@@ -449,7 +443,7 @@
 						></textarea>
 					</div>
 					<div class="space-y-2">
-						<Label for="tls_key">Client key</Label>
+						<Label for="tls_key">客户端密钥</Label>
 						<textarea
 							id="tls_key"
 							bind:value={formTlsKey}
@@ -461,7 +455,7 @@
 			{/if}
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => (showAddModal = false)}>Cancel</Button>
+			<Button variant="outline" onclick={() => (showAddModal = false)}>取消</Button>
 			<Button onclick={createEnvironment} disabled={formSaving}>
 				{#if formSaving}
 					<RefreshCw class="w-4 h-4 mr-1 animate-spin" />
@@ -478,7 +472,7 @@
 <Dialog.Root bind:open={showEditModal}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Edit environment</Dialog.Title>
+			<Dialog.Title>编辑环境</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4">
 			{#if formError}
@@ -487,7 +481,7 @@
 
 			<!-- Quick URL parser -->
 			<div class="space-y-2 pb-3 border-b">
-				<Label for="edit-quick-url">Quick URL (optional)</Label>
+				<Label for="edit-quick-url">快速链接（可选）</Label>
 				<div class="flex gap-2">
 					<Input
 						id="edit-quick-url"
@@ -500,30 +494,26 @@
 						size="sm"
 						onclick={() => parseDockerUrl(quickUrl)}
 						disabled={!quickUrl.trim()}
-					>
-						Parse
-					</Button>
+					>解析</Button>
 				</div>
-				<p class="text-xs text-muted-foreground">
-					Paste a full Docker URL to auto-fill the fields below
-				</p>
+				<p class="text-xs text-muted-foreground">粘贴完整的 Docker URL 即可自动填充以下字段。</p>
 			</div>
 
 			<div class="space-y-2">
-				<Label for="edit-name">Name</Label>
-				<Input id="edit-name" bind:value={formName} placeholder="Production server" />
+				<Label for="edit-name">名称</Label>
+				<Input id="edit-name" bind:value={formName} placeholder="生产服务器" />
 			</div>
 			<div class="space-y-2">
-				<Label for="edit-host">Host</Label>
+				<Label for="edit-host">主机</Label>
 				<Input id="edit-host" bind:value={formHost} placeholder="192.168.1.100" />
 			</div>
 			<div class="grid grid-cols-2 gap-4">
 				<div class="space-y-2">
-					<Label for="edit-port">Port</Label>
+					<Label for="edit-port">端口</Label>
 					<Input id="edit-port" type="number" bind:value={formPort} />
 				</div>
 				<div class="space-y-2">
-					<Label for="edit-protocol">Protocol</Label>
+					<Label for="edit-protocol">协议</Label>
 					<Select.Root type="single" bind:value={formProtocol}>
 						<Select.Trigger class="w-full h-9">
 							{#if formProtocol === 'https'}
@@ -548,9 +538,9 @@
 			</div>
 			{#if formProtocol === 'https'}
 				<div class="space-y-4 pt-2 border-t">
-					<p class="text-xs text-muted-foreground">TLS certificates (optional)</p>
+					<p class="text-xs text-muted-foreground">TLS证书（可选）</p>
 					<div class="space-y-2">
-						<Label for="edit-tls_ca">CA certificate</Label>
+						<Label for="edit-tls_ca">CA证书</Label>
 						<textarea
 							id="edit-tls_ca"
 							bind:value={formTlsCa}
@@ -559,7 +549,7 @@
 						></textarea>
 					</div>
 					<div class="space-y-2">
-						<Label for="edit-tls_cert">Client certificate</Label>
+						<Label for="edit-tls_cert">客户端证书</Label>
 						<textarea
 							id="edit-tls_cert"
 							bind:value={formTlsCert}
@@ -568,7 +558,7 @@
 						></textarea>
 					</div>
 					<div class="space-y-2">
-						<Label for="edit-tls_key">Client key</Label>
+						<Label for="edit-tls_key">客户端密钥</Label>
 						<textarea
 							id="edit-tls_key"
 							bind:value={formTlsKey}
@@ -580,7 +570,7 @@
 			{/if}
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => { showEditModal = false; editingEnv = null; }}>Cancel</Button>
+			<Button variant="outline" onclick={() => { showEditModal = false; editingEnv = null; }}>取消</Button>
 			<Button onclick={updateEnvironment} disabled={formSaving}>
 				{#if formSaving}
 					<RefreshCw class="w-4 h-4 mr-1 animate-spin" />

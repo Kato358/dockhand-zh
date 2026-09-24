@@ -54,7 +54,7 @@
 				containers = await response.json();
 			}
 		} catch (error) {
-			console.error('Failed to fetch containers:', error);
+			console.error('获取容器失败：', error);
 		} finally {
 			loading = false;
 		}
@@ -75,17 +75,17 @@
 			});
 
 			if (response.ok) {
-				toast.success(`Connected ${selectedContainerInfo?.name || 'container'} to ${network.name}`);
+				toast.success(`已将 ${selectedContainerInfo?.name || '容器'} 连接到 ${network.name}`);
 				open = false;
 				selectedContainer = undefined;
 				onSuccess();
 			} else {
 				const data = await response.json();
-				toast.error(data.details || 'Failed to connect container');
+				toast.error(data.details || '连接容器失败');
 			}
 		} catch (error) {
 			console.error('Failed to connect container:', error);
-			toast.error('Failed to connect container');
+			toast.error('连接容器失败');
 		} finally {
 			submitting = false;
 		}
@@ -106,9 +106,7 @@
 				<Link class="w-4 h-4" />
 				Connect container to {network?.name}
 			</Dialog.Title>
-			<Dialog.Description>
-				Select a container to connect to this network.
-			</Dialog.Description>
+			<Dialog.Description>选择要连接到此网络的容器。</Dialog.Description>
 		</Dialog.Header>
 
 		<div class="space-y-4 py-4">
@@ -119,12 +117,12 @@
 			{:else if availableContainers.length === 0}
 				<div class="text-center py-8 text-muted-foreground">
 					<Box class="w-8 h-8 mx-auto mb-2 opacity-50" />
-					<p class="text-sm">No containers available to connect.</p>
-					<p class="text-xs mt-1">All containers are already connected to this network.</p>
+					<p class="text-sm">没有可连接的容器。</p>
+					<p class="text-xs mt-1">所有容器均已连接到此网络。</p>
 				</div>
 			{:else}
 				<div class="space-y-2">
-					<Label for="container">Container</Label>
+					<Label for="container">容器</Label>
 					<Select.Root type="single" bind:value={selectedContainer}>
 						<Select.Trigger id="container" class="w-full">
 							{#if selectedContainerInfo}
@@ -133,7 +131,7 @@
 									{selectedContainerInfo.name}
 								</span>
 							{:else}
-								<span class="text-muted-foreground">Select a container...</span>
+								<span class="text-muted-foreground">选择一个容器…</span>
 							{/if}
 						</Select.Trigger>
 						<Select.Content>
@@ -153,9 +151,7 @@
 		</div>
 
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => open = false} disabled={submitting}>
-				Cancel
-			</Button>
+			<Button variant="outline" onclick={() => open = false} disabled={submitting}>取消</Button>
 			<Button
 				onclick={handleConnect}
 				disabled={!selectedContainer || submitting || availableContainers.length === 0}

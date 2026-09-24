@@ -33,7 +33,7 @@
 			credentials = await response.json();
 		} catch (error) {
 			console.error('Failed to fetch git credentials:', error);
-			toast.error('Failed to fetch git credentials');
+			toast.error('获取 Git 凭据失败');
 		} finally {
 			loading = false;
 		}
@@ -58,24 +58,24 @@
 			const response = await fetch(`/api/git/credentials/${id}`, { method: 'DELETE' });
 			if (response.ok) {
 				await fetchCredentials();
-				toast.success('Credential deleted');
+				toast.success('凭证已删除');
 			} else {
-				toast.error('Failed to delete credential');
+				toast.error('删除凭据失败');
 			}
 		} catch (error) {
 			console.error('Failed to delete credential:', error);
-			toast.error('Failed to delete credential');
+			toast.error('删除凭据失败');
 		}
 	}
 
 	function getAuthTypeBadge(authType: string) {
 		switch (authType) {
 			case 'password':
-				return { label: 'Password', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' };
+				return { label: '密码', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' };
 			case 'ssh':
-				return { label: 'SSH Key', class: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' };
+				return { label: 'SSH密钥', class: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' };
 			default:
-				return { label: 'None', class: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200' };
+				return { label: '无', class: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200' };
 		}
 	}
 
@@ -87,26 +87,24 @@
 <div class="space-y-4">
 	<div class="flex justify-between items-center">
 		<div>
-			<h3 class="text-lg font-medium">Git credentials</h3>
-			<p class="text-sm text-muted-foreground">Manage credentials for accessing Git repositories</p>
+			<h3 class="text-lg font-medium">Git 凭据</h3>
+			<p class="text-sm text-muted-foreground">管理访问 Git 仓库的凭据</p>
 		</div>
 		{#if $canAccess('settings', 'edit')}
 			<Button size="sm" onclick={() => openModal()}>
-				<Plus class="w-4 h-4" />
-				Add credential
-			</Button>
+				<Plus class="w-4 h-4" />添加凭据</Button>
 		{/if}
 	</div>
 
 	{#if loading}
-		<p class="text-sm text-muted-foreground">Loading credentials...</p>
+		<p class="text-sm text-muted-foreground">正在加载凭据…</p>
 	{:else if credentials.length === 0}
 		<Card.Root>
 			<Card.Content>
 				<EmptyState
 					icon={Key}
-					title="No Git credentials configured"
-					description="Add credentials to connect to private Git repositories"
+					title="未配置 Git 凭据"
+					description="添加连接到私有 Git 仓库的凭据"
 				/>
 			</Card.Content>
 		</Card.Root>
@@ -146,10 +144,10 @@
 								</Button>
 								<ConfirmPopover
 									open={confirmDeleteId === cred.id}
-									action="Delete"
+									action="删除"
 									itemType="credential"
 									itemName={cred.name}
-									title="Delete"
+									title="删除"
 									onConfirm={() => deleteCredential(cred.id)}
 									onOpenChange={(open) => confirmDeleteId = open ? cred.id : null}
 								>

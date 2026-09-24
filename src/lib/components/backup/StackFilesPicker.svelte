@@ -1,6 +1,6 @@
 <script lang="ts">
 	/**
-	 * "Stack files on the host" — probes the target host at backup-config time, shows the
+	 * "主机上的编排文件" — probes the target host at backup-config time, shows the
 	 * resolved HOST path of the stack folder, and lets the user pick which entries to back up.
 	 * Load-bearing files (compose, .env) are always kept (non-deselectable). When the folder
 	 * can't be located on the host, an info callout tells the user to set the env's stack path
@@ -33,7 +33,7 @@
 		/** Environment icon (Lucide name or custom) + its id, for the env glyph in the tooltip. */
 		envIcon?: string;
 		envId?: number;
-		/** The user-set "Remote stack path (for backup)" for direct/hawser envs (empty if unset). */
+		/** The user-set "远程编排路径（用于备份）" for direct/hawser envs (empty if unset). */
 		configuredStackPath?: string;
 	}
 
@@ -91,27 +91,25 @@
 </script>
 
 <div class="space-y-2">
-	<div class="text-sm font-medium">Stack files on the host</div>
+	<div class="text-sm font-medium">主机上的编排文件</div>
 
 	{#if loading}
 		<div class="flex items-center gap-2 rounded-md border bg-muted/30 p-2.5 text-xs text-muted-foreground">
-			<Loader2 class="h-4 w-4 shrink-0 animate-spin" />
-			Probing the host for the stack folder...
-		</div>
+			<Loader2 class="h-4 w-4 shrink-0 animate-spin" />正在探测主机上的编排文件夹…</div>
 	{:else if listing?.kind === 'listed'}
 			<!-- Resolved host path callout (copied from BackupPanel's stack-path candidate). -->
 			<div class="flex items-start gap-2 rounded-md border bg-muted/30 p-2.5 text-xs">
 				<FolderOpen class="mt-0.5 h-4 w-4 shrink-0 text-sky-500" />
 				<div class="min-w-0 flex-1">
 					<div class="flex items-center gap-1.5">
-						<span class="font-medium text-foreground">Captured from the host at</span>
+						<span class="font-medium text-foreground">从主机捕获</span>
 						<Tooltip.Root>
 							<Tooltip.Trigger type="button" class="text-muted-foreground hover:text-foreground">
 								<HelpCircle class="h-3.5 w-3.5" />
 							</Tooltip.Trigger>
 							<Tooltip.Content class="w-80 z-[200]" side="right">
 								<div class="space-y-2">
-									<p class="font-medium">Where this path comes from</p>
+									<p class="font-medium">此路径的来源</p>
 									{#if envKind === 'socket'}
 										<p class="flex items-center gap-1.5 text-muted-foreground">
 											{#if envIcon && envId != null}<EnvironmentIcon icon={envIcon} {envId} class="h-3.5 w-3.5 shrink-0" />{/if}
@@ -120,8 +118,7 @@
 											environment. Backup reads the stack folder from Dockhand's own stack
 											directory on this host.</span>
 										</p>
-										<p class="text-muted-foreground">
-											If this path looks wrong, set <code class="bg-muted px-1 rounded">HOST_DATA_DIR</code>
+										<p class="text-muted-foreground">如果此路径看起来有误，请设置<code class="bg-muted px-1 rounded">HOST_DATA_DIR</code>
 											when Dockhand runs in a container, so it points to where the data volume
 											lives on the host.
 										</p>
@@ -134,14 +131,10 @@
 											Docker host.</span>
 										</p>
 										{#if configuredStackPath}
-											<p class="text-muted-foreground">
-												Remote stack path set on this environment:
-												<code class="bg-muted px-1 rounded break-all">{configuredStackPath}</code>
+											<p class="text-muted-foreground">此环境中已设置远程编排路径：<code class="bg-muted px-1 rounded break-all">{configuredStackPath}</code>
 											</p>
 										{:else}
-											<p class="text-muted-foreground">
-												It is derived from the stack's bind mounts. To set it explicitly, use
-												<span class="font-medium text-foreground">Environments &gt; (edit) &gt; Remote stack path (for backup)</span>
+											<p class="text-muted-foreground">它源自编排的绑定挂载点。要显式设置它，请使用<span class="font-medium text-foreground">环境 &gt;（编辑）&gt; 远程编排路径（用于备份）</span>
 												and re-open this dialog.
 											</p>
 										{/if}
@@ -158,15 +151,12 @@
 											directory on its host.</span>
 										</p>
 										{#if configuredStackPath}
-											<p class="text-muted-foreground">
-												Remote stack path set on this environment:
-												<code class="bg-muted px-1 rounded break-all">{configuredStackPath}</code>
+											<p class="text-muted-foreground">此环境中已设置远程编排路径：<code class="bg-muted px-1 rounded break-all">{configuredStackPath}</code>
 											</p>
 										{:else}
-											<p class="text-muted-foreground">
-												It defaults to <code class="bg-muted px-1 rounded">/data/stacks</code>. If the
+											<p class="text-muted-foreground">默认值为<code class="bg-muted px-1 rounded">/data/stacks</code>. If the
 												agent uses a custom <code class="bg-muted px-1 rounded">STACKS_DIR</code>, set it
-												under <span class="font-medium text-foreground">Environments &gt; (edit) &gt; Remote stack path (for backup)</span>
+												under <span class="font-medium text-foreground">环境 &gt;（编辑）&gt; 远程编排路径（用于备份）</span>
 												and re-open this dialog.
 											</p>
 										{/if}
@@ -182,7 +172,7 @@
 		<div class="border rounded-md overflow-hidden">
 			<div class="flex items-center gap-3 px-3 py-2 bg-muted/30 border-b">
 				<Label class="text-xs">Backup all files ({selectable.length})</Label>
-				<TogglePill checked={allFiles} onLabel="Yes" offLabel="No" onchange={() => toggleAll(!allFiles)} />
+				<TogglePill checked={allFiles} onLabel="是" offLabel="否" onchange={() => toggleAll(!allFiles)} />
 			</div>
 			<div class="divide-y max-h-40 overflow-y-auto">
 				{#each entries as entry}
@@ -217,23 +207,23 @@
 		<div class="flex items-start gap-2 rounded-md border border-destructive/50 bg-destructive/10 p-2.5 text-xs">
 			<AlertTriangle class="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
 			<div class="min-w-0">
-				<div class="font-medium text-destructive">The backup helper can't run on this environment</div>
+				<div class="font-medium text-destructive">备份助手无法在此环境下运行</div>
 				<div class="mt-0.5 break-all text-muted-foreground">{listing.reason}</div>
-				<div class="mt-1 text-muted-foreground">A backup can't be created until this is fixed - the same helper container captures the stack files.</div>
+				<div class="mt-1 text-muted-foreground">这个问题解决之前无法创建备份——同一个辅助容器会捕获编排文件。</div>
 			</div>
 		</div>
 	{:else if listing?.kind === 'unknown'}
 		<div class="flex items-start gap-2 rounded-md border bg-muted/30 p-2.5 text-xs">
 			<Info class="mt-0.5 h-4 w-4 shrink-0 text-sky-500" />
 			<div class="min-w-0">
-				<div class="font-medium text-foreground">No stack folder found on the host</div>
+				<div class="font-medium text-foreground">主机上未找到编排文件夹</div>
 				<div class="mt-0.5 text-muted-foreground">{listing.reason}</div>
 				{#if envKind === 'socket'}
-					<div class="mt-1 text-muted-foreground">On a socket environment this usually means <code class="bg-muted px-1 rounded">HOST_DATA_DIR</code> does not match where the data volume is mounted on the host. Fix it, then cancel and re-configure this backup.</div>
+					<div class="mt-1 text-muted-foreground">在套接字环境中，这通常意味着<code class="bg-muted px-1 rounded">HOST_DATA_DIR</code> does not match where the data volume is mounted on the host. Fix it, then cancel and re-configure this backup.</div>
 				{:else if envKind === 'direct'}
-					<div class="mt-1 text-muted-foreground">Set the environment's stack path (Environments &gt; edit &gt; Remote stack path for backup), then cancel and re-configure this backup.</div>
+					<div class="mt-1 text-muted-foreground">设置环境的编排路径（环境 &gt; 编辑 &gt; 备份的远程编排路径），然后取消并重新配置此备份。</div>
 				{:else}
-					<div class="mt-1 text-muted-foreground">On Hawser this usually means the agent uses a custom <code class="bg-muted px-1 rounded">STACKS_DIR</code> (not the default <code class="bg-muted px-1 rounded">/data/stacks</code>). Set the environment's stack path (Environments &gt; edit &gt; Remote stack path for backup), then cancel and re-configure this backup.</div>
+					<div class="mt-1 text-muted-foreground">在 Hawser 上，这通常意味着代理使用自定义<code class="bg-muted px-1 rounded">STACKS_DIR</code> (not the default <code class="bg-muted px-1 rounded">/data/stacks</code>). Set the environment's stack path (Environments &gt; edit &gt; Remote stack path for backup), then cancel and re-configure this backup.</div>
 				{/if}
 			</div>
 		</div>

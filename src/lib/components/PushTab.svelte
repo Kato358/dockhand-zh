@@ -116,7 +116,7 @@
 
 			if (!pulledImage) {
 				console.log('Looking for:', sourceImageName, 'Available tags:', images.map((i: any) => i.tags).flat());
-				errorMessage = 'Could not find image to push';
+				errorMessage = '找不到要推送的镜像';
 				status = 'error';
 				onError?.(errorMessage);
 				return;
@@ -178,10 +178,10 @@
 		} else if (data.status === 'complete') {
 			statusMessage = data.message || 'Image pushed successfully!';
 			status = 'complete';
-			addOutputLine(`[push] ${data.message || 'Push complete!'}`);
+			addOutputLine(`[push] ${data.message || '推送完成！'}`);
 			onComplete?.(targetTag || data.targetTag || '');
 		} else if (data.status === 'error' || data.error) {
-			errorMessage = data.error || 'Push failed';
+			errorMessage = data.error || '推送失败';
 			status = 'error';
 			addOutputLine(`[error] ${data.error}`);
 			onError?.(errorMessage);
@@ -210,10 +210,10 @@
 						<span class="text-sm">{statusMessage}</span>
 					{:else if status === 'complete'}
 						<CheckCircle2 class="w-4 h-4 text-green-600" />
-						<span class="text-sm text-green-600">Push complete!</span>
+						<span class="text-sm text-green-600">推送完成！</span>
 					{:else if status === 'error'}
 						<XCircle class="w-4 h-4 text-red-600" />
-						<span class="text-sm text-red-600">Push failed</span>
+						<span class="text-sm text-red-600">推送失败</span>
 					{/if}
 				</div>
 				{#if status === 'complete' && targetTag}
@@ -239,7 +239,7 @@
 						<Terminal class="w-3.5 h-3.5" />
 						<span>Output ({outputLines.length} lines)</span>
 					</div>
-					<button type="button" onclick={toggleLogTheme} class="p-1 rounded hover:bg-muted transition-colors cursor-pointer" title="Toggle log theme">
+					<button type="button" onclick={toggleLogTheme} class="p-1 rounded hover:bg-muted transition-colors cursor-pointer" title="切换日志主题">
 						{#if logDarkMode}
 							<Sun class="w-3.5 h-3.5" />
 						{:else}
@@ -276,7 +276,7 @@
 	{#if status === 'idle'}
 		<div class="flex-1 flex flex-col items-center justify-center gap-4 text-muted-foreground">
 			<Upload class="w-12 h-12 opacity-50" />
-			<p class="text-sm">Ready to push to <code class="bg-muted px-1.5 py-0.5 rounded">{registryName}</code></p>
+			<p class="text-sm">准备推送到<code class="bg-muted px-1.5 py-0.5 rounded">{registryName}</code></p>
 		</div>
 	{/if}
 </div>

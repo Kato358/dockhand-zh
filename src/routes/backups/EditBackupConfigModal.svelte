@@ -70,8 +70,7 @@
 			{#if config}
 				{#if loading}
 					<div class="flex items-center gap-2 p-4 text-sm text-muted-foreground">
-						<Loader2 class="w-4 h-4 animate-spin" /> Loading volumes…
-					</div>
+						<Loader2 class="w-4 h-4 animate-spin" />正在加载卷…</div>
 				{:else}
 					<BackupPanel
 						containerName={config.targetName}

@@ -47,7 +47,7 @@
 			providers = await response.json();
 		} catch (e) {
 			console.error('Failed to fetch secret providers:', e);
-			toast.error('Failed to fetch secret providers');
+			toast.error('获取密钥提供程序失败');
 		} finally {
 			loading = false;
 		}
@@ -81,13 +81,13 @@
 			});
 			if (response.ok) {
 				await fetchProviders();
-				toast.success('Secret provider deleted');
+				toast.success('密钥提供者已删除');
 			} else {
 				const data = await response.json();
-				toast.error(data.error || 'Failed to delete secret provider');
+				toast.error(data.error || '删除密钥提供者失败');
 			}
 		} catch {
-			toast.error('Failed to delete secret provider');
+			toast.error('删除密钥提供者失败');
 		}
 	}
 
@@ -100,7 +100,7 @@
 			);
 			const data = await response.json();
 			if (data.ok) {
-				toast.success(`${provider.name}: connection works`);
+				toast.success(`${provider.name}：连接正常`);
 				clearTimeout(testOkTimer);
 				testOkId = provider.id;
 				testOkTimer = setTimeout(() => (testOkId = null), 2000);
@@ -110,7 +110,7 @@
 				);
 			}
 		} catch {
-			toast.error('Connection test failed');
+			toast.error('连接测试失败');
 		} finally {
 			testingId = null;
 		}
@@ -131,23 +131,21 @@
 		<div class="flex gap-2">
 			{#if $canAccess("secrets", "create")}
 				<Button size="sm" onclick={() => openModal()}>
-					<Plus class="w-4 h-4" />
-					Add secret provider
-				</Button>
+					<Plus class="w-4 h-4" />添加密钥提供者</Button>
 			{/if}
 			<Button size="sm" variant="outline" onclick={fetchProviders}
-				>Refresh</Button
+				>刷新</Button
 			>
 		</div>
 	</div>
 
 	{#if loading && providers.length === 0}
-		<p class="text-muted-foreground text-sm">Loading secret providers...</p>
+		<p class="text-muted-foreground text-sm">正在加载密钥提供者…</p>
 	{:else if providers.length === 0}
 		<EmptyState
 			icon={KeyRound}
-			title="No secret providers"
-			description="Add a provider (1Password, Infisical, HashiCorp Vault, ...) to load secrets at deploy time"
+			title="没有密钥供应商"
+			description="添加提供程序（1Password、Infisical、HashiCorp Vault 等）以便在部署时加载密钥"
 		/>
 	{:else}
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -193,9 +191,7 @@
 											{:else}
 												<PlugZap class="w-3 h-3" />
 											{/if}
-										</span>
-										Test
-									</Button>
+										</span>测试</Button>
 								{/if}
 								{#if $canAccess("secrets", "edit")}
 									<Button
@@ -209,10 +205,10 @@
 								{#if $canAccess("secrets", "delete")}
 									<ConfirmPopover
 										open={confirmDeleteId === provider.id}
-										action="Delete"
+										action="删除"
 										itemType="secret provider"
 										itemName={provider.name}
-										title="Remove"
+										title="移除"
 										position="left"
 										autoHideMs={0}
 										onConfirm={() =>
@@ -232,7 +228,7 @@
 										{/snippet}
 										{#snippet extraContent()}
 											{#if loadingAffected}
-												<p class="text-xs text-muted-foreground">Checking which stacks use this provider...</p>
+												<p class="text-xs text-muted-foreground">正在检查哪些编排使用此提供程序…</p>
 											{:else if deleteAffectedStacks.length > 0}
 												<p class="text-xs text-amber-600 dark:text-amber-500">
 													This unbinds {deleteAffectedStacks.length} stack{deleteAffectedStacks.length === 1 ? '' : 's'}; their next deploy drops the injected secrets:

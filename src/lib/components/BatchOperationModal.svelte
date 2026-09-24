@@ -285,27 +285,25 @@
 		<!-- Footer: Summary + Button in one row -->
 		<div class="flex items-center justify-between pt-2">
 			<div class="flex items-center gap-3 text-sm">
-				<div class="flex items-center gap-1" title="Succeeded">
+				<div class="flex items-center gap-1" title="成功">
 					<Check class="w-4 h-4 text-green-500" />
 					<span class="tabular-nums">{successCount}</span>
 				</div>
-				<div class="flex items-center gap-1" title="Failed">
+				<div class="flex items-center gap-1" title="失败">
 					<X class="w-4 h-4 text-red-500" />
 					<span class="tabular-nums">{failCount}</span>
 				</div>
-				<div class="flex items-center gap-1" title="Cancelled">
+				<div class="flex items-center gap-1" title="取消">
 					<Ban class="w-4 h-4 text-amber-500" />
 					<span class="tabular-nums">{cancelledCount}</span>
 				</div>
-				<div class="flex items-center gap-1 text-muted-foreground" title="Pending">
+				<div class="flex items-center gap-1 text-muted-foreground" title="待处理">
 					<Circle class="w-4 h-4" />
 					<span class="tabular-nums">{items.length - successCount - failCount - cancelledCount}</span>
 				</div>
 			</div>
 			{#if isRunning}
-				<Button variant="outline" size="sm" onclick={handleCancel}>
-					Cancel
-				</Button>
+				<Button variant="outline" size="sm" onclick={handleCancel}>取消</Button>
 			{:else}
 				<Button size="sm" onclick={handleOk}>
 					OK

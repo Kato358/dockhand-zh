@@ -38,7 +38,7 @@
 
 	async function handleClone() {
 		if (!newName.trim()) {
-			error = 'Please enter a name for the new volume';
+			error = '请输入新卷的名称';
 			return;
 		}
 
@@ -58,7 +58,7 @@
 				throw new Error(data.details || data.error || 'Failed to clone volume');
 			}
 
-			toast.success(`Volume cloned as "${newName}"`);
+			toast.success(`卷已克隆为“${newName}”`);
 			onsuccess();
 			open = false;
 		} catch (e: any) {
@@ -73,9 +73,7 @@
 	<Dialog.Content class="max-w-2xl">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<Copy class="w-5 h-5" />
-				Clone volume
-			</Dialog.Title>
+				<Copy class="w-5 h-5" />克隆存储卷</Dialog.Title>
 			<Dialog.Description>
 				Create a new volume with the same driver and options as "{volumeName}".
 			</Dialog.Description>
@@ -83,11 +81,11 @@
 
 		<div class="space-y-4 py-4">
 			<div class="space-y-2">
-				<Label for="new-name">New volume name</Label>
+				<Label for="new-name">新卷名</Label>
 				<Input
 					id="new-name"
 					bind:value={newName}
-					placeholder="Enter new volume name"
+					placeholder="输入新的卷名称"
 					disabled={cloning}
 					onkeydown={(e) => e.key === 'Enter' && handleClone()}
 				/>
@@ -97,15 +95,11 @@
 				<p class="text-sm text-destructive">{error}</p>
 			{/if}
 
-			<p class="text-xs text-muted-foreground">
-				Note: This creates an empty volume with the same configuration. To copy data, use the Export feature on the source volume and import into the new volume.
-			</p>
+			<p class="text-xs text-muted-foreground">注意：这将创建一个配置相同的空卷。要复制数据，请使用源卷上的“导出”功能，然后将其导入到新卷中。</p>
 		</div>
 
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => (open = false)} disabled={cloning}>
-				Cancel
-			</Button>
+			<Button variant="outline" onclick={() => (open = false)} disabled={cloning}>取消</Button>
 			<Button onclick={handleClone} disabled={cloning || !newName.trim()}>
 				{#if cloning}
 					<Loader2 class="w-4 h-4 animate-spin" />

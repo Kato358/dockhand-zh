@@ -25,7 +25,7 @@
 		outputSize = 256,
 		outputFormat = 'image/jpeg',
 		outputQuality = 0.9,
-		title = 'Crop avatar',
+		title = '裁剪头像',
 		saveLabel = 'Save avatar'
 	}: Props = $props();
 
@@ -145,7 +145,7 @@
 		}
 
 		if (!cropData) {
-			throw new Error('No crop data available');
+			throw new Error('暂无作物数据');
 		}
 
 		return new Promise((resolve, reject) => {
@@ -157,7 +157,7 @@
 				const ctx = canvas.getContext('2d');
 
 				if (!ctx) {
-					reject(new Error('Failed to get canvas context'));
+					reject(new Error('获取画布上下文失败'));
 					return;
 				}
 
@@ -190,7 +190,7 @@
 			};
 
 			image.onerror = () => {
-				reject(new Error('Failed to load image'));
+				reject(new Error('镜像加载失败'));
 			};
 		});
 	}
@@ -233,9 +233,7 @@
 			<!-- Header -->
 			<div class="p-4 border-b">
 				<h3 class="text-lg font-semibold">{title}</h3>
-				<p class="text-sm text-muted-foreground mt-1">
-					Drag to reposition. Use the slider to zoom.
-				</p>
+				<p class="text-sm text-muted-foreground mt-1">拖动即可重新定位。使用滑块缩放。</p>
 			</div>
 
 			<!-- Cropper Container -->
@@ -277,16 +275,14 @@
 					onclick={handleCancel}
 					disabled={saving}
 				>
-					<X class="w-4 h-4" />
-					Cancel
-				</Button>
+					<X class="w-4 h-4" />取消</Button>
 				<Button
 					class="flex-1"
 					onclick={handleSave}
 					disabled={saving || !imageLoaded}
 				>
 					<Check class="w-4 h-4" />
-					{saving ? 'Uploading...' : !imageLoaded ? 'Loading...' : saveLabel}
+					{saving ? 'Uploading...' : !imageLoaded ? '加载中…' : saveLabel}
 				</Button>
 			</div>
 		</div>

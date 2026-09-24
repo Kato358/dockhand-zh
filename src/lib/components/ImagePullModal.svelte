@@ -192,7 +192,7 @@
 			const response = await fetch(deleteUrl, { method: 'DELETE' });
 			if (!response.ok) {
 				const data = await response.json().catch(() => ({}));
-				throw new Error(data.error || 'Failed to delete image');
+				throw new Error(data.error || '删除镜像失败');
 			}
 
 			// Close modal after successful delete
@@ -257,9 +257,7 @@
 					onclick={() => { if (!isProcessing && activeTab !== 'configure') activeTab = 'configure'; }}
 					disabled={isProcessing}
 				>
-					<Settings2 class="w-3.5 h-3.5 inline mr-1.5" />
-					Configure
-				</button>
+					<Settings2 class="w-3.5 h-3.5 inline mr-1.5" />配置</button>
 				<ArrowBigRight class="w-3.5 h-3.5 text-muted-foreground/50 shrink-0" />
 			{/if}
 			<button
@@ -312,7 +310,7 @@
 			{#if needsConfigureStep}
 				<div class="space-y-4 px-1 overflow-auto" class:hidden={activeTab !== 'configure'}>
 					<div class="space-y-2">
-						<Label>Registry</Label>
+						<Label>镜像仓库</Label>
 						<Select.Root
 							type="single"
 							value={selectedRegistryId === 'dockerhub' ? 'dockerhub' : selectedRegistryId ? String(selectedRegistryId) : undefined}
@@ -327,7 +325,7 @@
 									{/if}
 									<span class="flex-1 text-left">{selectedRegistry.name}</span>
 								{:else}
-									<span class="text-muted-foreground">Select registry</span>
+									<span class="text-muted-foreground">选择镜像仓库</span>
 								{/if}
 							</Select.Trigger>
 							<Select.Content>
@@ -349,7 +347,7 @@
 					</div>
 
 					<div class="space-y-2">
-						<Label>Image name</Label>
+						<Label>镜像名称</Label>
 						<Input
 							bind:value={configImageName}
 							placeholder={selectedRegistryId === 'dockerhub' ? 'nginx:latest or library/nginx:1.25' : 'myimage:latest'}
@@ -359,14 +357,13 @@
 								}
 							}}
 						/>
-						<p class="text-xs text-muted-foreground">
-							Format: <code class="bg-muted px-1 py-0.5 rounded">image:tag</code> or <code class="bg-muted px-1 py-0.5 rounded">namespace/image:tag</code>
+						<p class="text-xs text-muted-foreground">格式：<code class="bg-muted px-1 py-0.5 rounded">image:tag</code> or <code class="bg-muted px-1 py-0.5 rounded">namespace/image:tag</code>
 						</p>
 					</div>
 
 					{#if configImageName.trim()}
 						<div class="space-y-2">
-							<Label class="text-muted-foreground">Full image reference</Label>
+							<Label class="text-muted-foreground">完整镜像引用</Label>
 							<div class="p-2 bg-muted rounded text-sm">
 								<code class="break-all">{fullImageReference}</code>
 							</div>
@@ -438,9 +435,7 @@
 						onclick={handleClose}
 						disabled={isDeleting}
 					>
-						<CheckCircle2 class="w-4 h-4" />
-						Keep image
-					</Button>
+						<CheckCircle2 class="w-4 h-4" />保持镜像</Button>
 				{:else if showDeleteButton && pullStatus === 'complete' && !envHasScanning}
 					<!-- Show Keep/Remove buttons after pull completes when no scanning (Images page) -->
 					<Button
@@ -461,25 +456,21 @@
 						onclick={handleClose}
 						disabled={isDeleting}
 					>
-						<CheckCircle2 class="w-4 h-4" />
-						Keep image
-					</Button>
+						<CheckCircle2 class="w-4 h-4" />保持镜像</Button>
 				{:else}
 					<Button
 						variant="outline"
 						onclick={handleClose}
 						disabled={isProcessing}
 					>
-						{pullStatus === 'complete' && !envHasScanning ? 'Done' : 'Cancel'}
+						{pullStatus === 'complete' && !envHasScanning ? '完成' : '取消'}
 					</Button>
 					{#if activeTab === 'configure'}
 						<Button
 							onclick={startPullFromConfigure}
 							disabled={!configImageName.trim()}
 						>
-							<Download class="w-4 h-4" />
-							Pull
-						</Button>
+							<Download class="w-4 h-4" />拉取</Button>
 					{:else if pullStatus === 'complete' || scanStatus === 'complete'}
 						<Button
 							variant="default"

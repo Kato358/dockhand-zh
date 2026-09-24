@@ -37,52 +37,52 @@
 	// secretproviders/shared.ts. Non-required fields are optional overrides.
 	export const PROVIDER_FIELDS: Record<string, ProviderField[]> = {
 		'op-service-account': [
-			{ key: 'token', label: 'Service account token', type: 'password', required: true, placeholder: 'ops_eyJ...', hint: 'A 1Password service account token (starts with ops_).' },
+			{ key: 'token', label: '服务账号令牌', type: 'password', required: true, placeholder: 'ops_eyJ...', hint: '1Password 服务账号令牌（以 ops_ 开头）。' },
 		],
 		'op-connect': [
-			{ key: 'host', label: 'Connect host URL', type: 'text', required: true, placeholder: 'https://connect.example.com', hint: 'URL of your 1Password Connect server.' },
-			{ key: 'token', label: 'Connect token', type: 'password', required: true, placeholder: 'eyJ...', hint: 'A Connect access token with read access to the vault.' },
+			{ key: 'host', label: '连接主机 URL', type: 'text', required: true, placeholder: 'https://connect.example.com', hint: '您的 1Password Connect 服务器的 URL。' },
+			{ key: 'token', label: '连接令牌', type: 'password', required: true, placeholder: 'eyJ...', hint: '具有对Vault读取权限的 Connect 访问令牌。' },
 		],
 		infisical: [
-			{ key: 'host', label: 'API host', type: 'text', required: true, placeholder: 'https://app.infisical.com', hint: 'Infisical Cloud or your self-hosted URL.' },
-			{ key: 'token', label: 'Access token', type: 'password', required: false, placeholder: 'st...', hint: 'A static service/access token. Leave blank to use Universal Auth (client ID + secret) below instead.' },
-			{ key: 'clientId', label: 'Universal Auth client ID', type: 'text', required: false, placeholder: 'machine identity client id', hint: 'A Machine Identity client ID. Pair with the client secret; leave blank if using a static token.' },
-			{ key: 'clientSecret', label: 'Universal Auth client secret', type: 'password', required: false, placeholder: 'machine identity client secret', hint: 'The Machine Identity client secret. Exchanged for a short-lived token via Universal Auth.' },
+			{ key: 'host', label: 'API主机', type: 'text', required: true, placeholder: 'https://app.infisical.com', hint: 'Infisical Cloud 或您自托管的 URL。' },
+			{ key: 'token', label: '访问令牌', type: 'password', required: false, placeholder: 'st...', hint: '静态服务/访问令牌。留空则使用下方的通用身份验证（客户端 ID + 密钥）。' },
+			{ key: 'clientId', label: '通用身份验证客户端 ID', type: 'text', required: false, placeholder: 'machine identity client id', hint: '机器身份客户端 ID。请与客户端密钥配对；如果使用静态令牌，请留空。' },
+			{ key: 'clientSecret', label: '通用身份验证客户端密钥', type: 'password', required: false, placeholder: 'machine identity client secret', hint: '机器身份客户端密钥。通过通用身份验证交换为短期令牌。' },
 			// A single-scope service token (st.*) carries its own project + environment, so
 			// both are optional for it. A multi-scope or glob-path service token, and every
 			// other auth shape (Universal Auth, static non-st token), still need them.
-			{ key: 'projectId', label: 'Project ID', type: 'text', required: true, requiredWhen: (c) => !(c.token ?? '').trim().startsWith('st.'), placeholder: 'workspace / project id', hint: 'The workspace/project the secrets live in. Optional for a single-scope service token (st.), which already targets one project; a multi-scope token still needs it.' },
-			{ key: 'environment', label: 'Environment', type: 'text', required: true, requiredWhen: (c) => !(c.token ?? '').trim().startsWith('st.'), placeholder: 'prod', hint: 'Environment slug, e.g. prod / staging. Optional for a single-scope service token (st.).' },
-			{ key: 'path', label: 'Secret path', type: 'text', required: false, placeholder: '/', hint: 'Folder path within the project. Defaults to /.' },
+			{ key: 'projectId', label: '项目 ID', type: 'text', required: true, requiredWhen: (c) => !(c.token ?? '').trim().startsWith('st.'), placeholder: 'workspace / project id', hint: '密钥所在的工作区/项目。对于单作用域服务令牌（st.）而言，此项为可选，因为单作用域令牌已经指向一个项目；多作用域令牌仍然需要此项。' },
+			{ key: 'environment', label: '环境', type: 'text', required: true, requiredWhen: (c) => !(c.token ?? '').trim().startsWith('st.'), placeholder: 'prod', hint: '环境别名，例如 prod / staging。对于单作用域服务令牌（st.）而言是可选。' },
+			{ key: 'path', label: '密钥路径', type: 'text', required: false, placeholder: '/', hint: '项目内的文件夹路径。默认为 /。' },
 		],
 		vault: [
-			{ key: 'address', label: 'Vault address', type: 'text', required: true, placeholder: 'https://vault.example.com', hint: 'Base URL of your Vault server.' },
-			{ key: 'token', label: 'Vault token', type: 'password', required: true, placeholder: 'hvs...', hint: 'A token with read access to the KV path.' },
-			{ key: 'namespace', label: 'Namespace', type: 'text', required: false, placeholder: 'admin (Enterprise / HCP)', hint: 'Vault Enterprise / HCP only.' },
-			{ key: 'mount', label: 'KV mount', type: 'text', required: false, placeholder: 'secret', hint: 'KV v2 mount path. Defaults to "secret".' },
+			{ key: 'address', label: 'Vault地址', type: 'text', required: true, placeholder: 'https://vault.example.com', hint: 'Vault 服务器的基本 URL。' },
+			{ key: 'token', label: 'Vault 令牌', type: 'password', required: true, placeholder: 'hvs...', hint: '具有对 KV 路径读取权限的令牌。' },
+			{ key: 'namespace', label: '命名空间', type: 'text', required: false, placeholder: 'admin (Enterprise / HCP)', hint: '仅限 Vault 企业版/HCP。' },
+			{ key: 'mount', label: 'KV 挂载点', type: 'text', required: false, placeholder: 'secret', hint: 'KV v2 挂载路径。默认为“secret”。' },
 		],
 		doppler: [
-			{ key: 'token', label: 'Token', type: 'password', required: true, placeholder: 'dp.st.... or dp.pt....', hint: 'A service token (dp.st.) already targets one config. A personal token (dp.pt.) also needs the project and config below.' },
-			{ key: 'project', label: 'Project', type: 'text', required: false, placeholder: 'only for a personal token (dp.pt.)', hint: 'Doppler project slug. Only needed with a personal token.' },
-			{ key: 'config', label: 'Config', type: 'text', required: false, placeholder: 'e.g. prd', hint: 'Config within the project. Only needed with a personal token.' },
+			{ key: 'token', label: '令牌', type: 'password', required: true, placeholder: 'dp.st.... or dp.pt....', hint: '服务令牌（dp.st.）已经指向一个配置。个人令牌（dp.pt.）还需要以下项目和配置。' },
+			{ key: 'project', label: '项目', type: 'text', required: false, placeholder: 'only for a personal token (dp.pt.)', hint: '多普勒项目别名。仅需个人令牌即可使用。' },
+			{ key: 'config', label: '配置', type: 'text', required: false, placeholder: 'e.g. prd', hint: '项目内部配置。仅在使用个人令牌时需要。' },
 		],
 		bitwarden: [
-			{ key: 'token', label: 'Machine Account access token', type: 'password', required: true, placeholder: 'Machine Account access token', hint: 'A Bitwarden Secrets Manager Machine Account token with read access to the Project.' },
-			{ key: 'serverUrl', label: 'Server URL', type: 'text', required: false, placeholder: 'https://vault.bitwarden.com', hint: 'Optional for EU or self-hosted Bitwarden. Leave blank for Bitwarden US cloud.' },
+			{ key: 'token', label: '机器帐户访问令牌', type: 'password', required: true, placeholder: '机器帐户访问令牌', hint: '具有对项目读取权限的 Bitwarden Secrets Manager 机器帐户令牌。' },
+			{ key: 'serverUrl', label: '服务器地址', type: 'text', required: false, placeholder: 'https://vault.bitwarden.com', hint: '对于欧盟或自托管的 Bitwarden 服务，此项为可选。对于美国 Bitwarden 云服务，请留空。' },
 		],
 		proton: [
-			{ key: 'token', label: 'Personal access token', type: 'password', required: true, placeholder: 'pst_...::...', hint: 'A Proton Pass personal access token (pst_...) used by the operator-installed pass-cli.' },
+			{ key: 'token', label: '个人访问令牌', type: 'password', required: true, placeholder: 'pst_...::...', hint: '由操作员安装的 pass-cli 使用的 Proton Pass 个人访问令牌 (pst_…)。' },
 		],
 		'azure-kv': [
-			{ key: 'vaultUri', label: 'Vault URI', type: 'text', required: true, placeholder: 'https://my-vault.vault.azure.net', hint: 'The Key Vault URI (from the vault Overview page).' },
-			{ key: 'tenantId', label: 'Tenant ID', type: 'text', required: true, placeholder: 'directory (tenant) ID', hint: 'Azure AD tenant (directory) ID of the app registration.' },
-			{ key: 'clientId', label: 'Client ID', type: 'text', required: true, placeholder: 'application (client) ID', hint: 'The service-principal (app registration) client ID.' },
-			{ key: 'clientSecret', label: 'Client secret', type: 'password', required: true, placeholder: 'app registration client secret', hint: 'A client secret for the app registration, with Get/List secret permission on the vault.' },
+			{ key: 'vaultUri', label: 'Vault URI', type: 'text', required: true, placeholder: 'https://my-vault.vault.azure.net', hint: '密钥库 URI（来自密钥库概览页面）。' },
+			{ key: 'tenantId', label: '租户 ID', type: 'text', required: true, placeholder: 'directory (tenant) ID', hint: 'Azure AD 租户（目录）ID，用于应用程序注册。' },
+			{ key: 'clientId', label: '客户ID', type: 'text', required: true, placeholder: 'application (client) ID', hint: '服务主体（应用程序注册）客户端 ID。' },
+			{ key: 'clientSecret', label: '客户机密', type: 'password', required: true, placeholder: 'app registration client secret', hint: '用于应用程序注册的客户端密钥，具有对密钥库的 Get/List 权限。' },
 		],
 		keepass: [
-			{ key: 'databasePath', label: 'Database path', type: 'text', required: true, placeholder: '/secrets/passwords.kdbx', hint: 'Absolute path to the .kdbx file as seen inside the Dockhand container (bind-mount it read-only). keepassxc-cli must be installed in the container.' },
-			{ key: 'password', label: 'Master password', type: 'password', required: false, requiredWhen: (c) => !(c.keyFilePath ?? '').trim(), placeholder: 'database master password', hint: 'The database master password. Optional if a key file is provided instead (or in addition).' },
-			{ key: 'keyFilePath', label: 'Key file path', type: 'text', required: false, placeholder: '/secrets/db.keyx', hint: 'Optional absolute path to the database key file, as seen inside the container.' },
+			{ key: 'databasePath', label: '数据库路径', type: 'text', required: true, placeholder: '/secrets/passwords.kdbx', hint: '.kdbx 文件在 Dockhand 容器内的绝对路径（以只读方式绑定挂载）。容器内必须安装 keepassxc-cli。' },
+			{ key: 'password', label: '主密码', type: 'password', required: false, requiredWhen: (c) => !(c.keyFilePath ?? '').trim(), placeholder: 'database master password', hint: '数据库主密码。如果提供了密钥文件（或同时提供了密钥文件），则此项为可选。' },
+			{ key: 'keyFilePath', label: '密钥文件路径', type: 'text', required: false, placeholder: '/secrets/db.keyx', hint: '可选的数据库密钥文件的绝对路径，如容器内所示。' },
 		],
 	};
 
@@ -97,29 +97,29 @@
 	export type BulkSelectorField = { label: string; placeholder?: string; hint?: string };
 	export const BULK_SELECTOR_FIELDS: Record<string, BulkSelectorField> = {
 		'op-service-account': {
-			label: 'Environment',
-			placeholder: '1Password Environment id',
-			hint: 'Bulk-load every secret from this 1Password Environment. Leave blank to inject only inline op:// references.'
+			label: '环境',
+			placeholder: '1Password 环境 ID',
+			hint: '从此 1Password 环境批量加载所有密钥。留空则仅注入内联 op:// 引用。'
 		},
 		'vault': {
-			label: 'KV v2 path',
+			label: 'KV v2 路径',
 			placeholder: 'path/to/secret',
-			hint: 'Bulk-load every key at this KV v2 path (under the configured mount).'
+			hint: '批量加载此 KV v2 路径（在已配置的挂载点下）的每个密钥。'
 		},
 		'infisical': {
-			label: 'Secret path',
+			label: '密钥路径',
 			placeholder: '/',
-			hint: 'Bulk-load every secret at this path (project and environment come from the provider config).'
+			hint: '批量加载此路径下的所有密钥（项目和环境来自提供程序配置）。'
 		},
 		'bitwarden': {
-			label: 'Project',
-			placeholder: 'Bitwarden Project UUID',
-			hint: 'Bulk-load every secret from this Bitwarden Secrets Manager Project.'
+			label: '项目',
+			placeholder: 'Bitwarden 项目 UUID',
+			hint: '从这个 Bitwarden Secrets Manager 项目批量加载所有密钥。'
 		},
 		'proton': {
 			label: 'Vault',
-			placeholder: 'Proton Pass vault name',
-			hint: 'Bulk-load every item from this Proton Pass vault. Leave blank to inject only inline pass:// references.'
+			placeholder: 'Proton PassVault名称',
+			hint: '批量加载此 Proton Pass 库中的所有项目。留空则仅注入内联 pass:// 引用。'
 		},
 		'azure-kv': {
 			label: 'Key Vault',
@@ -127,7 +127,7 @@
 			hint: 'Bulk-load every secret in the vault. Set any value to enable it; leave blank to inject only inline azurekv:// references.'
 		},
 		'keepass': {
-			label: 'Group',
+			label: '团体',
 			placeholder: 'e.g. dockhand (leave blank for inline refs only)',
 			hint: 'Bulk-load every entry under this group as ENV=<entry password>. Leave blank to inject only inline keepass:// references.'
 		}
@@ -300,16 +300,16 @@
 			}
 			const data = await response.json();
 			if (data.ok) {
-				toast.success('Connection works');
+				toast.success('连接正常');
 				clearTimeout(testOkTimer);
 				testOk = true;
 				testOkTimer = setTimeout(() => (testOk = false), 2000);
 			} else {
-				toast.error(data.error || 'Connection failed');
-				formError = data.error || 'Connection failed';
+				toast.error(data.error || '连接失败');
+				formError = data.error || '连接失败';
 			}
 		} catch {
-			toast.error('Connection test failed');
+			toast.error('连接测试失败');
 		} finally {
 			formTesting = false;
 		}
@@ -317,7 +317,7 @@
 
 	async function save() {
 		if (!formName.trim()) {
-			formError = 'Name is required';
+			formError = '名称（必填）';
 			return;
 		}
 
@@ -394,7 +394,7 @@
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
 				<KeyRound class="w-5 h-5 text-muted-foreground" />
-				{isEditing ? "Edit" : "Add"} secret provider
+				{isEditing ? "编辑" : "添加"} secret provider
 			</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4">
@@ -404,15 +404,15 @@
 				</div>
 			{/if}
 			<div class="space-y-2">
-				<FieldLabel label="Name" forId="provider-name" required showOptional={false} />
+				<FieldLabel label="名称" forId="provider-name" required showOptional={false} />
 				<Input
 					id="provider-name"
 					bind:value={formName}
-					placeholder="Production secrets"
+					placeholder="生产机密"
 				/>
 			</div>
 			<div class="space-y-2">
-				<FieldLabel label="Provider" forId="provider-type" required showOptional={false} />
+				<FieldLabel label="提供者" forId="provider-type" required showOptional={false} />
 				<Select.Root
 					type="single"
 					value={formType}
@@ -467,17 +467,14 @@
 					{#if formType === 'bitwarden'}
 						<p class="flex items-start gap-2 text-xs text-muted-foreground">
 							<Info class="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-500" />
-							<span>
-								Bitwarden Secrets Manager requires an externally installed or mounted official
-								<code>bws</code> client at <code>/usr/local/bin/bws</code> (or an absolute
+							<span>Bitwarden Secrets Manager 需要外部安装或挂载的官方版本。<code>bws</code> client at <code>/usr/local/bin/bws</code> (or an absolute
 								<code>DOCKHAND_BWS_PATH</code> process override).
 							</span>
 						</p>
 					{:else if formType === 'keepass'}
 						<p class="flex items-start gap-2 text-xs text-muted-foreground">
 							<Info class="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-500" />
-							<span>
-								KeePassXC requires the official <code>keepassxc-cli</code> client installed in the
+							<span>KeePassXC 需要官方版本<code>keepassxc-cli</code> client installed in the
 								container (or an absolute <code>DOCKHAND_KEEPASSXC_CLI_PATH</code> process override),
 								and the <code>.kdbx</code> database bind-mounted into the container read-only at the
 								path above. Supports both a bulk group pull and inline <code>keepass://</code>
@@ -487,9 +484,7 @@
 					{:else}
 						<p class="flex items-start gap-2 text-xs text-muted-foreground">
 							<Info class="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-500" />
-							<span>
-								Proton Pass requires an externally installed or mounted official
-								<code>pass-cli</code> client at <code>/usr/local/bin/pass-cli</code> (or an absolute
+							<span>Proton Pass 需要外部安装或固定的官方设备。<code>pass-cli</code> client at <code>/usr/local/bin/pass-cli</code> (or an absolute
 								<code>DOCKHAND_PASS_CLI_PATH</code> process override). Supports both a bulk vault pull
 								and inline <code>pass://</code> references.
 							</span>
@@ -519,11 +514,9 @@
 					{:else}
 						<PlugZap class="w-4 h-4" />
 					{/if}
-				</span>
-				Test connection
-			</Button>
+				</span>测试连接</Button>
 			<div class="flex-1"></div>
-			<Button variant="outline" onclick={handleClose}>Cancel</Button>
+			<Button variant="outline" onclick={handleClose}>取消</Button>
 			<Button onclick={save} disabled={formSaving}>
 				{#if formSaving}
 					<RefreshCw class="w-4 h-4 mr-1 animate-spin" />
@@ -532,7 +525,7 @@
 				{:else}
 					<Plus class="w-4 h-4" />
 				{/if}
-				{isEditing ? "Save" : "Add"}
+				{isEditing ? "保存" : "添加"}
 			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>

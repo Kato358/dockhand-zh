@@ -12,9 +12,9 @@
 	import { Plus, Trash2, HardDrive, Database, Server, ChevronDown } from 'lucide-svelte';
 
 	const VOLUME_DRIVERS = [
-		{ value: 'local', label: 'Local', description: 'Default local driver', icon: HardDrive },
-		{ value: 'nfs', label: 'NFS', description: 'Network file system', icon: Server },
-		{ value: 'cifs', label: 'CIFS', description: 'Windows/SMB shares', icon: Database }
+		{ value: 'local', label: '本地', description: '默认本地驱动程序', icon: HardDrive },
+		{ value: 'nfs', label: 'NFS', description: '网络文件系统', icon: Server },
+		{ value: 'cifs', label: 'CIFS', description: 'Windows/SMB 共享', icon: Database }
 	];
 
 	const SMB_VERSIONS = [
@@ -216,7 +216,7 @@
 <Dialog.Root bind:open onOpenChange={(isOpen) => { if (isOpen) focusFirstInput(); handleOpenChange(isOpen); }}>
 	<Dialog.Content class="max-w-2xl">
 		<Dialog.Header>
-			<Dialog.Title>Create volume</Dialog.Title>
+			<Dialog.Title>创建卷</Dialog.Title>
 		</Dialog.Header>
 
 		<div class="space-y-4">
@@ -228,7 +228,7 @@
 
 			<!-- Volume Name -->
 			<div class="space-y-2">
-				<Label for="volume-name">Volume name *</Label>
+				<Label for="volume-name">卷名*</Label>
 				<Input
 					id="volume-name"
 					bind:value={name}
@@ -244,7 +244,7 @@
 
 			<!-- Driver -->
 			<div class="space-y-2">
-				<Label for="driver">Driver</Label>
+				<Label for="driver">驱动</Label>
 				<Select.Root type="single" bind:value={driver} disabled={creating}>
 					<Select.Trigger class="w-full h-9">
 						{@const selectedDriver = VOLUME_DRIVERS.find(d => d.value === driver)}
@@ -269,9 +269,7 @@
 						{/each}
 					</Select.Content>
 				</Select.Root>
-				<p class="text-xs text-muted-foreground">
-					Volume driver to use (local is default)
-				</p>
+				<p class="text-xs text-muted-foreground">要使用的卷驱动程序（默认为本地驱动程序）</p>
 			</div>
 
 			<!-- Driver-specific fields -->
@@ -279,7 +277,7 @@
 				<!-- CIFS fields -->
 				<div class="grid grid-cols-2 gap-4">
 					<div class="space-y-2">
-						<Label for="cifs-server">Server / IP *</Label>
+						<Label for="cifs-server">服务器/IP *</Label>
 						<Input
 							id="cifs-server"
 							bind:value={cifsServer}
@@ -293,7 +291,7 @@
 						{/if}
 					</div>
 					<div class="space-y-2">
-						<Label for="cifs-share">Share path *</Label>
+						<Label for="cifs-share">共享路径 *</Label>
 						<Input
 							id="cifs-share"
 							bind:value={cifsShare}
@@ -309,7 +307,7 @@
 				</div>
 				<div class="grid grid-cols-2 gap-4">
 					<div class="space-y-2">
-						<Label for="cifs-username">Username</Label>
+						<Label for="cifs-username">用户名</Label>
 						<Input
 							id="cifs-username"
 							bind:value={cifsUsername}
@@ -318,7 +316,7 @@
 						/>
 					</div>
 					<div class="space-y-2">
-						<Label for="cifs-password">Password</Label>
+						<Label for="cifs-password">密码</Label>
 						<Input
 							id="cifs-password"
 							type="password"
@@ -330,7 +328,7 @@
 				</div>
 				<div class="grid grid-cols-2 gap-4">
 					<div class="space-y-2">
-						<Label for="cifs-version">SMB version</Label>
+						<Label for="cifs-version">SMB 版本</Label>
 						<Select.Root type="single" bind:value={cifsVersion} disabled={creating}>
 							<Select.Trigger class="w-full h-9">
 								{SMB_VERSIONS.find(v => v.value === cifsVersion)?.label ?? 'Select version'}
@@ -343,14 +341,14 @@
 						</Select.Root>
 					</div>
 					<div class="space-y-2">
-						<Label for="cifs-domain">Domain</Label>
+						<Label for="cifs-domain">领域</Label>
 						<Input
 							id="cifs-domain"
 							bind:value={cifsDomain}
 							placeholder="WORKGROUP"
 							disabled={creating}
 						/>
-						<p class="text-xs text-muted-foreground">Optional AD/workgroup domain</p>
+						<p class="text-xs text-muted-foreground">可选的 AD/工作组域</p>
 					</div>
 				</div>
 
@@ -361,29 +359,25 @@
 						class="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
 						onclick={() => showAdditionalOpts = !showAdditionalOpts}
 					>
-						<ChevronDown class="w-3.5 h-3.5 transition-transform {showAdditionalOpts ? 'rotate-180' : ''}" />
-						Additional options
-					</button>
+						<ChevronDown class="w-3.5 h-3.5 transition-transform {showAdditionalOpts ? 'rotate-180' : ''}" />其他选项</button>
 					{#if showAdditionalOpts}
 						<div class="space-y-2 pl-1">
 							<div class="flex items-center justify-end">
 								<Button type="button" size="sm" variant="outline" onclick={addDriverOpt} disabled={creating}>
-									<Plus class="w-3 h-3" />
-									Add option
-								</Button>
+									<Plus class="w-3 h-3" />添加选项</Button>
 							</div>
 							{#if driverOpts.length > 0}
 								{#each driverOpts as opt, i}
 									<div class="flex gap-2">
-										<Input bind:value={opt.key} placeholder="Key" disabled={creating} class="flex-1" />
-										<Input bind:value={opt.value} placeholder="Value (optional)" disabled={creating} class="flex-1" />
+										<Input bind:value={opt.key} placeholder="键" disabled={creating} class="flex-1" />
+										<Input bind:value={opt.value} placeholder="值（可选）" disabled={creating} class="flex-1" />
 										<Button type="button" size="icon" variant="ghost" onclick={() => removeDriverOpt(i)} disabled={creating}>
 											<Trash2 class="w-4 h-4" />
 										</Button>
 									</div>
 								{/each}
 							{:else}
-								<p class="text-xs text-muted-foreground">Extra mount options appended to the mount string</p>
+								<p class="text-xs text-muted-foreground">附加到挂载字符串的额外挂载选项</p>
 							{/if}
 						</div>
 					{/if}
@@ -392,7 +386,7 @@
 				<!-- NFS fields -->
 				<div class="grid grid-cols-2 gap-4">
 					<div class="space-y-2">
-						<Label for="nfs-server">Server / IP *</Label>
+						<Label for="nfs-server">服务器/IP *</Label>
 						<Input
 							id="nfs-server"
 							bind:value={nfsServer}
@@ -406,7 +400,7 @@
 						{/if}
 					</div>
 					<div class="space-y-2">
-						<Label for="nfs-path">Export path *</Label>
+						<Label for="nfs-path">导出路径 *</Label>
 						<Input
 							id="nfs-path"
 							bind:value={nfsPath}
@@ -421,7 +415,7 @@
 					</div>
 				</div>
 				<div class="space-y-2">
-					<Label for="nfs-version">NFS version</Label>
+					<Label for="nfs-version">NFS 版本</Label>
 					<Select.Root type="single" bind:value={nfsVersion} disabled={creating}>
 						<Select.Trigger class="w-full max-w-[200px] h-9">
 							{NFS_VERSIONS.find(v => v.value === nfsVersion)?.label ?? 'Select version'}
@@ -435,16 +429,16 @@
 				</div>
 				<div class="flex items-center gap-6">
 					<div class="flex items-center gap-2">
-						<TogglePill bind:checked={nfsSoft} onLabel="Soft" offLabel="Hard" />
+						<TogglePill bind:checked={nfsSoft} onLabel="柔软" offLabel="难" />
 						<span class="text-xs text-muted-foreground">mount</span>
 					</div>
 					<div class="flex items-center gap-2">
 						<TogglePill bind:checked={nfsNolock} />
-						<span class="text-xs text-muted-foreground">No lock</span>
+						<span class="text-xs text-muted-foreground">无锁</span>
 					</div>
 					<div class="flex items-center gap-2">
 						<TogglePill bind:checked={nfsReadOnly} />
-						<span class="text-xs text-muted-foreground">Read-only</span>
+						<span class="text-xs text-muted-foreground">只读</span>
 					</div>
 				</div>
 
@@ -455,29 +449,25 @@
 						class="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
 						onclick={() => showAdditionalOpts = !showAdditionalOpts}
 					>
-						<ChevronDown class="w-3.5 h-3.5 transition-transform {showAdditionalOpts ? 'rotate-180' : ''}" />
-						Additional options
-					</button>
+						<ChevronDown class="w-3.5 h-3.5 transition-transform {showAdditionalOpts ? 'rotate-180' : ''}" />其他选项</button>
 					{#if showAdditionalOpts}
 						<div class="space-y-2 pl-1">
 							<div class="flex items-center justify-end">
 								<Button type="button" size="sm" variant="outline" onclick={addDriverOpt} disabled={creating}>
-									<Plus class="w-3 h-3" />
-									Add option
-								</Button>
+									<Plus class="w-3 h-3" />添加选项</Button>
 							</div>
 							{#if driverOpts.length > 0}
 								{#each driverOpts as opt, i}
 									<div class="flex gap-2">
-										<Input bind:value={opt.key} placeholder="Key" disabled={creating} class="flex-1" />
-										<Input bind:value={opt.value} placeholder="Value (optional)" disabled={creating} class="flex-1" />
+										<Input bind:value={opt.key} placeholder="键" disabled={creating} class="flex-1" />
+										<Input bind:value={opt.value} placeholder="值（可选）" disabled={creating} class="flex-1" />
 										<Button type="button" size="icon" variant="ghost" onclick={() => removeDriverOpt(i)} disabled={creating}>
 											<Trash2 class="w-4 h-4" />
 										</Button>
 									</div>
 								{/each}
 							{:else}
-								<p class="text-xs text-muted-foreground">Extra mount options appended to the mount string</p>
+								<p class="text-xs text-muted-foreground">附加到挂载字符串的额外挂载选项</p>
 							{/if}
 						</div>
 					{/if}
@@ -486,7 +476,7 @@
 				<!-- Local driver - generic key-value options -->
 				<div class="space-y-2">
 					<div class="flex items-center justify-between">
-						<Label>Driver options</Label>
+						<Label>驱动选项</Label>
 						<Button
 							type="button"
 							size="sm"
@@ -494,9 +484,7 @@
 							onclick={addDriverOpt}
 							disabled={creating}
 						>
-							<Plus class="w-3 h-3" />
-							Add option
-						</Button>
+							<Plus class="w-3 h-3" />添加选项</Button>
 					</div>
 					{#if driverOpts.length > 0}
 						<div class="space-y-2">
@@ -504,13 +492,13 @@
 								<div class="flex gap-2">
 									<Input
 										bind:value={opt.key}
-										placeholder="Key"
+										placeholder="键"
 										disabled={creating}
 										class="flex-1"
 									/>
 									<Input
 										bind:value={opt.value}
-										placeholder="Value"
+										placeholder="值"
 										disabled={creating}
 										class="flex-1"
 									/>
@@ -527,7 +515,7 @@
 							{/each}
 						</div>
 					{:else}
-						<p class="text-xs text-muted-foreground">No driver options configured</p>
+						<p class="text-xs text-muted-foreground">未配置任何驱动程序选项</p>
 					{/if}
 				</div>
 			{/if}
@@ -535,7 +523,7 @@
 			<!-- Labels -->
 			<div class="space-y-2">
 				<div class="flex items-center justify-between">
-					<Label>Labels</Label>
+					<Label>标签</Label>
 					<Button
 						type="button"
 						size="sm"
@@ -543,9 +531,7 @@
 						onclick={addLabel}
 						disabled={creating}
 					>
-						<Plus class="w-3 h-3" />
-						Add label
-					</Button>
+						<Plus class="w-3 h-3" />添加标签</Button>
 				</div>
 				{#if labels.length > 0}
 					<div class="space-y-2">
@@ -553,13 +539,13 @@
 							<div class="flex gap-2">
 								<Input
 									bind:value={label.key}
-									placeholder="Key"
+									placeholder="键"
 									disabled={creating}
 									class="flex-1"
 								/>
 								<Input
 									bind:value={label.value}
-									placeholder="Value"
+									placeholder="值"
 									disabled={creating}
 									class="flex-1"
 								/>
@@ -576,16 +562,14 @@
 						{/each}
 					</div>
 				{:else}
-					<p class="text-xs text-muted-foreground">No labels configured</p>
+					<p class="text-xs text-muted-foreground">未配置任何标签</p>
 				{/if}
 			</div>
 
 			<Dialog.Footer class="pt-4">
-				<Button variant="outline" onclick={() => (open = false)} disabled={creating}>
-					Cancel
-				</Button>
+				<Button variant="outline" onclick={() => (open = false)} disabled={creating}>取消</Button>
 				<Button onclick={handleCreate} disabled={creating}>
-					{creating ? 'Creating...' : 'Create volume'}
+					{creating ? 'Creating...' : '创建卷'}
 				</Button>
 			</Dialog.Footer>
 		</div>

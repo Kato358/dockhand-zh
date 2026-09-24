@@ -274,9 +274,7 @@
 				onclick={() => { if (!isProcessing && currentStep !== 'configure') currentStep = 'configure'; }}
 				disabled={isProcessing}
 			>
-				<Settings2 class="w-3.5 h-3.5 inline mr-1.5" />
-				Configure
-			</button>
+				<Settings2 class="w-3.5 h-3.5 inline mr-1.5" />配置</button>
 			<ArrowBigRight class="w-3.5 h-3.5 text-muted-foreground/50 shrink-0" />
 			<button
 				class="px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer {currentStep === 'pull' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
@@ -343,14 +341,14 @@
 			<!-- Configuration Step -->
 			<div class="space-y-4 px-1" class:hidden={currentStep !== 'configure'}>
 					<div class="space-y-2">
-						<Label>Source image</Label>
+						<Label>源镜像</Label>
 						<div class="p-2 bg-muted rounded text-sm">
 							<code class="break-all">{imageName}:{sourceTag}</code>
 						</div>
 					</div>
 
 					<div class="space-y-2">
-						<Label>Target registry</Label>
+						<Label>目标镜像仓库</Label>
 						<Select.Root type="single" value={targetRegistryId ? String(targetRegistryId) : undefined} onValueChange={(v) => targetRegistryId = Number(v)}>
 							<Select.Trigger class="w-full h-9 justify-start">
 								{#if targetRegistry}
@@ -361,7 +359,7 @@
 									{/if}
 									<span class="flex-1 text-left">{targetRegistry.name}{targetRegistry.hasCredentials ? ' (auth)' : ''}</span>
 								{:else}
-									<span class="text-muted-foreground">Select registry</span>
+									<span class="text-muted-foreground">选择镜像仓库</span>
 								{/if}
 							</Select.Trigger>
 							<Select.Content>
@@ -381,31 +379,31 @@
 							</Select.Content>
 						</Select.Root>
 						{#if pushableRegistries.length === 0}
-							<p class="text-xs text-muted-foreground">No target registries available. Add a private registry in Settings.</p>
+							<p class="text-xs text-muted-foreground">没有可用的目标镜像仓库。请在“设置”中添加私有镜像仓库。</p>
 						{/if}
 					</div>
 
 					<div class="space-y-2">
-						<Label>Image name/tag</Label>
+						<Label>镜像名称/标签</Label>
 						<Input
 							bind:value={customTag}
 							placeholder="myimage:latest"
 						/>
 						<p class="text-xs text-muted-foreground flex items-center gap-1">
-							<span>Will be pushed as:</span>
+							<span>将以如下方式推送：</span>
 							<code class="bg-muted px-1 py-0.5 rounded">{targetImageName()}</code>
 							<button
 								type="button"
 								onclick={copyTargetToClipboard}
 								class="p-0.5 rounded hover:bg-muted transition-colors cursor-pointer"
-								title="Copy to clipboard"
+								title="复制到剪贴板"
 							>
 								{#if copiedToClipboard === 'error'}
 									<Tooltip.Root open>
 										<Tooltip.Trigger>
 											<XCircle class="w-3 h-3 text-red-500" />
 										</Tooltip.Trigger>
-										<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+										<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 									</Tooltip.Root>
 								{:else if copiedToClipboard === 'ok'}
 									<Check class="w-3 h-3 text-green-500" />
@@ -485,21 +483,19 @@
 					onclick={handleClose}
 					disabled={isProcessing}
 				>
-					{pushStatus === 'complete' ? 'Done' : 'Cancel'}
+					{pushStatus === 'complete' ? '完成' : '取消'}
 				</Button>
 				{#if currentStep === 'configure'}
 					<Button
 						onclick={startCopy}
 						disabled={!targetRegistryId || pushableRegistries.length === 0}
 					>
-						<Copy class="w-4 h-4" />
-						Start copy
-					</Button>
+						<Copy class="w-4 h-4" />开始复制</Button>
 				{:else if currentStep === 'scan' && scanStatus === 'complete'}
 					{#if hasCriticalOrHigh}
 						<div class="flex items-center gap-2 text-red-600 text-sm mr-2">
 							<ShieldX class="w-4 h-4" />
-							<span>Critical/high vulnerabilities found</span>
+							<span>发现严重/高危漏洞</span>
 						</div>
 					{:else if totalVulnerabilities > 0}
 						<div class="flex items-center gap-2 text-yellow-600 text-sm mr-2">

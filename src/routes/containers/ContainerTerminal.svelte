@@ -151,7 +151,7 @@
 
 		ws.onerror = (e) => {
 			console.error('WebSocket error:', e);
-			error = 'Connection error';
+			error = '连接错误';
 			terminal?.writeln('\x1b[31mConnection error\x1b[0m');
 		};
 
@@ -227,7 +227,7 @@
 				selectedShell = bestShell;
 			}
 		} catch (error) {
-			console.error('Failed to detect shells:', error);
+			console.error('未能检测到 shell：', error);
 		} finally {
 			detectingShells = false;
 		}
@@ -276,9 +276,7 @@
 					<Dialog.Title>Terminal - {containerName}</Dialog.Title>
 					{#if connected}
 						<span class="inline-flex items-center gap-1 text-xs text-green-500">
-							<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-							Connected
-						</span>
+							<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>已连接</span>
 					{/if}
 				</div>
 				<button
@@ -295,35 +293,27 @@
 				{#if detectingShells}
 					<div class="text-center">
 						<Loader2 class="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-spin" />
-						<h3 class="text-lg font-medium">Detecting available shells...</h3>
+						<h3 class="text-lg font-medium">正在检测可用 shell…</h3>
 					</div>
 				{:else if !anyShellAvailable}
 					<div class="text-center">
 						<AlertCircle class="w-12 h-12 mx-auto mb-4 text-amber-500" />
-						<h3 class="text-lg font-medium text-amber-500">No shell available</h3>
-						<p class="text-sm text-muted-foreground mt-2">
-							This container does not have any shell installed.
-						</p>
-						<p class="text-xs text-muted-foreground/70 mt-1">
-							Containers built from scratch or distroless images often don't include shells.
-						</p>
-						<Button onclick={handleClose} variant="outline" class="mt-6">
-							Close
-						</Button>
+						<h3 class="text-lg font-medium text-amber-500">没有可用的终端</h3>
+						<p class="text-sm text-muted-foreground mt-2">此容器未安装任何 shell。</p>
+						<p class="text-xs text-muted-foreground/70 mt-1">从零开始构建的容器或无发行版镜像通常不包含 shell。</p>
+						<Button onclick={handleClose} variant="outline" class="mt-6">关闭</Button>
 					</div>
 				{:else}
 					<div class="w-full max-w-md space-y-6">
 						<div class="text-center">
 							<TerminalIcon class="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-							<h3 class="text-lg font-medium">Open terminal session</h3>
-							<p class="text-sm text-muted-foreground mt-1">
-								Configure the shell and user for this session
-							</p>
+							<h3 class="text-lg font-medium">打开终端会话</h3>
+							<p class="text-sm text-muted-foreground mt-1">为本次会话配置 shell 和用户</p>
 						</div>
 
 						<div class="space-y-4">
 							<div class="space-y-2">
-								<Label>Shell</Label>
+								<Label>终端</Label>
 								<Select.Root type="single" bind:value={selectedShell}>
 									<Select.Trigger class="w-full h-10">
 										<Shell class="w-4 h-4 mr-2 text-muted-foreground" />
@@ -352,7 +342,7 @@
 							</div>
 
 							<div class="space-y-2">
-								<Label>User</Label>
+								<Label>用户</Label>
 								<Select.Root type="single" bind:value={selectedUser}>
 									<Select.Trigger class="w-full h-10">
 										<User class="w-4 h-4 mr-2 text-muted-foreground" />
@@ -373,9 +363,9 @@
 						<div class="flex gap-2">
 							<Button onclick={startSession} class="flex-1" disabled={!xtermLoaded || !anyShellAvailable}>
 								<TerminalIcon class="w-4 h-4" />
-								{xtermLoaded ? 'Connect' : 'Loading...'}
+								{xtermLoaded ? '连接' : '加载中…'}
 							</Button>
-							<Button onclick={openInNewWindow} variant="outline" disabled={!xtermLoaded} title="Open in new window">
+							<Button onclick={openInNewWindow} variant="outline" disabled={!xtermLoaded} title="在新窗口中打开">
 								<ExternalLink class="w-4 h-4" />
 							</Button>
 						</div>

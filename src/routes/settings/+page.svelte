@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Settings - Dockhand</title>
+	<title>设置 - Dockhand</title>
 </svelte:head>
 
 <script lang="ts">
@@ -48,62 +48,40 @@
 
 <div class="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
-		<PageHeader icon={Settings} title="Settings" showConnection={false} />
+		<PageHeader icon={Settings} title="设置" showConnection={false} />
 	</div>
 
 	<Tabs.Root value={activeTab} onValueChange={handleTabChange} class="w-full flex-1 min-h-0 flex flex-col">
 		<Tabs.List class="w-full flex flex-wrap h-auto gap-1 p-1">
 			<Tabs.Trigger value="general" class="flex-1 flex items-center justify-center gap-1.5">
-				<Settings class="w-4 h-4" />
-				General
-			</Tabs.Trigger>
+				<Settings class="w-4 h-4" />通用</Tabs.Trigger>
 			<Tabs.Trigger value="environments" class="flex-1 flex items-center justify-center gap-1.5">
-				<Globe class="w-4 h-4" />
-				Environments
-			</Tabs.Trigger>
+				<Globe class="w-4 h-4" />环境</Tabs.Trigger>
 			<Tabs.Trigger value="labels" class="flex-1 flex items-center justify-center gap-1.5">
-				<Tags class="w-4 h-4" />
-				Labels and tags
-			</Tabs.Trigger>
+				<Tags class="w-4 h-4" />标签与标记</Tabs.Trigger>
 			<Tabs.Trigger value="registries" class="flex-1 flex items-center justify-center gap-1.5">
-				<Download class="w-4 h-4" />
-				Registries
-			</Tabs.Trigger>
+				<Download class="w-4 h-4" />镜像仓库</Tabs.Trigger>
 			<Tabs.Trigger value="git" class="flex-1 flex items-center justify-center gap-1.5">
 				<GitBranch class="w-4 h-4" />
 				Git
 			</Tabs.Trigger>
 			<Tabs.Trigger value="secrets" class="flex-1 flex items-center justify-center gap-1.5">
-				<KeyRound class="w-4 h-4" />
-				Secrets
-			</Tabs.Trigger>
+				<KeyRound class="w-4 h-4" />密钥</Tabs.Trigger>
 			<Tabs.Trigger value="config-sets" class="flex-1 flex items-center justify-center gap-1.5">
-				<Layers class="w-4 h-4" />
-				Config sets
-			</Tabs.Trigger>
+				<Layers class="w-4 h-4" />配置集</Tabs.Trigger>
 			<Tabs.Trigger value="notifications" class="flex-1 flex items-center justify-center gap-1.5">
-				<Bell class="w-4 h-4" />
-				Notifications
-			</Tabs.Trigger>
+				<Bell class="w-4 h-4" />通知</Tabs.Trigger>
 			<!-- BETA GATE: Backups tab hidden unless FEAT_BACKUPS_ENABLED (see features.ts) -->
 			{#if $page.data.backupsEnabled}
 				<Tabs.Trigger value="backups" class="flex-1 flex items-center justify-center gap-1.5">
-					<Archive class="w-4 h-4" />
-					Backups
-				</Tabs.Trigger>
+					<Archive class="w-4 h-4" />备份</Tabs.Trigger>
 			{/if}
 			<Tabs.Trigger value="auth" class="flex-1 flex items-center justify-center gap-1.5">
-				<Users class="w-4 h-4" />
-				Authentication
-			</Tabs.Trigger>
+				<Users class="w-4 h-4" />验证</Tabs.Trigger>
 			<Tabs.Trigger value="license" class="flex-1 flex items-center justify-center gap-1.5">
-				<Crown class="w-4 h-4" />
-				License
-			</Tabs.Trigger>
+				<Crown class="w-4 h-4" />许可证</Tabs.Trigger>
 			<Tabs.Trigger value="about" class="flex-1 flex items-center justify-center gap-1.5">
-				<Info class="w-4 h-4" />
-				About
-			</Tabs.Trigger>
+				<Info class="w-4 h-4" />关于</Tabs.Trigger>
 		</Tabs.List>
 
 		<Tabs.Content value="general" class="flex-1 min-h-0 overflow-y-auto pr-5">

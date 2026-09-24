@@ -11,18 +11,16 @@
 {#if hasEnvironments}
 	<EmptyState
 		icon={Server}
-		title="No environment selected"
-		description="Select a Docker environment from the dropdown to get started"
+		title="未选择环境"
+		description="从下拉菜单中选择 Docker 环境即可开始使用。"
 	/>
 {:else}
 	<EmptyState
 		icon={Server}
-		title="No environment configured"
-		description="Add a Docker environment in Settings to get started"
+		title="未配置任何环境"
+		description="在“设置”中添加 Docker 环境即可开始使用。"
 	>
 		<Button variant="secondary" onclick={() => goto('/settings?tab=environments')}>
-			<Settings class="w-4 h-4" />
-			Go to Settings
-		</Button>
+			<Settings class="w-4 h-4" />前往设置</Button>
 	</EmptyState>
 {/if}

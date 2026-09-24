@@ -483,7 +483,7 @@ const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2,
 			<!-- Progress bar -->
 			<div class="space-y-2 shrink-0">
 				<div class="flex items-center justify-between text-sm">
-					<span class="text-muted-foreground">Progress</span>
+					<span class="text-muted-foreground">进度</span>
 					<Badge variant="secondary">{currentIndex}/{totalCount}</Badge>
 				</div>
 				<Progress value={progressPercentage} class="h-2" />
@@ -554,9 +554,7 @@ const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2,
 											size="sm"
 											class="h-6 px-2 text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/50"
 											onclick={() => forceUpdateContainer(item.containerId)}
-										>
-											Update anyway
-										</Button>
+										>无论如何都要更新</Button>
 									{/if}
 								{/if}
 								{#if hasLogs}
@@ -564,7 +562,7 @@ const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2,
 										type="button"
 										onclick={() => toggleLogs(item.containerId)}
 										class="p-1 hover:bg-muted rounded cursor-pointer"
-										title={item.showLogs ? 'Hide logs' : 'Show logs'}
+										title={item.showLogs ? 'Hide logs' : '显示日志'}
 									>
 										{#if item.showLogs}
 											<ChevronDown class="w-4 h-4 text-muted-foreground" />
@@ -605,10 +603,10 @@ const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2,
 												<thead>
 													<tr class="text-left text-muted-foreground border-b">
 														<th class="pb-1 pr-2 font-medium">CVE</th>
-														<th class="pb-1 pr-2 font-medium">Severity</th>
-														<th class="pb-1 pr-2 font-medium">Package</th>
-														<th class="pb-1 pr-2 font-medium">Version</th>
-														<th class="pb-1 font-medium">Fixed</th>
+														<th class="pb-1 pr-2 font-medium">严重程度</th>
+														<th class="pb-1 pr-2 font-medium">包裹</th>
+														<th class="pb-1 pr-2 font-medium">版本</th>
+														<th class="pb-1 font-medium">固定</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -677,13 +675,9 @@ const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2,
 		<Dialog.Footer class="shrink-0">
 			{#if status === 'updating'}
 				<Button variant="outline" disabled>
-					<Loader2 class="w-4 h-4 mr-2 animate-spin" />
-					Updating...
-				</Button>
+					<Loader2 class="w-4 h-4 mr-2 animate-spin" />更新中…</Button>
 			{:else}
-				<Button variant="outline" onclick={handleClose}>
-					Close
-				</Button>
+				<Button variant="outline" onclick={handleClose}>关闭</Button>
 			{/if}
 		</Dialog.Footer>
 	</Dialog.Content>

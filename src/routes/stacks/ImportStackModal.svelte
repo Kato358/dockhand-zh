@@ -53,7 +53,7 @@
 
 	// Use current environment from store
 	const envId = $derived($currentEnvironment?.id ?? null);
-	const envName = $derived($currentEnvironment?.name ?? 'Unknown');
+	const envName = $derived($currentEnvironment?.name ?? '未知');
 	// Look up the icon from the environments list since currentEnvironment doesn't store it
 	const currentEnvData = $derived($environments.find(e => e.id === envId));
 	const envIcon = $derived(currentEnvData?.icon || 'globe');
@@ -130,7 +130,7 @@
 			const data = await res.json();
 
 			if (!res.ok) {
-				toast.error(data.error || 'Failed to scan directory');
+				toast.error(data.error || '扫描目录失败');
 				return;
 			}
 
@@ -164,9 +164,9 @@
 
 			if (discovered.length === 0) {
 				if (skippedCount > 0) {
-					toast.info(`All ${skippedCount} stack(s) in this directory are already adopted`);
+					toast.info(`此目录中的所有 ${skippedCount} 个编排均已被采用`);
 				} else {
-					toast.info('No compose stacks found in this directory');
+					toast.info('此目录中未找到 Compose 编排');
 				}
 			} else {
 				const selections = new Map<string, boolean>();
@@ -181,7 +181,7 @@
 			await filesystemBrowser?.addRecentLocation(path);
 
 		} catch (e) {
-			toast.error(e instanceof Error ? e.message : 'Failed to scan directory');
+			toast.error(e instanceof Error ? e.message : '扫描目录失败');
 		} finally {
 			scanning = false;
 		}
@@ -189,7 +189,7 @@
 
 	async function adoptSingleFile(entry: FileEntry) {
 		if (!envId) {
-			toast.error('No environment selected');
+			toast.error('未选择环境');
 			return;
 		}
 
@@ -226,15 +226,15 @@
 			}
 
 			if (data.adopted?.length > 0) {
-				toast.success(`Adopted stack "${data.adopted[0]}"`);
+				toast.success(`已采用编排“${data.adopted[0]}”`);
 				await filesystemBrowser?.addRecentLocation(parentDir);
 				onAdopted?.();
 				handleClose();
 			} else if (data.failed?.length > 0) {
-				toast.error(`Failed: ${data.failed[0].error}`);
+				toast.error(`失败：${data.failed[0].error}`);
 			}
 		} catch (e) {
-			toast.error(e instanceof Error ? e.message : 'Failed to adopt');
+			toast.error(e instanceof Error ? e.message : '未能采纳');
 		} finally {
 			adopting = false;
 		}
@@ -261,20 +261,20 @@
 			const data = await res.json();
 
 			if (!res.ok) {
-				toast.error(data.error || 'Failed to adopt stacks');
+				toast.error(data.error || '未能采用技术编排');
 				return;
 			}
 
 			if (data.adopted?.length > 0) {
-				toast.success(`Adopted ${data.adopted.length} stack(s)`);
+				toast.success(`已采用 ${data.adopted.length} 个编排`);
 				onAdopted?.();
 				handleClose();
 			}
 			if (data.failed?.length > 0) {
-				toast.error(`Failed to adopt ${data.failed.length} stack(s)`);
+				toast.error(`未能采用 ${data.failed.length} 个编排`);
 			}
 		} catch (e) {
-			toast.error(e instanceof Error ? e.message : 'Failed to adopt');
+			toast.error(e instanceof Error ? e.message : '未能采纳');
 		} finally {
 			adopting = false;
 		}
@@ -345,9 +345,7 @@
 		<Dialog.Content class="max-w-4xl h-[80vh] flex flex-col p-0 gap-0">
 			<Dialog.Header class="px-6 py-4 border-b shrink-0">
 				<Dialog.Title class="flex items-center gap-2">
-					<Import class="w-5 h-5" />
-					Select stacks to adopt to
-					<EnvironmentIcon icon={envIcon} envId={envId} class="w-4 h-4 text-muted-foreground" />
+					<Import class="w-5 h-5" />选择要采用的技术编排<EnvironmentIcon icon={envIcon} envId={envId} class="w-4 h-4 text-muted-foreground" />
 					<span class="text-muted-foreground font-normal">{envName}</span>
 				</Dialog.Title>
 				<Dialog.Description>
@@ -403,12 +401,12 @@
 					{#if isRemoteEnv}
 						<div class="flex items-start gap-2.5 text-xs bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-md px-3 py-2.5">
 							<ServerCog class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-							<span class="text-blue-700 dark:text-blue-300">These compose files are on the <span class="font-medium">Dockhand host</span>, not on {envName}. Docker commands will be sent to {envName} via Hawser, but the files are managed locally.</span>
+							<span class="text-blue-700 dark:text-blue-300">这些 compose 文件位于<span class="font-medium">Dockhand 主机</span>, not on {envName}. Docker commands will be sent to {envName} via Hawser, but the files are managed locally.</span>
 						</div>
 					{/if}
 					<div class="flex items-start gap-2.5 text-xs bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md px-3 py-2.5">
 						<Info class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-						<span><span class="font-medium text-amber-600 dark:text-amber-400">What happens when you adopt:</span> <span class="text-zinc-600 dark:text-zinc-400">Dockhand will track these compose files, letting you edit, start, and stop the stacks from the UI. Your files stay in their current location.</span></span>
+						<span><span class="font-medium text-amber-600 dark:text-amber-400">领养孩子后会发生什么：</span> <span class="text-zinc-600 dark:text-zinc-400">Dockhand 会跟踪这些Compose 文件，让您可以通过用户界面编辑、启动和停止编排。您的文件将保留在当前位置。</span></span>
 					</div>
 				</div>
 			</div>
@@ -425,12 +423,8 @@
 					</span>
 				</div>
 				<div class="flex gap-2">
-					<Button variant="outline" onclick={goBackToBrowse}>
-						Back
-					</Button>
-					<Button variant="outline" onclick={handleClose}>
-						Cancel
-					</Button>
+					<Button variant="outline" onclick={goBackToBrowse}>返回</Button>
+					<Button variant="outline" onclick={handleClose}>取消</Button>
 					<Button
 						variant="default"
 						onclick={handleAdoptSelected}
@@ -455,12 +449,8 @@
 	<Dialog.Content class="max-w-3xl h-[70vh] flex flex-col p-0 gap-0">
 		<Dialog.Header class="px-5 py-4 border-b shrink-0">
 			<Dialog.Title class="flex items-center gap-2">
-				<Import class="w-5 h-5" />
-				Adopt this stack?
-			</Dialog.Title>
-			<Dialog.Description>
-				Review the compose file before adopting.
-			</Dialog.Description>
+				<Import class="w-5 h-5" />采用这套技术编排？</Dialog.Title>
+			<Dialog.Description>采纳前请先查看compose文件。</Dialog.Description>
 		</Dialog.Header>
 
 		{#if previewFile}
@@ -468,7 +458,7 @@
 				<!-- Stack info bar -->
 				<div class="px-5 py-3 border-b bg-muted/30 flex items-center gap-4 shrink-0">
 					<div class="flex items-center gap-2">
-						<span class="text-sm text-muted-foreground">Stack:</span>
+						<span class="text-sm text-muted-foreground">编排：</span>
 						<span class="font-medium">{previewComposeName || previewFile.path.replace(/\/[^/]+$/, '').split('/').pop() || 'unknown'}</span>
 						{#if previewServiceCount > 0}
 							<Badge variant="outline" class="text-xs">
@@ -503,21 +493,19 @@
 					{#if isRemoteEnv}
 						<div class="flex items-start gap-2.5 text-xs bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-md px-3 py-2.5">
 							<ServerCog class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-							<span class="text-blue-700 dark:text-blue-300">This compose file is on the <span class="font-medium">Dockhand host</span>, not on {envName}. Docker commands will be sent to {envName} via Hawser, but the file is managed locally.</span>
+							<span class="text-blue-700 dark:text-blue-300">这个 compose 文件位于<span class="font-medium">Dockhand 主机</span>, not on {envName}. Docker commands will be sent to {envName} via Hawser, but the file is managed locally.</span>
 						</div>
 					{/if}
 					<div class="flex items-start gap-2.5 text-xs bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md px-3 py-2.5">
 						<Info class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-						<span><span class="font-medium text-amber-600 dark:text-amber-400">What happens when you adopt:</span> <span class="text-zinc-600 dark:text-zinc-400">Dockhand will track this compose file, letting you edit, start, and stop the stack from the UI. Your files stay in their current location.</span></span>
+						<span><span class="font-medium text-amber-600 dark:text-amber-400">领养孩子后会发生什么：</span> <span class="text-zinc-600 dark:text-zinc-400">Dockhand 会跟踪此Compose 文件，允许您通过用户界面编辑、启动和停止编排。您的文件将保留在当前位置。</span></span>
 					</div>
 				</div>
 			</div>
 		{/if}
 
 		<div class="px-5 py-3 border-t flex justify-end gap-2 shrink-0">
-			<Button variant="outline" onclick={() => showPreview = false}>
-				Cancel
-			</Button>
+			<Button variant="outline" onclick={() => showPreview = false}>取消</Button>
 			<Button onclick={confirmAdoptFromPreview} disabled={adopting}>
 				{#if adopting}
 					<Loader2 class="w-4 h-4 mr-2 animate-spin" />

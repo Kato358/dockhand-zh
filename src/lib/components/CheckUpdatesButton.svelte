@@ -50,7 +50,7 @@
 		if (btnEl) btnEl.style.minWidth = '';
 	}
 
-	// Reset the button state when the environment changes — a "Latest" result
+	// Reset the button state when the environment changes — a "最新" result
 	// from one environment must not linger on another.
 	let lastEnvId = $state<number | null>(null);
 	$effect(() => {
@@ -76,7 +76,7 @@
 
 	function showFailedChecksToast(failed: FailedCheckItem[], prefix: string) {
 		const details = failed.map((f) => `• ${f.containerName}: ${f.error}`).join('\n');
-		toast.warning(`${prefix} (${failed.length} failed to check)`, {
+		toast.warning(`${prefix} (${failed.length} 检查失败)`, {
 			description: details,
 			descriptionClass: 'whitespace-pre-line',
 			class: '!w-[28rem] !max-w-[28rem]',
@@ -143,12 +143,12 @@
 				: '';
 
 			if (withUpdates.length === 0 && newerVersions.length === 0) {
-				// Keep the "Latest" status until re-check / env-switch — don't auto-revert (#1019)
+				// Keep the "最新" status until re-check / env-switch — don't auto-revert (#1019)
 				status = 'none';
 				if (failed.length > 0) {
-					showFailedChecksToast(failed, 'All containers are up to date');
+					showFailedChecksToast(failed, '所有容器均已更新');
 				} else {
-					toast.success('All containers are up to date');
+					toast.success('所有容器均已更新');
 				}
 			} else {
 				status = 'found';
@@ -177,7 +177,7 @@
 	variant="outline"
 	onclick={checkForUpdates}
 	disabled={status === 'checking'}
-	title="Check for available updates"
+	title="检查是否有可用更新"
 	class="relative overflow-hidden"
 >
 	{#if displayStatus === 'checking'}

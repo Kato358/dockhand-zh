@@ -96,7 +96,7 @@
 	const scannerOptions = [
 		{ value: 'grype', label: 'Grype' },
 		{ value: 'trivy', label: 'Trivy' },
-		{ value: 'both', label: 'Both', icon: ShieldCheck }
+		{ value: 'both', label: '两个都', icon: ShieldCheck }
 	];
 
 	// Types
@@ -171,75 +171,75 @@
 	const NOTIFICATION_EVENT_GROUPS = [
 		{
 			id: 'container',
-			label: 'Container events',
+			label: '容器事件',
 			events: [
-				{ id: 'container_started', label: 'Container started', description: 'When a container starts running' },
-				{ id: 'container_stopped', label: 'Container stopped', description: 'When a container is stopped' },
-				{ id: 'container_restarted', label: 'Container restarted', description: 'When a container restarts' },
-				{ id: 'container_exited', label: 'Container exited', description: 'When a container exits unexpectedly' },
-				{ id: 'container_unhealthy', label: 'Container unhealthy', description: 'When a container health check fails' },
-				{ id: 'container_oom', label: 'Container OOM killed', description: 'When a container is killed due to out of memory' },
-				{ id: 'container_updated', label: 'Container updated', description: 'When a container image is updated' }
+				{ id: 'container_started', label: '容器已启动', description: '当容器开始运行时' },
+				{ id: 'container_stopped', label: '容器已停止', description: '当容器停止运行时' },
+				{ id: 'container_restarted', label: '容器已重启', description: '容器重启时' },
+				{ id: 'container_exited', label: '容器已退出', description: '容器意外退出时' },
+				{ id: 'container_unhealthy', label: '容器不健康', description: '当容器健康检查失败时' },
+				{ id: 'container_oom', label: '容器内存不足终止', description: '当容器因内存不足而被终止时' },
+				{ id: 'container_updated', label: '容器已更新', description: '当容器镜像更新时' }
 			]
 		},
 		{
 			id: 'auto_update',
-			label: 'Auto-update events',
+			label: '自动更新事件',
 			events: [
-				{ id: 'auto_update_success', label: 'Update succeeded', description: 'Container successfully updated to new image' },
-				{ id: 'auto_update_failed', label: 'Update failed', description: 'Container auto-update failed' },
-				{ id: 'auto_update_blocked', label: 'Update blocked by vulns', description: 'Update blocked due to vulnerability criteria' },
-				{ id: 'updates_detected', label: 'Updates detected', description: 'Container image updates are available (scheduled check)' },
-				{ id: 'newer_version_available', label: 'Newer version tag', description: 'A newer version tag is published for a pinned image (semver, advisory)' },
-				{ id: 'batch_update_success', label: 'Batch update completed', description: 'Scheduled container updates completed successfully' }
+				{ id: 'auto_update_success', label: '更新成功', description: '容器已成功更新到新镜像' },
+				{ id: 'auto_update_failed', label: '更新失败', description: '容器自动更新失败' },
+				{ id: 'auto_update_blocked', label: '更新因漏洞而被阻止', description: '由于漏洞标准，更新被阻止' },
+				{ id: 'updates_detected', label: '检测到更新', description: '容器镜像更新可用（定期检查）' },
+				{ id: 'newer_version_available', label: '新版本标签', description: '已为置顶镜像发布新版本标签（语义化版本控制，建议版本控制）' },
+				{ id: 'batch_update_success', label: '批量更新完成', description: '计划的容器更新已成功完成' }
 			]
 		},
 		{
 			id: 'git_stack',
-			label: 'Git stack events',
+			label: 'Git 编排事件',
 			events: [
-				{ id: 'git_sync_success', label: 'Git sync succeeded', description: 'Git stack synced and deployed successfully' },
-				{ id: 'git_sync_failed', label: 'Git sync failed', description: 'Git stack sync or deploy failed' },
-				{ id: 'git_sync_skipped', label: 'Git sync skipped', description: 'Git stack sync skipped (no changes)' }
+				{ id: 'git_sync_success', label: 'Git 同步成功', description: 'Git编排已成功同步和部署' },
+				{ id: 'git_sync_failed', label: 'Git 同步失败', description: 'Git编排同步或部署失败' },
+				{ id: 'git_sync_skipped', label: 'Git 同步已跳过', description: 'Git 编排同步已跳过（无更改）' }
 			]
 		},
 		{
 			id: 'stack',
-			label: 'Stack events',
+			label: '编排事件',
 			events: [
-				{ id: 'stack_started', label: 'Stack started', description: 'When a compose stack starts' },
-				{ id: 'stack_stopped', label: 'Stack stopped', description: 'When a compose stack stops' },
-				{ id: 'stack_deployed', label: 'Stack deployed', description: 'Stack deployed (new or update)' },
-				{ id: 'stack_deploy_failed', label: 'Stack deploy failed', description: 'Stack deployment failed' }
+				{ id: 'stack_started', label: '编排已启动', description: '当编排启动时' },
+				{ id: 'stack_stopped', label: '编排已停止', description: '当编排停止时' },
+				{ id: 'stack_deployed', label: '编排已部署', description: '编排已部署（新建或更新）' },
+				{ id: 'stack_deploy_failed', label: '编排部署失败', description: '编排部署失败' }
 			]
 		},
 		{
 			id: 'security',
-			label: 'Security events',
+			label: '安全事件',
 			events: [
-				{ id: 'vulnerability_critical', label: 'Critical vulns found', description: 'Critical vulnerabilities found in image scan' },
-				{ id: 'vulnerability_high', label: 'High vulns found', description: 'High severity vulnerabilities found' },
-				{ id: 'vulnerability_any', label: 'Any vulns found', description: 'Any vulnerabilities found (medium/low)' }
+				{ id: 'vulnerability_critical', label: '发现关键漏洞', description: '镜像扫描中发现严重漏洞' },
+				{ id: 'vulnerability_high', label: '发现高漏洞', description: '发现高危漏洞' },
+				{ id: 'vulnerability_any', label: '发现的任何漏洞', description: '发现的漏洞（中/低）' }
 			]
 		},
 		{
 			id: 'backup',
-			label: 'Backup events',
+			label: '备份事件',
 			events: [
-				{ id: 'backup_success', label: 'Backup succeeded', description: 'Backup completed successfully' },
-				{ id: 'backup_failed', label: 'Backup failed', description: 'Backup failed' },
-				{ id: 'restore_success', label: 'Restore succeeded', description: 'Restore completed successfully' },
-				{ id: 'restore_failed', label: 'Restore failed', description: 'Restore failed' }
+				{ id: 'backup_success', label: '备份成功', description: '备份已成功完成' },
+				{ id: 'backup_failed', label: '备份失败', description: '备份失败' },
+				{ id: 'restore_success', label: '还原成功。', description: '还原已成功完成' },
+				{ id: 'restore_failed', label: '还原失败', description: '还原失败' }
 			]
 		},
 		{
 			id: 'system',
-			label: 'System events',
+			label: '系统事件',
 			events: [
-				{ id: 'image_pulled', label: 'Image pulled', description: 'When a new image is pulled' },
-				{ id: 'environment_offline', label: 'Environment offline', description: 'Environment became unreachable' },
-				{ id: 'environment_online', label: 'Environment online', description: 'Environment came back online' },
-				{ id: 'disk_space_warning', label: 'Disk space warning', description: 'Docker disk usage exceeds threshold' }
+				{ id: 'image_pulled', label: '镜像已拉取', description: '当拉取新镜像时' },
+				{ id: 'environment_offline', label: '环境离线', description: '环境变得无法到达' },
+				{ id: 'environment_online', label: '在线环境', description: '环境已还原在线' },
+				{ id: 'disk_space_warning', label: '磁盘空间警告', description: 'Docker 磁盘使用量超过阈值' }
 				// Note: license_expiring is a global event configured at the notification channel level
 			]
 		}
@@ -368,7 +368,7 @@
 				iconCacheBust = Date.now();
 				pendingIconData = null;
 			} else {
-				toast.error('Failed to upload icon');
+				toast.error('上传图标失败');
 			}
 		} else {
 			// Create mode: store for later upload after environment is created
@@ -425,13 +425,13 @@
 		try {
 			const text = await file.text();
 			if (!text.includes('-----BEGIN')) {
-				toast.error(`${file.name} does not look like a PEM file (no BEGIN block)`);
+				toast.error(`${file.name} 看起来不像是一个 PEM 文件（没有 BEGIN 块）`);
 				return;
 			}
 			assign(text);
-			toast.success(`Loaded ${label} from ${file.name}`);
+			toast.success(`从 ${file.name} 加载 ${label}`);
 		} catch (err: any) {
-			toast.error(`Failed to read ${file.name}: ${err?.message ?? err}`);
+			toast.error(`读取文件 ${file.name} 失败：${err?.message ?? err}`);
 		} finally {
 			input.value = ''; // allow re-uploading the same file
 		}
@@ -759,18 +759,18 @@
 
 			if (result.success) {
 				if (result.isEdgeMode) {
-					toast.info('Edge mode - connection will be tested when agent connects');
+					toast.info('边缘模式 - 代理连接时将测试连接。');
 				} else {
-					toast.success(`Connected! Docker ${result.info.serverVersion} - ${result.info.containers} containers`);
+					toast.success(`已连接！Docker ${result.info.serverVersion} - ${result.info.containers} 个容器`);
 					// Docker reports the kernel's cgroup memory controller is off -> container
 					// memory will show 0. Surface it now so the user isn't left guessing.
 					if (result.info.showMemoryWarning) memWarnOpen = true;
 				}
 			} else {
-				toast.error(result.error || 'Connection failed');
+				toast.error(result.error || '连接失败');
 			}
 		} catch (error) {
-			const message = error instanceof Error ? error.message : 'Connection test failed';
+			const message = error instanceof Error ? error.message : '连接测试失败';
 			testResult = { success: false, error: message };
 			toast.error(message);
 		} finally {
@@ -787,18 +787,18 @@
 			detectedSockets = result.sockets || [];
 
 			if (detectedSockets.length === 0) {
-				toast.error('No Docker sockets found');
+				toast.error('未找到 Docker 套接字');
 			} else if (detectedSockets.length === 1) {
 				// Auto-select if only one found
 				formSocketPath = detectedSockets[0].path;
-				toast.success(`Found ${detectedSockets[0].name}`);
+				toast.success(`找到 ${detectedSockets[0].name}`);
 			} else {
 				// Show dropdown to select
 				showSocketDropdown = true;
-				toast.success(`Found ${detectedSockets.length} Docker sockets`);
+				toast.success(`找到 ${detectedSockets.length} 个 Docker 套接字`);
 			}
 		} catch (error) {
-			toast.error('Failed to detect sockets');
+			toast.error('未能检测到套接字');
 		} finally {
 			detectingSockets = false;
 		}
@@ -816,7 +816,7 @@
 		let hasErrors = false;
 
 		if (!formName.trim()) {
-			formErrors.name = 'Name is required';
+			formErrors.name = '名称（必填）';
 			hasErrors = true;
 		} else {
 			const nameCheck = validateEnvName(formName.trim());
@@ -941,7 +941,7 @@
 		let hasErrors = false;
 
 		if (!formName.trim()) {
-			formErrors.name = 'Name is required';
+			formErrors.name = '名称（必填）';
 			hasErrors = true;
 		} else if (formName.trim() !== environment.name) {
 			// Only validate name format on rename — existing names with legacy characters are allowed
@@ -1057,7 +1057,7 @@
 				await saveTimezone(environment.id);
 				await saveDiskWarningSettings(environment.id);
 				if (usesStackPath(formConnectionType)) await saveRemoteStacksDir(environment.id);
-				toast.success(`Updated environment: ${formName}`);
+				toast.success(`已更新的环境：${formName}`);
 				onSaved();
 				onClose();
 			} else {
@@ -1413,7 +1413,7 @@
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to pull Grype image');
+				throw new Error('无法拉取 Grype 镜像');
 			}
 
 			const result = await readJobResponse(response);
@@ -1445,7 +1445,7 @@
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to pull Trivy image');
+				throw new Error('无法拉取 Trivy 镜像');
 			}
 
 			const result = await readJobResponse(response);
@@ -1498,14 +1498,14 @@
 			});
 			if (response.ok) {
 				await loadEnvNotifications(envId);
-				toast.success('Notification channel added');
+				toast.success('已添加通知渠道');
 			} else {
 				const data = await response.json();
-				toast.error(data.error || 'Failed to add notification channel');
+				toast.error(data.error || '添加通知渠道失败');
 			}
 		} catch (error) {
 			console.error('Failed to add environment notification:', error);
-			toast.error('Failed to add notification channel');
+			toast.error('添加通知渠道失败');
 		}
 	}
 
@@ -1573,14 +1573,14 @@
 				const data = await response.json();
 				generatedToken = data.token;
 				await loadHawserToken(envId);
-				toast.success('Token generated successfully');
+				toast.success('令牌已成功生成');
 			} else {
 				const data = await response.json();
-				toast.error(data.error || 'Failed to generate token');
+				toast.error(data.error || '生成令牌失败');
 			}
 		} catch (error) {
 			console.error('Failed to generate Hawser token:', error);
-			toast.error('Failed to generate token');
+			toast.error('生成令牌失败');
 		} finally {
 			generatingToken = false;
 		}
@@ -1641,32 +1641,20 @@
 		<Tabs.Root bind:value={modalTab} class="flex-1 flex flex-col overflow-hidden mt-4">
 			<Tabs.List class="flex-shrink-0 mb-0 w-full grid grid-cols-6">
 				<Tabs.Trigger value="general" class="flex items-center justify-center gap-1.5">
-					<Globe class="w-3.5 h-3.5" />
-					General
-				</Tabs.Trigger>
+					<Globe class="w-3.5 h-3.5" />通用</Tabs.Trigger>
 				<Tabs.Trigger value="updates" class="flex items-center justify-center gap-1.5">
-					<CircleFadingArrowUp class="w-3.5 h-3.5" />
-					Updates
-				</Tabs.Trigger>
+					<CircleFadingArrowUp class="w-3.5 h-3.5" />更新</Tabs.Trigger>
 				<Tabs.Trigger value="activity" class="flex items-center justify-center gap-1.5">
-					<Activity class="w-3.5 h-3.5" />
-					Activity
-				</Tabs.Trigger>
+					<Activity class="w-3.5 h-3.5" />活动</Tabs.Trigger>
 				<Tabs.Trigger value="security" class="flex items-center justify-center gap-1.5">
-					<ShieldCheck class="w-3.5 h-3.5" />
-					Security
-				</Tabs.Trigger>
+					<ShieldCheck class="w-3.5 h-3.5" />安全</Tabs.Trigger>
 				<!-- BETA GATE: Backups tab hidden unless FEAT_BACKUPS_ENABLED (see features.ts) -->
 				{#if $page.data.backupsEnabled}
 					<Tabs.Trigger value="backup" class="flex items-center justify-center gap-1.5">
-						<Archive class="w-3.5 h-3.5" />
-						Backups
-					</Tabs.Trigger>
+						<Archive class="w-3.5 h-3.5" />备份</Tabs.Trigger>
 				{/if}
 				<Tabs.Trigger value="notifications" class="flex items-center justify-center gap-1.5">
-					<Bell class="w-3.5 h-3.5" />
-					Notifications
-				</Tabs.Trigger>
+					<Bell class="w-3.5 h-3.5" />通知</Tabs.Trigger>
 			</Tabs.List>
 
 			<div class="overflow-y-auto py-4 h-[520px] [scrollbar-gutter:stable] pr-5">
@@ -1674,7 +1662,7 @@
 					<Tabs.Content value="general" class="space-y-4 mt-0 h-full">
 						<!-- Name field -->
 						<div class="space-y-2">
-							<Label for="edit-env-name">Name</Label>
+							<Label for="edit-env-name">名称</Label>
 							<div class="flex gap-2">
 								{#if isCustomIcon(formIcon) || pendingIconData}
 									<Button variant="outline" size="sm" class="h-9 w-9 p-0 relative group" type="button" onclick={() => iconFileInput?.click()}>
@@ -1684,19 +1672,19 @@
 											<EnvironmentIcon icon={formIcon} envId={environment.id} class="w-5 h-5" cacheBust={iconCacheBust} />
 										{/if}
 									</Button>
-									<Button variant="ghost" size="sm" class="h-9 w-9 p-0" type="button" title="Remove custom icon" onclick={removeCustomIcon}>
+									<Button variant="ghost" size="sm" class="h-9 w-9 p-0" type="button" title="移除自定义图标" onclick={removeCustomIcon}>
 										<X class="w-3.5 h-3.5 text-muted-foreground" />
 									</Button>
 								{:else}
 									<IconPicker value={formIcon} onchange={(icon) => formIcon = icon} />
-									<Button variant="ghost" size="sm" class="h-9 w-9 p-0" type="button" title="Upload custom icon" onclick={() => iconFileInput?.click()}>
+									<Button variant="ghost" size="sm" class="h-9 w-9 p-0" type="button" title="上传自定义图标" onclick={() => iconFileInput?.click()}>
 										<ImageUp class="w-4 h-4 text-muted-foreground" />
 									</Button>
 								{/if}
 								<Input
 									id="edit-env-name"
 									bind:value={formName}
-									placeholder="Production"
+									placeholder="生产"
 									class="flex-1 {formErrors.name ? 'border-destructive focus-visible:ring-destructive' : ''}"
 									oninput={() => formErrors.name = undefined}
 								/>
@@ -1716,7 +1704,7 @@
 						<!-- Labels section -->
 						<div class="space-y-2">
 							<div class="flex items-center gap-1.5">
-								<Label>Labels</Label>
+								<Label>标签</Label>
 								<span class="text-xs text-muted-foreground">({formLabels.length}/{MAX_LABELS})</span>
 							</div>
 							{#if formLabels.length > 0}
@@ -1744,7 +1732,7 @@
 									<div class="relative flex-1">
 										<Input
 											bind:value={newLabelInput}
-											placeholder="Add label..."
+											placeholder="添加标签…"
 											onfocus={() => showLabelDropdown = true}
 											onblur={() => setTimeout(() => showLabelDropdown = false, 150)}
 											onkeydown={(e) => {
@@ -1800,14 +1788,14 @@
 									</Button>
 								</div>
 							{:else}
-								<p class="text-xs text-muted-foreground">Maximum labels reached</p>
+								<p class="text-xs text-muted-foreground">标签数量已达上限</p>
 							{/if}
 						</div>
 
 						<!-- Connection type selector -->
 						<div class="space-y-2">
 							<div class="flex items-center gap-1.5">
-								<Label for="edit-env-connection-type">Connection type</Label>
+								<Label for="edit-env-connection-type">连接类型</Label>
 								<Tooltip.Root>
 									<Tooltip.Trigger type="button" class="text-muted-foreground hover:text-foreground">
 										<HelpCircle class="w-3.5 h-3.5" />
@@ -1817,35 +1805,33 @@
 											<div class="flex items-start gap-2">
 												<Unplug class="w-4 h-4 mt-0.5 text-cyan-500 shrink-0" />
 												<div>
-													<p class="font-medium">Unix socket</p>
-													<p class="text-xs text-muted-foreground">Connect via Docker socket on the same machine. Default path: /var/run/docker.sock. Also works with Docker Desktop and OrbStack.</p>
+													<p class="font-medium">Unix 套接字</p>
+													<p class="text-xs text-muted-foreground">通过同一台机器上的 Docker 套接字连接。默认路径：/var/run/docker.sock。也适用于 Docker Desktop 和 OrbStack。</p>
 												</div>
 											</div>
 											<div class="flex items-start gap-2">
 												<Icon iconNode={whale} class="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
 												<div>
-													<p class="font-medium">Direct connection</p>
-													<p class="text-xs text-muted-foreground">Connect directly to Docker Engine API. Requires Docker to expose its API on a TCP port (default 2375/2376). Best for LAN environments.</p>
+													<p class="font-medium">直接连接</p>
+													<p class="text-xs text-muted-foreground">直接连接到 Docker Engine API。需要 Docker 在 TCP 端口（默认 2375/2376）上公开其 API。最适合局域网环境。</p>
 												</div>
 											</div>
 											<div class="flex items-start gap-2">
 												<Route class="w-4 h-4 mt-0.5 text-purple-500 shrink-0" />
 												<div>
-													<p class="font-medium">Hawser standard</p>
-													<p class="text-xs text-muted-foreground">Hawser agent listens on a port and Dockhand connects to it. Good for LAN with static IPs.</p>
+													<p class="font-medium">Hawser标准</p>
+													<p class="text-xs text-muted-foreground">Hawser代理监听某个端口，Dockhand连接到该端口。适用于具有静态IP地址的局域网。</p>
 												</div>
 											</div>
 											<div class="flex items-start gap-2">
 												<UndoDot class="w-4 h-4 mt-0.5 text-green-500 shrink-0" />
 												<div>
-													<p class="font-medium">Hawser edge</p>
-													<p class="text-xs text-muted-foreground">Hawser agent initiates outbound WebSocket to Dockhand. No port forwarding needed. Perfect for VPS, NAT, or dynamic IPs.</p>
+													<p class="font-medium">Hawser边缘</p>
+													<p class="text-xs text-muted-foreground">Hawser代理发起与Dockhand的出站WebSocket连接。无需端口转发。完美适用于VPS、NAT或动态IP。</p>
 												</div>
 											</div>
 											<a href="https://github.com/Finsys/hawser" target="_blank" class="flex items-center gap-1 text-xs text-blue-500 hover:underline">
-												<ExternalLink class="w-3 h-3" />
-												Learn more about Hawser
-											</a>
+												<ExternalLink class="w-3 h-3" />了解更多关于 Hawser 的信息</a>
 										</div>
 									</Tooltip.Content>
 								</Tooltip.Root>
@@ -1879,27 +1865,19 @@
 								<Select.Content>
 									<Select.Item value="socket">
 										<span class="flex items-center gap-2">
-											<Unplug class="w-4 h-4 text-cyan-500" />
-											Unix socket
-										</span>
+											<Unplug class="w-4 h-4 text-cyan-500" />Unix 套接字</span>
 									</Select.Item>
 									<Select.Item value="direct">
 										<span class="flex items-center gap-2">
-											<Icon iconNode={whale} class="w-4 h-4 text-blue-500" />
-											Direct connection
-										</span>
+											<Icon iconNode={whale} class="w-4 h-4 text-blue-500" />直接连接</span>
 									</Select.Item>
 									<Select.Item value="hawser-standard">
 										<span class="flex items-center gap-2">
-											<Route class="w-4 h-4 text-purple-500" />
-											Hawser agent (standard)
-										</span>
+											<Route class="w-4 h-4 text-purple-500" />Hawser代理（标准）</span>
 									</Select.Item>
 									<Select.Item value="hawser-edge">
 										<span class="flex items-center gap-2">
-											<UndoDot class="w-4 h-4 text-green-500" />
-											Hawser agent (edge)
-										</span>
+											<UndoDot class="w-4 h-4 text-green-500" />Hawser代理（边缘）</span>
 									</Select.Item>
 								</Select.Content>
 							</Select.Root>
@@ -1920,7 +1898,7 @@
 						<!-- Socket connection settings -->
 						{#if formConnectionType === 'socket'}
 							<div class="space-y-2">
-								<Label for="edit-env-socket-path">Socket path</Label>
+								<Label for="edit-env-socket-path">套接字路径</Label>
 								<div class="relative">
 									<div class="flex gap-2">
 										<Input
@@ -1934,7 +1912,7 @@
 											size="icon"
 											onclick={detectDockerSockets}
 											disabled={detectingSockets}
-											title="Auto-detect Docker socket"
+											title="自动检测 Docker 套接字"
 										>
 											{#if detectingSockets}
 												<Loader2 class="w-4 h-4 animate-spin" />
@@ -1965,8 +1943,7 @@
 										</div>
 									{/if}
 								</div>
-								<p class="text-xs text-muted-foreground">
-									Click <Pipette class="w-3 h-3 inline" /> to auto-detect available Docker sockets
+								<p class="text-xs text-muted-foreground">点击<Pipette class="w-3 h-3 inline" /> to auto-detect available Docker sockets
 								</p>
 							</div>
 						{/if}
@@ -1975,9 +1952,7 @@
 						{#if usesStackPath(formConnectionType)}
 							<div class="space-y-2">
 								<div class="flex items-center gap-1.5">
-									<Label for="edit-env-remote-stacks-dir">
-										Remote stack path (for backup)
-										<span class="text-muted-foreground font-normal">(optional)</span>
+									<Label for="edit-env-remote-stacks-dir">远程编排路径（用于备份）<span class="text-muted-foreground font-normal">(optional)</span>
 									</Label>
 									<Tooltip.Root>
 										<Tooltip.Trigger type="button" class="text-muted-foreground hover:text-foreground">
@@ -1986,28 +1961,24 @@
 										<Tooltip.Content class="w-80 z-[200]" side="right">
 											{#if isHawserConn(formConnectionType)}
 												<div class="space-y-2">
-													<p class="font-medium">Where the agent keeps stack files</p>
-													<p class="text-muted-foreground">
-														The Hawser agent stores each stack's folder at
-														<code class="bg-muted px-1 rounded">&lt;this path&gt;/&lt;stack&gt;</code>
+													<p class="font-medium">代理保存编排文件的位置</p>
+													<p class="text-muted-foreground">Hawser代理将每个编排的文件夹存储在<code class="bg-muted px-1 rounded">&lt;this path&gt;/&lt;stack&gt;</code>
 														on <span class="font-medium text-foreground">its own host</span>. Backup reads
 														the compose and config from there. This does <span class="font-medium text-foreground">not</span>
 														change where deploy or restore write - the agent always uses its own
 														<code class="bg-muted px-1 rounded">STACKS_DIR</code>; this only tells backup where to look.
 													</p>
-													<p class="text-muted-foreground">
-														So set it to MATCH the agent's <code class="bg-muted px-1 rounded">STACKS_DIR</code>
+													<p class="text-muted-foreground">所以将其设置为与代理的匹配<code class="bg-muted px-1 rounded">STACKS_DIR</code>
 														(default <code class="bg-muted px-1 rounded">/data/stacks</code>). Leave empty for
 														the default; set it only if the agent runs with a custom one.
 													</p>
-													<p class="text-muted-foreground">
-														This must be a <span class="font-medium text-foreground">real path on the agent's host</span>
+													<p class="text-muted-foreground">这一定是<span class="font-medium text-foreground">real path on the agent's host</span>
 														where the stack files actually live.
 													</p>
 												</div>
 											{:else}
 												<div class="space-y-2">
-													<p class="font-medium">Where this stack's files live on the host</p>
+													<p class="font-medium">该编排的文件在主机上的位置</p>
 													<p class="text-muted-foreground">
 														A direct daemon shares no filesystem with Dockhand. When set, Dockhand copies each
 														stack's folder to
@@ -2042,7 +2013,7 @@
 										Absolute path on the remote host where Dockhand keeps this stack's files, so its compose
 										and config are backupable and relative binds resolve on the remote daemon. Leave empty to
 										use only absolute paths or named volumes.
-										<span class="text-foreground font-medium">Takes effect on the next deploy</span> - after
+										<span class="text-foreground font-medium">在下次部署时生效</span> - after
 										setting this, redeploy each stack so Dockhand stages its files there.
 									{/if}
 								</p>
@@ -2053,7 +2024,7 @@
 						{#if formConnectionType === 'direct'}
 							<div class="grid grid-cols-2 gap-4">
 								<div class="space-y-2">
-									<Label for="edit-env-host">Host</Label>
+									<Label for="edit-env-host">主机</Label>
 									<Input
 										id="edit-env-host"
 										bind:value={formHost}
@@ -2067,12 +2038,12 @@
 									{/if}
 								</div>
 								<div class="space-y-2">
-									<Label for="edit-env-port">Port</Label>
+									<Label for="edit-env-port">端口</Label>
 									<Input id="edit-env-port" type="number" bind:value={formPort} />
 								</div>
 							</div>
 							<div class="space-y-2">
-								<Label for="edit-env-protocol">Protocol</Label>
+								<Label for="edit-env-protocol">协议</Label>
 								<Select.Root type="single" value={formProtocol} onValueChange={(v) => formProtocol = v}>
 									<Select.Trigger class="w-full">
 										<span class="flex items-center gap-2">
@@ -2103,20 +2074,18 @@
 							</div>
 							{#if formProtocol === 'https'}
 								<div class="space-y-4 pt-2 border-t">
-									<p class="text-xs text-muted-foreground">TLS certificates for mTLS authentication (RSA or ECDSA). Paste the PEM content or upload a file.</p>
+									<p class="text-xs text-muted-foreground">用于 mTLS 身份验证的 TLS 证书（RSA 或 ECDSA）。请粘贴 PEM 内容或上传文件。</p>
 									<div class="space-y-2">
 										<div class="flex items-center justify-between gap-2">
-											<Label for="edit-env-tls_ca">CA certificate</Label>
+											<Label for="edit-env-tls_ca">CA证书</Label>
 											<Button variant="ghost" size="sm" type="button" class="h-7 px-2 text-xs" onclick={() => document.getElementById('edit-env-tls_ca-file')?.click()}>
-												<Upload class="w-3 h-3 mr-1" />
-												Upload file
-											</Button>
+												<Upload class="w-3 h-3 mr-1" />上传文件</Button>
 											<input
 												id="edit-env-tls_ca-file"
 												type="file"
 												accept=".pem,.crt,.cer,.ca,.cert,application/x-pem-file,application/x-x509-ca-cert"
 												class="hidden"
-												onchange={(e) => loadPemFromFile(e, (t) => (formTlsCa = t), 'CA certificate')}
+												onchange={(e) => loadPemFromFile(e, (t) => (formTlsCa = t), 'CA证书')}
 											/>
 										</div>
 										<textarea
@@ -2128,11 +2097,9 @@
 									</div>
 									<div class="space-y-2">
 										<div class="flex items-center justify-between gap-2">
-											<Label for="edit-env-tls_cert">Client certificate</Label>
+											<Label for="edit-env-tls_cert">客户端证书</Label>
 											<Button variant="ghost" size="sm" type="button" class="h-7 px-2 text-xs" onclick={() => document.getElementById('edit-env-tls_cert-file')?.click()}>
-												<Upload class="w-3 h-3 mr-1" />
-												Upload file
-											</Button>
+												<Upload class="w-3 h-3 mr-1" />上传文件</Button>
 											<input
 												id="edit-env-tls_cert-file"
 												type="file"
@@ -2150,11 +2117,9 @@
 									</div>
 									<div class="space-y-2">
 										<div class="flex items-center justify-between gap-2">
-											<Label for="edit-env-tls_key">Client key</Label>
+											<Label for="edit-env-tls_key">客户端密钥</Label>
 											<Button variant="ghost" size="sm" type="button" class="h-7 px-2 text-xs" onclick={() => document.getElementById('edit-env-tls_key-file')?.click()}>
-												<Upload class="w-3 h-3 mr-1" />
-												Upload file
-											</Button>
+												<Upload class="w-3 h-3 mr-1" />上传文件</Button>
 											<input
 												id="edit-env-tls_key-file"
 												type="file"
@@ -2178,7 +2143,7 @@
 						{#if formConnectionType === 'hawser-standard'}
 							<div class="grid grid-cols-2 gap-4">
 								<div class="space-y-2">
-									<Label for="edit-env-host">Agent host</Label>
+									<Label for="edit-env-host">代理主机</Label>
 									<Input
 										id="edit-env-host"
 										bind:value={formHost}
@@ -2192,12 +2157,12 @@
 									{/if}
 								</div>
 								<div class="space-y-2">
-									<Label for="edit-env-port">Agent port</Label>
+									<Label for="edit-env-port">代理端口</Label>
 									<Input id="edit-env-port" type="number" bind:value={formPort} placeholder="2376" />
 								</div>
 							</div>
 							<div class="space-y-2">
-								<Label for="edit-env-protocol">Protocol</Label>
+								<Label for="edit-env-protocol">协议</Label>
 								<Select.Root type="single" value={formProtocol} onValueChange={(v) => formProtocol = v}>
 									<Select.Trigger class="w-full">
 										<span class="flex items-center gap-2">
@@ -2229,17 +2194,15 @@
 							{#if formProtocol === 'https'}
 								<div class="space-y-2">
 									<div class="flex items-center justify-between gap-2">
-										<Label for="edit-env-hawser-tls-ca">CA certificate (for self-signed)</Label>
+										<Label for="edit-env-hawser-tls-ca">CA证书（自签名证书）</Label>
 										<Button variant="ghost" size="sm" type="button" class="h-7 px-2 text-xs" disabled={formTlsSkipVerify} onclick={() => document.getElementById('edit-env-hawser-tls-ca-file')?.click()}>
-											<Upload class="w-3 h-3 mr-1" />
-											Upload file
-										</Button>
+											<Upload class="w-3 h-3 mr-1" />上传文件</Button>
 										<input
 											id="edit-env-hawser-tls-ca-file"
 											type="file"
 											accept=".pem,.crt,.cer,.ca,.cert,application/x-pem-file,application/x-x509-ca-cert"
 											class="hidden"
-											onchange={(e) => loadPemFromFile(e, (t) => (formTlsCa = t), 'CA certificate')}
+											onchange={(e) => loadPemFromFile(e, (t) => (formTlsCa = t), 'CA证书')}
 										/>
 									</div>
 									<textarea
@@ -2249,19 +2212,19 @@
 										class="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-mono text-xs"
 										disabled={formTlsSkipVerify}
 									></textarea>
-									<p class="text-xs text-muted-foreground">Paste the CA certificate or upload a file if agent uses self-signed TLS (RSA or ECDSA).</p>
+									<p class="text-xs text-muted-foreground">如果代理使用自签名 TLS（RSA 或 ECDSA），请粘贴 CA 证书或上传文件。</p>
 								</div>
 								<div class="flex items-center justify-between">
 									<div>
-										<Label>Skip TLS verification</Label>
-										<p class="text-xs text-muted-foreground">Disable certificate validation (insecure)</p>
+										<Label>跳过 TLS 验证</Label>
+										<p class="text-xs text-muted-foreground">禁用证书验证（不安全）</p>
 									</div>
 									<TogglePill bind:checked={formTlsSkipVerify} />
 								</div>
 							{/if}
 							<div class="space-y-2">
 								<div class="flex items-center justify-between">
-									<Label for="edit-env-hawser-token">Agent token (optional)</Label>
+									<Label for="edit-env-hawser-token">代理令牌（可选）</Label>
 									{#if !formHawserToken}
 										<Button
 											variant="outline"
@@ -2269,18 +2232,14 @@
 											class="h-7 text-xs"
 											onclick={generateStandardToken}
 										>
-											<Key class="w-3 h-3" />
-											Generate
-										</Button>
+											<Key class="w-3 h-3" />产生</Button>
 									{/if}
 								</div>
 								<Input id="edit-env-hawser-token" type="password" bind:value={formHawserToken} placeholder={hasStoredHawserToken ? 'Configured - leave blank to keep, or enter a new token to replace it' : 'Token for agent authentication'} oninput={() => generatedStandardToken = null} />
 								{#if generatedStandardToken}
 									<div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700 rounded-md space-y-2">
 										<p class="text-xs font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1">
-											<AlertTriangle class="w-3 h-3" />
-											Copy this token now — it won't be shown again!
-										</p>
+											<AlertTriangle class="w-3 h-3" />立即复制此令牌——它不会再次显示！</p>
 										<div class="flex gap-2">
 											<Input
 												type="text"
@@ -2294,7 +2253,7 @@
 														<Tooltip.Trigger>
 															<XCircle class="w-4 h-4 text-red-500" />
 														</Tooltip.Trigger>
-														<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+														<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 													</Tooltip.Root>
 												{:else if copySuccess === 'ok'}
 													<Check class="w-4 h-4 text-green-500" />
@@ -2308,13 +2267,13 @@
 										</div>
 									</div>
 								{:else}
-									<p class="text-xs text-muted-foreground">Enter a token manually or generate one. Set the same token as <code class="bg-muted px-1 rounded">TOKEN</code> env var on your Hawser agent.</p>
+									<p class="text-xs text-muted-foreground">手动输入令牌或生成令牌。设置与当前令牌相同的令牌<code class="bg-muted px-1 rounded">TOKEN</code> env var on your Hawser agent.</p>
 								{/if}
 							</div>
 							<div class="text-xs text-muted-foreground bg-muted/50 rounded-md p-2 flex items-start gap-2">
 								<Info class="w-3 h-3 mt-0.5 shrink-0" />
 								<div class="space-y-1 flex-1">
-									<span>Run Hawser agent on the target host:</span>
+									<span>在目标主机上运行 Hawser 代理：</span>
 									<div class="flex items-start gap-1.5">
 										<code class="bg-muted px-1.5 py-0.5 rounded break-all flex-1">{formHawserToken ? `TOKEN=${formHawserToken} ` : ''}hawser standard --port {formPort}</code>
 										{#if formHawserToken}
@@ -2327,14 +2286,14 @@
 														setTimeout(() => { copyCmdSuccess = null; }, 2000);
 													});
 												}}
-												title="Copy command"
+												title="复制命令"
 											>
 												{#if copyCmdSuccess === 'error'}
 													<Tooltip.Root open>
 														<Tooltip.Trigger>
 															<XCircle class="w-3 h-3 text-red-500" />
 														</Tooltip.Trigger>
-														<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+														<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 													</Tooltip.Root>
 												{:else if copyCmdSuccess === 'ok'}
 													<Check class="w-3 h-3 text-green-600" />
@@ -2354,29 +2313,25 @@
 								<!-- Connection status (edit mode only) -->
 								{#if isEditing && environment}
 									<div class="flex items-center justify-between">
-										<Label>Connection status</Label>
+										<Label>连接状态</Label>
 										{#if environment.hawserAgentId}
 											<Badge variant="outline" class="bg-green-50 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700">
-												<Wifi class="w-3 h-3 mr-1" />
-												Connected
-											</Badge>
+												<Wifi class="w-3 h-3 mr-1" />已连接</Badge>
 										{:else}
 											<Badge variant="outline" class="bg-slate-50 text-slate-500 border-slate-300 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-700">
-												<WifiOff class="w-3 h-3 mr-1" />
-												Waiting for agent
-											</Badge>
+												<WifiOff class="w-3 h-3 mr-1" />等待代理</Badge>
 										{/if}
 									</div>
 
 									<!-- Agent info if connected -->
 									{#if environment.hawserAgentId}
 										<div class="text-xs bg-muted/30 rounded-md p-2 space-y-1">
-											<p><span class="text-muted-foreground">Agent:</span> {environment.hawserAgentName || environment.hawserAgentId}</p>
+											<p><span class="text-muted-foreground">代理：</span> {environment.hawserAgentName || environment.hawserAgentId}</p>
 											{#if environment.hawserVersion}
-												<p><span class="text-muted-foreground">Version:</span> {environment.hawserVersion}</p>
+												<p><span class="text-muted-foreground">版本：</span> {environment.hawserVersion}</p>
 											{/if}
 											{#if environment.hawserLastSeen}
-												<p><span class="text-muted-foreground">Last seen:</span> {formatDateTime(environment.hawserLastSeen, true)}</p>
+												<p><span class="text-muted-foreground">最后出现时间：</span> {formatDateTime(environment.hawserLastSeen, true)}</p>
 											{/if}
 										</div>
 									{/if}
@@ -2385,7 +2340,7 @@
 								<!-- Token section -->
 								<div class="space-y-2">
 									<div class="flex items-center justify-between">
-										<Label>Connection token</Label>
+										<Label>连接令牌</Label>
 										{#if isEditing && hawserToken}
 											<Button
 												variant="outline"
@@ -2428,19 +2383,13 @@
 												class="w-full"
 												onclick={generatePendingToken}
 											>
-												<Key class="w-3.5 h-3.5 mr-1.5" />
-												Generate connection token
-											</Button>
-											<p class="text-xs text-muted-foreground">
-												Generate a token now. It will be saved when you add the environment.
-											</p>
+												<Key class="w-3.5 h-3.5 mr-1.5" />生成连接令牌</Button>
+											<p class="text-xs text-muted-foreground">立即生成令牌。添加环境时，令牌将被保存。</p>
 										{:else}
 											<!-- Show pending token -->
 											<div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700 rounded-md space-y-2">
 												<p class="text-xs font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1">
-													<AlertTriangle class="w-3 h-3" />
-													Copy this token now - you'll need it for the Hawser agent!
-												</p>
+													<AlertTriangle class="w-3 h-3" />立即复制此令牌 - 您将需要它来操作 Hawser 代理！</p>
 												<div class="flex gap-2">
 													<Input
 														type="text"
@@ -2454,7 +2403,7 @@
 																<Tooltip.Trigger>
 																	<XCircle class="w-4 h-4 text-red-500" />
 																</Tooltip.Trigger>
-																<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+																<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 															</Tooltip.Root>
 														{:else if copySuccess === 'ok'}
 															<Check class="w-4 h-4 text-green-500" />
@@ -2464,20 +2413,20 @@
 													</Button>
 												</div>
 												<div class="text-xs text-amber-600 dark:text-amber-300 space-y-1">
-													<span>Run on your host:</span>
+													<span>在主机上运行：</span>
 													<div class="flex items-start gap-1.5">
 														<code class="bg-amber-100 dark:bg-amber-900/50 px-1.5 py-0.5 rounded break-all flex-1">DOCKHAND_SERVER_URL={getConnectionUrl()} TOKEN={pendingToken} hawser</code>
 														<button
 															class="shrink-0 p-0.5 rounded hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors"
 															onclick={() => copyCommand(pendingToken!)}
-															title="Copy command"
+															title="复制命令"
 														>
 															{#if copyCmdSuccess === 'error'}
 																<Tooltip.Root open>
 																	<Tooltip.Trigger>
 																		<XCircle class="w-3 h-3 text-red-500" />
 																	</Tooltip.Trigger>
-																	<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+																	<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 																</Tooltip.Root>
 															{:else if copyCmdSuccess === 'ok'}
 																<Check class="w-3 h-3 text-green-600" />
@@ -2488,9 +2437,7 @@
 													</div>
 												</div>
 												<Button variant="ghost" size="sm" class="h-6 text-xs" onclick={generatePendingToken}>
-													<RefreshCw class="w-3 h-3" />
-													Generate new token
-												</Button>
+													<RefreshCw class="w-3 h-3" />生成新令牌</Button>
 											</div>
 										{/if}
 									{/if}
@@ -2505,9 +2452,7 @@
 											<!-- Just generated a new token - show full value -->
 											<div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700 rounded-md space-y-2">
 												<p class="text-xs font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1">
-													<AlertTriangle class="w-3 h-3" />
-													Save this token now - it won't be shown again!
-												</p>
+													<AlertTriangle class="w-3 h-3" />请立即保存此令牌——它不会再次显示！</p>
 												<div class="flex gap-2">
 													<Input
 														type="text"
@@ -2521,7 +2466,7 @@
 																<Tooltip.Trigger>
 																	<XCircle class="w-4 h-4 text-red-500" />
 																</Tooltip.Trigger>
-																<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+																<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 															</Tooltip.Root>
 														{:else if copySuccess === 'ok'}
 															<Check class="w-4 h-4 text-green-500" />
@@ -2531,20 +2476,20 @@
 													</Button>
 												</div>
 												<div class="text-xs text-amber-600 dark:text-amber-300 space-y-1">
-													<span>Run on your host:</span>
+													<span>在主机上运行：</span>
 													<div class="flex items-start gap-1.5">
 														<code class="bg-amber-100 dark:bg-amber-900/50 px-1.5 py-0.5 rounded break-all flex-1">DOCKHAND_SERVER_URL={getConnectionUrl()} TOKEN={generatedToken} hawser</code>
 														<button
 															class="shrink-0 p-0.5 rounded hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors"
 															onclick={() => copyCommand(generatedToken!)}
-															title="Copy command"
+															title="复制命令"
 														>
 															{#if copyCmdSuccess === 'error'}
 																<Tooltip.Root open>
 																	<Tooltip.Trigger>
 																		<XCircle class="w-3 h-3 text-red-500" />
 																	</Tooltip.Trigger>
-																	<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+																	<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 																</Tooltip.Root>
 															{:else if copyCmdSuccess === 'ok'}
 																<Check class="w-3 h-3 text-green-600" />
@@ -2568,7 +2513,7 @@
 												{/if}
 											</div>
 										{:else}
-											<p class="text-xs text-muted-foreground text-center py-2">No token generated yet. Click Generate above.</p>
+											<p class="text-xs text-muted-foreground text-center py-2">尚未生成令牌。请点击上方的“生成”按钮。</p>
 										{/if}
 									{/if}
 								</div>
@@ -2578,13 +2523,13 @@
 						<!-- Public IP field -->
 						<div class="space-y-2 pt-4 border-t">
 							<div class="flex items-center gap-2">
-								<Label for="edit-env-public-ip">Public IP</Label>
+								<Label for="edit-env-public-ip">公网 IP</Label>
 								<Tooltip.Root>
 									<Tooltip.Trigger>
 										<HelpCircle class="w-3.5 h-3.5 text-muted-foreground" />
 									</Tooltip.Trigger>
 									<Tooltip.Content side="bottom" class="w-72">
-										<p>IP address or hostname where container ports are accessible from your browser. For local Docker, use the server's LAN IP.</p>
+										<p>容器端口可通过浏览器访问的 IP 地址或主机名。对于本地 Docker，请使用服务器的局域网 IP 地址。</p>
 									</Tooltip.Content>
 								</Tooltip.Root>
 							</div>
@@ -2594,9 +2539,7 @@
 								placeholder="e.g., 192.168.1.4"
 								class="w-full"
 							/>
-							<p class="text-xs text-muted-foreground">
-								Used for clickable port links on the containers page
-							</p>
+							<p class="text-xs text-muted-foreground">用于容器页面上的可点击端口链接</p>
 						</div>
 					</Tabs.Content>
 
@@ -2636,16 +2579,14 @@
 				<Tabs.Content value="security" class="space-y-4 mt-0 h-full">
 					<div class="space-y-4">
 						<div class="flex items-center gap-2 text-sm font-medium">
-							<ShieldCheck class="w-4 h-4" />
-							Vulnerability scanning
-						</div>
+							<ShieldCheck class="w-4 h-4" />漏洞扫描</div>
 
 						{#if !isEditing}
 							<!-- Add mode - full security settings -->
 							<div class="flex items-start gap-3">
 								<div class="flex-1">
-									<Label>Enable scanning</Label>
-									<p class="text-xs text-muted-foreground">Scan images for known security vulnerabilities</p>
+									<Label>启用扫描</Label>
+									<p class="text-xs text-muted-foreground">扫描镜像以查找已知安全漏洞</p>
 								</div>
 								<TogglePill bind:checked={formEnableScanner} />
 							</div>
@@ -2653,8 +2594,8 @@
 							{#if formEnableScanner}
 								<div class="flex items-start gap-3">
 									<div class="flex-1">
-										<Label>Scanner</Label>
-										<p class="text-xs text-muted-foreground">Choose vulnerability scanner</p>
+										<Label>扫描器</Label>
+										<p class="text-xs text-muted-foreground">选择漏洞扫描器</p>
 									</div>
 									<ToggleGroup
 										value={formScannerType}
@@ -2665,7 +2606,7 @@
 
 								<div class="text-xs text-muted-foreground bg-muted/50 rounded-md p-2 flex items-start gap-2">
 									<Info class="w-3 h-3 mt-0.5 shrink-0" />
-									<span>Scanner images will be pulled automatically on first scan. Vulnerability databases are cached in Docker volumes for faster subsequent scans.</span>
+									<span>首次扫描时，扫描器镜像将自动拉取。漏洞数据库缓存在 Docker 卷中，以加快后续扫描速度。</span>
 								</div>
 							{/if}
 						{:else if scannerLoading}
@@ -2675,8 +2616,8 @@
 						{:else}
 							<div class="flex items-start gap-3">
 								<div class="flex-1">
-									<Label>Enable scanning</Label>
-									<p class="text-xs text-muted-foreground">Scan images for known security vulnerabilities</p>
+									<Label>启用扫描</Label>
+									<p class="text-xs text-muted-foreground">扫描镜像以查找已知安全漏洞</p>
 								</div>
 								<TogglePill bind:checked={scannerEnabled} />
 							</div>
@@ -2684,8 +2625,8 @@
 							{#if scannerEnabled}
 								<div class="flex items-start gap-3">
 									<div class="flex-1">
-										<Label>Scanner</Label>
-										<p class="text-xs text-muted-foreground">Choose vulnerability scanner</p>
+										<Label>扫描器</Label>
+										<p class="text-xs text-muted-foreground">选择漏洞扫描器</p>
 									</div>
 									<ToggleGroup
 										value={selectedScanner}
@@ -2707,17 +2648,15 @@
 											{:else if scannerAvailability.grype && scannerVersions.grype}
 												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-green-500/10 text-green-600 border-green-500/30">v{scannerVersions.grype}</Badge>
 											{:else if scannerAvailability.grype}
-												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-green-500/10 text-green-600 border-green-500/30">Ready</Badge>
+												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-green-500/10 text-green-600 border-green-500/30">就绪</Badge>
 											{:else}
-												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-amber-500/10 text-amber-600 border-amber-500/30">Not installed</Badge>
+												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-amber-500/10 text-amber-600 border-amber-500/30">未安装</Badge>
 											{/if}
 											{#if !loadingScannerVersions}
 												{#if !scannerAvailability.grype}
 													<ImagePullProgressPopover imageName={scannerGrypeImage} envId={environment?.id} onComplete={() => reloadScannerAvailability(environment?.id)}>
 														<button class="inline-flex items-center text-2xs px-1.5 py-0 h-4 rounded-full border bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-															<Download class="w-2.5 h-2.5 mr-0.5" />
-															Pull
-														</button>
+															<Download class="w-2.5 h-2.5 mr-0.5" />拉取</button>
 													</ImagePullProgressPopover>
 												{:else}
 													<button
@@ -2734,9 +2673,7 @@
 													</button>
 													{#if grypeUpdateStatus === 'up-to-date'}
 														<span class="inline-flex items-center text-2xs px-1.5 py-0 h-4 text-green-600">
-															<CheckCircle2 class="w-2.5 h-2.5 mr-0.5" />
-															Latest
-														</span>
+															<CheckCircle2 class="w-2.5 h-2.5 mr-0.5" />最新</span>
 													{:else if grypeUpdateStatus === 'update-available' || pullingGrype}
 														<button
 															class="inline-flex items-center text-2xs px-1.5 py-0 h-4 rounded-full border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 transition-colors disabled:opacity-50"
@@ -2784,17 +2721,15 @@
 											{:else if scannerAvailability.trivy && scannerVersions.trivy}
 												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-green-500/10 text-green-600 border-green-500/30">v{scannerVersions.trivy}</Badge>
 											{:else if scannerAvailability.trivy}
-												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-green-500/10 text-green-600 border-green-500/30">Ready</Badge>
+												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-green-500/10 text-green-600 border-green-500/30">就绪</Badge>
 											{:else}
-												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-amber-500/10 text-amber-600 border-amber-500/30">Not installed</Badge>
+												<Badge variant="outline" class="text-2xs px-1 py-0 h-4 bg-amber-500/10 text-amber-600 border-amber-500/30">未安装</Badge>
 											{/if}
 											{#if !loadingScannerVersions}
 												{#if !scannerAvailability.trivy}
 													<ImagePullProgressPopover imageName={scannerTrivyImage} envId={environment?.id} onComplete={() => reloadScannerAvailability(environment?.id)}>
 														<button class="inline-flex items-center text-2xs px-1.5 py-0 h-4 rounded-full border bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-															<Download class="w-2.5 h-2.5 mr-0.5" />
-															Pull
-														</button>
+															<Download class="w-2.5 h-2.5 mr-0.5" />拉取</button>
 													</ImagePullProgressPopover>
 												{:else}
 													<button
@@ -2811,9 +2746,7 @@
 													</button>
 													{#if trivyUpdateStatus === 'up-to-date'}
 														<span class="inline-flex items-center text-2xs px-1.5 py-0 h-4 text-green-600">
-															<CheckCircle2 class="w-2.5 h-2.5 mr-0.5" />
-															Latest
-														</span>
+															<CheckCircle2 class="w-2.5 h-2.5 mr-0.5" />最新</span>
 													{:else if trivyUpdateStatus === 'update-available' || pullingTrivy}
 														<button
 															class="inline-flex items-center text-2xs px-1.5 py-0 h-4 rounded-full border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 transition-colors disabled:opacity-50"
@@ -2853,7 +2786,7 @@
 									{#if ((selectedScanner === 'grype' || selectedScanner === 'both') && !scannerAvailability.grype) || ((selectedScanner === 'trivy' || selectedScanner === 'both') && !scannerAvailability.trivy)}
 										<div class="text-xs text-muted-foreground bg-muted/50 rounded-md p-2 flex items-start gap-2">
 											<Info class="w-3 h-3 mt-0.5 shrink-0" />
-											<span>Scanner images will be pulled automatically on first scan. Vulnerability databases are cached in Docker volumes for faster subsequent scans.</span>
+											<span>首次扫描时，扫描器镜像将自动拉取。漏洞数据库缓存在 Docker 卷中，以加快后续扫描速度。</span>
 										</div>
 									{/if}
 								</div>
@@ -2873,27 +2806,23 @@
 							host={environment.host}
 						/>
 					{:else}
-						<p class="text-sm text-muted-foreground py-4">Save the environment first to configure backups.</p>
+						<p class="text-sm text-muted-foreground py-4">请先保存环境以配置备份。</p>
 					{/if}
 				</Tabs.Content>
 
 				<Tabs.Content value="notifications" class="mt-0 h-full flex flex-col">
 					<div class="flex items-center gap-2 text-sm font-medium flex-shrink-0">
-						<Bell class="w-4 h-4" />
-						Notification channels
-					</div>
+						<Bell class="w-4 h-4" />通知渠道</div>
 
 					{#if !isEditing}
 						<!-- Add mode - show available channels to select -->
-						<p class="text-xs text-muted-foreground mt-2 flex-shrink-0">
-							Select which notification channels should send alerts for events from this environment.
-						</p>
+						<p class="text-xs text-muted-foreground mt-2 flex-shrink-0">选择应向哪些通知渠道发送来自此环境的事件警报。</p>
 
 						{#if notifications.length === 0}
 							<div class="flex-1 flex flex-col items-center justify-center py-8 text-center">
 								<Bell class="w-10 h-10 text-muted-foreground mb-3 opacity-50" />
-								<p class="text-sm text-muted-foreground">No notification channels configured yet.</p>
-								<p class="text-xs text-muted-foreground mt-1">Create notification channels in the Notifications settings tab first.</p>
+								<p class="text-sm text-muted-foreground">尚未配置任何通知渠道。</p>
+								<p class="text-xs text-muted-foreground mt-1">首先在“通知”设置选项卡中创建通知渠道。</p>
 							</div>
 						{:else}
 							<div class="space-y-2 mt-3 flex-1 overflow-y-auto min-h-0">
@@ -2926,9 +2855,7 @@
 										</div>
 										{#if !channel.enabled}
 											<p class="text-2xs text-amber-600 mt-1 flex items-center gap-1">
-												<AlertCircle class="w-2.5 h-2.5" />
-												Channel disabled globally
-											</p>
+												<AlertCircle class="w-2.5 h-2.5" />频道已全局禁用</p>
 										{/if}
 										<!-- Event Types (only show if selected) -->
 										{#if isSelected && selectedNotif}
@@ -2968,7 +2895,7 @@
 						<p class="text-xs text-muted-foreground mt-2 flex-shrink-0">
 							Configure which notification channels should send alerts for events from this environment.
 							{#if environment && !environment.collectActivity}
-								<span class="text-amber-500">Activity collection will be enabled automatically when you add a channel.</span>
+								<span class="text-amber-500">添加频道后，活动收集功能将自动启用。</span>
 							{/if}
 						</p>
 
@@ -3023,9 +2950,7 @@
 											{#if !notif.channelEnabled}
 												<div class="px-2 pb-2">
 													<p class="text-2xs text-amber-600 flex items-center gap-1">
-														<AlertCircle class="w-2.5 h-2.5" />
-														Channel disabled globally
-													</p>
+														<AlertCircle class="w-2.5 h-2.5" />频道已全局禁用</p>
 												</div>
 											{/if}
 											<!-- Event Types - collapsible content -->
@@ -3045,8 +2970,8 @@
 							{:else}
 								<div class="text-center py-6 text-muted-foreground">
 									<Bell class="w-8 h-8 mx-auto mb-2 opacity-50" />
-									<p class="text-sm">No notification channels configured</p>
-									<p class="text-xs mt-1">Add a channel below to receive alerts for this environment</p>
+									<p class="text-sm">未配置任何通知渠道</p>
+									<p class="text-xs mt-1">在下方添加通道以接收此环境的警报</p>
 								</div>
 							{/if}
 
@@ -3054,7 +2979,7 @@
 							{@const availableChannels = notifications.filter(n => !envNotifications.some(en => en.notificationId === n.id))}
 							{#if availableChannels.length > 0}
 								<div class="pt-3 border-t flex-shrink-0 mt-4">
-									<Label class="text-xs text-muted-foreground mb-2 block">Add notification channel:</Label>
+									<Label class="text-xs text-muted-foreground mb-2 block">添加通知渠道：</Label>
 									<div class="flex flex-wrap gap-2">
 										{#each availableChannels as channel}
 											<button
@@ -3076,9 +3001,9 @@
 								<div class="p-3 rounded-md bg-muted/30 text-xs text-muted-foreground flex items-start gap-2 flex-shrink-0 mt-4">
 									<Info class="w-3.5 h-3.5 mt-0.5 shrink-0" />
 									{#if !$licenseStore.isEnterprise || $canAccess('notifications', 'create')}
-										<span>No notification channels have been created yet. <a href="/settings?tab=notifications" class="text-primary hover:underline" onclick={onClose}>Go to Settings → Notifications</a> to add channels first.</span>
+										<span>尚未创建任何通知渠道。<a href="/settings?tab=notifications" class="text-primary hover:underline" onclick={onClose}>前往“设置”→“通知”。</a> to add channels first.</span>
 									{:else}
-										<span>No notification channels have been created yet. Contact your administrator to configure notification channels.</span>
+										<span>尚未创建任何通知渠道。请联系您的管理员配置通知渠道。</span>
 									{/if}
 								</div>
 							{/if}
@@ -3114,9 +3039,7 @@
 
 				{#if !isEditing}
 					<!-- Add mode -->
-					<Button variant="outline" onclick={onClose}>
-						Cancel
-					</Button>
+					<Button variant="outline" onclick={onClose}>取消</Button>
 					<Button onclick={createEnvironment} disabled={formSaving}>
 						{#if formSaving}
 							<RefreshCw class="w-4 h-4 animate-spin" />
@@ -3127,9 +3050,7 @@
 					</Button>
 				{:else}
 					<!-- Edit mode -->
-					<Button variant="outline" onclick={onClose}>
-						Cancel
-					</Button>
+					<Button variant="outline" onclick={onClose}>取消</Button>
 					<Button onclick={updateEnvironment} disabled={formSaving}>
 						{#if formSaving}
 							<RefreshCw class="w-4 h-4 animate-spin" />
@@ -3148,7 +3069,7 @@
 			outputSize={128}
 			outputFormat="image/webp"
 			outputQuality={0.85}
-			title="Crop icon"
+			title="裁剪图标"
 			saveLabel="Save icon"
 			onCancel={() => showIconCropper = false}
 			onSave={handleIconCropSave}
@@ -3161,9 +3082,7 @@
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2 text-amber-600 dark:text-amber-400">
-				<AlertTriangle class="w-5 h-5" />
-				Container memory won't be shown
-			</Dialog.Title>
+				<AlertTriangle class="w-5 h-5" />容器内存将不会显示。</Dialog.Title>
 		</Dialog.Header>
 		<div class="text-sm text-muted-foreground space-y-3">
 			<p>
@@ -3171,9 +3090,7 @@
 				per-container memory - it will show <span class="font-medium text-foreground whitespace-nowrap">0&nbsp;B</span>
 				for every container. This is common on Raspberry Pi and some ARM boards.
 			</p>
-			<p>
-				It's fixed in the kernel boot config, not in Dockhand. See the guide:
-				<a href={MEMORY_SUPPORT_DOC_URL} target="_blank" rel="noopener noreferrer"
+			<p>这个问题已在内核启动配置中修复，而非在 Dockhand 中修复。请参阅指南：<a href={MEMORY_SUPPORT_DOC_URL} target="_blank" rel="noopener noreferrer"
 					class="text-primary hover:underline inline-flex items-center gap-1">
 					enabling container memory accounting
 					<ExternalLink class="w-3 h-3" />
@@ -3192,11 +3109,9 @@
 	<Dialog.Content class="max-w-2xl">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<AlertTriangle class="w-5 h-5 text-amber-500" />
-				Rename environment?
-			</Dialog.Title>
+				<AlertTriangle class="w-5 h-5 text-amber-500" />重命名环境？</Dialog.Title>
 			<Dialog.Description class="pt-2 space-y-3 text-sm">
-				<p>The following directories will be moved on the Dockhand host:</p>
+				<p>以下目录将被移动到 Dockhand 主机上：</p>
 				<div class="space-y-1 text-xs font-mono bg-muted/40 rounded-md p-3 border overflow-x-auto">
 					<div class="flex items-center gap-2 whitespace-nowrap">
 						<code class="whitespace-nowrap">$DATA_DIR/stacks/{renameConfirmFrom}/</code>
@@ -3219,7 +3134,7 @@
 						{/if}
 					</p>
 				{:else if renameStackCount === 0 && renameGitStackCount === 0}
-					<p>No stacks are currently deployed on this environment, so the rename is safe.</p>
+					<p>目前此环境中未部署任何编排，因此重命名是安全。</p>
 				{:else if renameAffectsContainers}
 					<p>
 						{#if renameStackCount > 0 && renameGitStackCount > 0}
@@ -3262,9 +3177,7 @@
 			</Dialog.Description>
 		</Dialog.Header>
 		<div class="flex justify-end gap-2 mt-4">
-			<Button variant="outline" onclick={() => (showRenameConfirm = false)}>
-				Cancel
-			</Button>
+			<Button variant="outline" onclick={() => (showRenameConfirm = false)}>取消</Button>
 			<Button
 				variant="default"
 				onclick={async () => {

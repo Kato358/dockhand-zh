@@ -54,7 +54,7 @@
 	function onFromSelect(value: any) {
 		if (!value) return;
 		sinceDate = toDateString(value);
-		// Auto-switch to "To" picker
+		// Auto-switch to "到" picker
 		picking = 'to';
 		// If both dates are set, auto-apply
 		if (untilDate) {
@@ -126,7 +126,7 @@
 				/>
 				<div class="px-3 pb-2">
 					<div class="flex items-center gap-2">
-						<span class="text-xs text-muted-foreground">Time:</span>
+						<span class="text-xs text-muted-foreground">时间：</span>
 						<input type="time" bind:value={sinceTime} class="h-7 rounded border border-border px-2 text-xs bg-background text-foreground [color-scheme:dark] focus:outline-none focus:ring-1 focus:ring-ring" />
 					</div>
 				</div>
@@ -139,7 +139,7 @@
 				/>
 				<div class="px-3 pb-2">
 					<div class="flex items-center gap-2">
-						<span class="text-xs text-muted-foreground">Time:</span>
+						<span class="text-xs text-muted-foreground">时间：</span>
 						<input type="time" bind:value={untilTime} class="h-7 rounded border border-border px-2 text-xs bg-background text-foreground [color-scheme:dark] focus:outline-none focus:ring-1 focus:ring-ring" />
 					</div>
 				</div>
@@ -147,8 +147,8 @@
 
 			<!-- Actions -->
 			<div class="flex items-center gap-2 px-3 pb-2">
-				<button onclick={apply} class="px-2 py-1 rounded text-xs bg-primary text-primary-foreground hover:bg-primary/90" disabled={!sinceDate && !untilDate}>Apply</button>
-				<button onclick={clear} class="px-2 py-1 rounded text-xs bg-muted text-muted-foreground hover:bg-muted/80">Clear</button>
+				<button onclick={apply} class="px-2 py-1 rounded text-xs bg-primary text-primary-foreground hover:bg-primary/90" disabled={!sinceDate && !untilDate}>应用</button>
+				<button onclick={clear} class="px-2 py-1 rounded text-xs bg-muted text-muted-foreground hover:bg-muted/80">清空</button>
 			</div>
 		</div>
 	</Popover.Content>

@@ -9,8 +9,8 @@
 		open = $bindable(false),
 		ref = $bindable(null),
 		value = $bindable(""),
-		title = "Command Palette",
-		description = "Search for a command to run",
+		title = "命令面板",
+		description = "查找要运行的命令",
 		portalProps,
 		children,
 		...restProps

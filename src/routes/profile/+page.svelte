@@ -176,10 +176,10 @@
 				goto('/login');
 			} else {
 				const data = await response.json();
-				error = data.error || 'Failed to load profile';
+				error = data.error || '加载配置文件失败';
 			}
 		} catch (e) {
-			error = 'Failed to load profile';
+			error = '加载配置文件失败';
 		} finally {
 			loading = false;
 		}
@@ -264,7 +264,7 @@
 	}
 
 	function formatProfileDate(dateStr: string | null): string {
-		if (!dateStr) return 'Never';
+		if (!dateStr) return '从不';
 		return formatDateTime(dateStr, true);
 	}
 
@@ -352,13 +352,13 @@
 </script>
 
 <svelte:head>
-	<title>Profile - Dockhand</title>
+	<title>个人资料 - Dockhand</title>
 </svelte:head>
 
 <div class="container mx-auto p-6">
 	<div class="flex items-center gap-3 mb-6">
-		<PageHeader icon={User} title="Profile" showConnection={false}>
-			<p class="text-muted-foreground text-sm">Manage your account settings</p>
+		<PageHeader icon={User} title="轮廓" showConnection={false}>
+			<p class="text-muted-foreground text-sm">管理您的帐户设置</p>
 		</PageHeader>
 	</div>
 
@@ -392,9 +392,7 @@
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2">
-						<User class="w-5 h-5" />
-						Account information
-					</Card.Title>
+						<User class="w-5 h-5" />账户信息</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<div class="flex items-start gap-6">
@@ -437,7 +435,7 @@
 										onclick={removeAvatar}
 										disabled={avatarSaving}
 										class="absolute -bottom-1 -right-1 p-1 rounded-full bg-background border border-border text-muted-foreground hover:text-destructive hover:border-destructive transition-colors"
-										title="Remove photo"
+										title="移除照片"
 									>
 										<Trash2 class="w-3.5 h-3.5" />
 									</button>
@@ -449,19 +447,17 @@
 						<div class="flex-1 space-y-4">
 							<div class="grid grid-cols-2 gap-4">
 								<div>
-									<Label class="text-muted-foreground text-xs">Username</Label>
+									<Label class="text-muted-foreground text-xs">用户名</Label>
 									<p class="font-medium">{profile.username}</p>
 								</div>
 								<div>
-									<Label class="text-muted-foreground text-xs">Role</Label>
+									<Label class="text-muted-foreground text-xs">角色</Label>
 									<div class="flex items-center gap-2">
 										{#if profile.isAdmin}
 											<Badge variant="default" class="gap-1 rounded-sm">
-												<Crown class="w-3 h-3" />
-												Admin
-											</Badge>
+												<Crown class="w-3 h-3" />行政</Badge>
 										{:else}
-											<Badge variant="secondary" class="rounded-sm">User</Badge>
+											<Badge variant="secondary" class="rounded-sm">用户</Badge>
 										{/if}
 									</div>
 								</div>
@@ -469,14 +465,14 @@
 
 							<div class="grid grid-cols-2 gap-4">
 								<div>
-									<Label class="text-muted-foreground text-xs">Created</Label>
+									<Label class="text-muted-foreground text-xs">已创建</Label>
 									<p class="text-sm flex items-center gap-1">
 										<Calendar class="w-3.5 h-3.5" />
 										{formatProfileDate(profile.createdAt)}
 									</p>
 								</div>
 								<div>
-									<Label class="text-muted-foreground text-xs">Last login</Label>
+									<Label class="text-muted-foreground text-xs">上次登录</Label>
 									<p class="text-sm flex items-center gap-1">
 										<Clock class="w-3.5 h-3.5" />
 										{formatProfileDate(profile.lastLogin)}
@@ -492,9 +488,7 @@
 			<Card.Root class="flex flex-col">
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2">
-						<Mail class="w-5 h-5" />
-						Profile details
-					</Card.Title>
+						<Mail class="w-5 h-5" />个人资料详情</Card.Title>
 				</Card.Header>
 				<Card.Content class="flex-1 flex flex-col space-y-4">
 					{#if formError}
@@ -506,18 +500,18 @@
 
 					<div class="space-y-4 flex-1">
 						<div class="space-y-2">
-							<Label>Display name</Label>
+							<Label>显示名称</Label>
 							<Input
 								bind:value={formDisplayName}
-								placeholder="Enter display name"
+								placeholder="输入显示名称"
 							/>
 						</div>
 						<div class="space-y-2">
-							<Label>Email</Label>
+							<Label>邮箱</Label>
 							<Input
 								type="email"
 								bind:value={formEmail}
-								placeholder="Enter email"
+								placeholder="输入邮箱"
 							/>
 						</div>
 					</div>
@@ -544,9 +538,7 @@
 			<Card.Root class="flex flex-col">
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2">
-						<Shield class="w-5 h-5" />
-						Security
-					</Card.Title>
+						<Shield class="w-5 h-5" />安全</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<!-- Password - only show for local auth users -->
@@ -555,21 +547,19 @@
 							<div class="flex items-center gap-3">
 								<Key class="w-5 h-5 text-muted-foreground" />
 								<div>
-									<p class="font-medium">Password</p>
-									<p class="text-sm text-muted-foreground">Change your password</p>
+									<p class="font-medium">密码</p>
+									<p class="text-sm text-muted-foreground">更改密码</p>
 								</div>
 							</div>
-							<Button variant="outline" onclick={() => showPasswordModal = true}>
-								Change password
-							</Button>
+							<Button variant="outline" onclick={() => showPasswordModal = true}>更改密码</Button>
 						</div>
 					{:else}
 						<div class="flex items-center justify-between p-3 border rounded-lg bg-muted/50">
 							<div class="flex items-center gap-3">
 								<Key class="w-5 h-5 text-muted-foreground" />
 								<div>
-									<p class="font-medium">Password</p>
-									<p class="text-sm text-muted-foreground">Managed by your SSO provider</p>
+									<p class="font-medium">密码</p>
+									<p class="text-sm text-muted-foreground">由您的 SSO 提供商管理</p>
 								</div>
 							</div>
 							<Badge class="gap-1 rounded-sm bg-yellow-500/20 text-yellow-600 border-yellow-500/30 hover:bg-yellow-500/30">
@@ -586,14 +576,12 @@
 								<Smartphone class="w-5 h-5 text-muted-foreground" />
 								<div>
 									<div class="flex items-center gap-2">
-										<p class="font-medium">Two-factor authentication</p>
+										<p class="font-medium">双因素身份验证</p>
 										{#if profile.mfaEnabled}
 											<Badge variant="default" class="bg-green-500 gap-1 rounded-sm">
-												<ShieldCheck class="w-3 h-3" />
-												Enabled
-											</Badge>
+												<ShieldCheck class="w-3 h-3" />已启用</Badge>
 										{:else}
-											<Badge variant="secondary" class="rounded-sm">Disabled</Badge>
+											<Badge variant="secondary" class="rounded-sm">已禁用</Badge>
 										{/if}
 									</div>
 									<p class="text-sm text-muted-foreground">
@@ -625,8 +613,8 @@
 							<div class="flex items-center gap-3">
 								<Smartphone class="w-5 h-5 text-muted-foreground" />
 								<div>
-									<p class="font-medium">Two-factor authentication</p>
-									<p class="text-sm text-muted-foreground">Managed by your SSO provider</p>
+									<p class="font-medium">双因素身份验证</p>
+									<p class="text-sm text-muted-foreground">由您的 SSO 提供商管理</p>
 								</div>
 							</div>
 							<Badge class="gap-1 rounded-sm bg-yellow-500/20 text-yellow-600 border-yellow-500/30 hover:bg-yellow-500/30">
@@ -650,29 +638,25 @@
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2 justify-between">
 						<span class="flex items-center gap-2">
-							<KeyRound class="w-5 h-5" />
-							API tokens
-						</span>
+							<KeyRound class="w-5 h-5" />API令牌</span>
 						<Button variant="outline" size="sm" onclick={() => showApiTokenModal = true}>
-							<Plus class="w-4 h-4 mr-1" />
-							Generate token
-						</Button>
+							<Plus class="w-4 h-4 mr-1" />生成令牌</Button>
 					</Card.Title>
-					<Card.Description>Create tokens for CI/CD pipelines and scripts</Card.Description>
+					<Card.Description>为 CI/CD 流水线和脚本创建令牌</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					{#if tokensLoading}
-						<p class="text-sm text-muted-foreground">Loading tokens...</p>
+						<p class="text-sm text-muted-foreground">正在加载令牌…</p>
 					{:else if apiTokens.length === 0}
-						<p class="text-sm text-muted-foreground">No API tokens created yet.</p>
+						<p class="text-sm text-muted-foreground">尚未创建任何 API 令牌。</p>
 					{:else}
 						<Table.Root>
 							<Table.Header>
 								<Table.Row>
-									<Table.Head>Name</Table.Head>
-									<Table.Head>Prefix</Table.Head>
-									<Table.Head>Last used</Table.Head>
-									<Table.Head>Expires</Table.Head>
+									<Table.Head>名称</Table.Head>
+									<Table.Head>前缀</Table.Head>
+									<Table.Head>上次使用</Table.Head>
+									<Table.Head>过期时间</Table.Head>
 									<Table.Head class="w-[80px]"></Table.Head>
 								</Table.Row>
 							</Table.Header>
@@ -684,22 +668,22 @@
 											<code class="text-xs bg-muted px-1.5 py-0.5 rounded">dh_{token.tokenPrefix}...</code>
 										</Table.Cell>
 										<Table.Cell class="text-sm text-muted-foreground">
-											{token.lastUsed ? formatDateTime(token.lastUsed) : 'Never'}
+											{token.lastUsed ? formatDateTime(token.lastUsed) : '从不'}
 										</Table.Cell>
 										<Table.Cell class="text-sm">
 											{#if isTokenExpired(token.expiresAt)}
-												<Badge variant="destructive">Expired</Badge>
+												<Badge variant="destructive">已到期</Badge>
 											{:else if token.expiresAt}
 												{formatDateTime(token.expiresAt)}
 											{:else}
-												<span class="text-muted-foreground">Never</span>
+												<span class="text-muted-foreground">从不</span>
 											{/if}
 										</Table.Cell>
 										<Table.Cell>
 											<ConfirmPopover
-												title="Revoke token"
-												description="This token will stop working immediately."
-												confirmText="Revoke"
+												title="撤销令牌"
+												description="此令牌将立即失效。"
+												confirmText="撤销"
 												onConfirm={() => revokeToken(token.id)}
 											>
 												<Button variant="ghost" size="sm" class="text-destructive hover:text-destructive">
@@ -724,10 +708,8 @@
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2">
-						<Palette class="w-5 h-5" />
-						Appearance
-					</Card.Title>
-					<Card.Description>Customize the look of the application</Card.Description>
+						<Palette class="w-5 h-5" />外貌</Card.Title>
+					<Card.Description>自定义应用程序的外观</Card.Description>
 				</Card.Header>
 				<Card.Content class="space-y-4">
 					<ThemeSelector userId={profile.id} />
@@ -741,10 +723,8 @@
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2">
-						<Compass class="w-5 h-5" />
-						Navigation
-					</Card.Title>
-					<Card.Description>Your landing page and environment-click target. Leave on "Use global default" to follow the workspace setting.</Card.Description>
+						<Compass class="w-5 h-5" />导航</Card.Title>
+					<Card.Description>您的着陆页和环境点击目标。保留“使用全局默认值”以遵循工作区设置。</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<NavigationSelector scope="user" />
@@ -757,10 +737,8 @@
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2">
-						<Palette class="w-5 h-5" />
-						Editor theme
-					</Card.Title>
-					<Card.Description>Color theme for the code editor, with a live preview.</Card.Description>
+						<Palette class="w-5 h-5" />编辑器主题</Card.Title>
+					<Card.Description>代码编辑器配色方案，带实时预览功能。</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<EditorThemeSelector userId={profile.id} />

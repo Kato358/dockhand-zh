@@ -111,7 +111,7 @@
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to start pull');
+				throw new Error('启动拉取失败');
 			}
 
 			const { jobId } = await response.json();
@@ -256,16 +256,16 @@
 				<div class="flex items-center gap-2">
 					{#if overallStatus === 'idle'}
 						<Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
-						<span class="text-sm text-muted-foreground">Initializing...</span>
+						<span class="text-sm text-muted-foreground">正在初始化…</span>
 					{:else if overallStatus === 'pulling'}
 						<Loader2 class="w-4 h-4 animate-spin text-blue-600" />
-						<span class="text-sm">Pulling...</span>
+						<span class="text-sm">拉取…</span>
 					{:else if overallStatus === 'complete'}
 						<CheckCircle2 class="w-4 h-4 text-green-600" />
-						<span class="text-sm text-green-600">Complete!</span>
+						<span class="text-sm text-green-600">完全！</span>
 					{:else if overallStatus === 'error'}
 						<XCircle class="w-4 h-4 text-red-600" />
-						<span class="text-sm text-red-600">Failed</span>
+						<span class="text-sm text-red-600">失败</span>
 					{/if}
 				</div>
 				{#if totalLayers > 0}
@@ -329,7 +329,7 @@
 			</div>
 		{:else if overallStatus === 'complete'}
 			<div class="p-3">
-				<p class="text-xs text-muted-foreground text-center py-2">Image is up to date</p>
+				<p class="text-xs text-muted-foreground text-center py-2">镜像已是最新</p>
 			</div>
 		{/if}
 
@@ -341,9 +341,7 @@
 					size="sm"
 					class="w-full"
 					onclick={() => handleOpenChange(false)}
-				>
-					Close
-				</Button>
+				>关闭</Button>
 			</div>
 		{/if}
 	</Popover.Content>

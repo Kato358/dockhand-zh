@@ -68,7 +68,7 @@
 		// space, other producers don't) so it lines up with the text, not the edge.
 		const lastReal = [...logLines].reverse().find((l) => l.trim().length > 0);
 		const indent = lastReal ? (lastReal.match(/^\s*/)?.[0] ?? '') : '';
-		const [color, label] = overallStatus === 'complete' ? [ANSI.green, 'Succeeded'] : [ANSI.red, 'Failed'];
+		const [color, label] = overallStatus === 'complete' ? [ANSI.green, '成功'] : [ANSI.red, '失败'];
 		return base + (base ? '\n' : '') + indent + color + label + ANSI.reset;
 	});
 
@@ -124,7 +124,7 @@
 						overallStatus = 'error';
 						errorMessage = data.error || 'Unknown error occurred';
 						// Put the reason in the log too (as plain, uniconed lines) so a
-						// failure that happens mid-stream shows WHY, not just "Failed".
+						// failure that happens mid-stream shows WHY, not just "失败".
 						for (const l of errorMessage.split('\n')) {
 							if (l.trim()) logLines = [...logLines, l];
 						}
@@ -194,8 +194,8 @@
 			: 'idle'
 	);
 	const headerStatusLine = $derived(
-		overallStatus === 'complete' ? 'Succeeded'
-			: overallStatus === 'error' ? 'Failed'
+		overallStatus === 'complete' ? '成功'
+			: overallStatus === 'error' ? '失败'
 			: isDeploying ? 'Deploying...'
 			: ''
 	);
@@ -225,7 +225,7 @@
 		<!-- Header -->
 		<div class="px-6 py-4 border-b shrink-0">
 			<DeployOutputHeader
-				verb="Git deploy"
+				verb="Git 部署"
 				{stackName}
 				{stackIcon}
 				{envId}
@@ -240,9 +240,8 @@
 				<div class="flex items-start gap-3 py-2 px-2">
 					<AlertTriangle class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
 					<div class="space-y-1">
-						<p class="font-medium">Sync from git?</p>
-						<p class="text-sm text-muted-foreground">
-							This will pull the latest changes for <strong class="text-foreground">{stackName}</strong>.
+						<p class="font-medium">从 Git 同步？</p>
+						<p class="text-sm text-muted-foreground">这将拉取最新的更改。<strong class="text-foreground">{stackName}</strong>.
 							Containers will only restart if the configuration changed.
 						</p>
 					</div>
@@ -250,7 +249,7 @@
 			{:else if logLines.length === 0 && isDeploying}
 				<div class="flex items-center gap-3 text-muted-foreground py-2 px-2">
 					<Loader2 class="w-4 h-4 animate-spin shrink-0" />
-					<span class="text-sm">Initializing...</span>
+					<span class="text-sm">正在初始化…</span>
 				</div>
 			{/if}
 
@@ -284,7 +283,7 @@
 			<!-- Left: cancel (confirm step only). The log has its own copy button. -->
 			<div>
 				{#if overallStatus === 'confirming'}
-					<Button variant="outline" onclick={handleCancelConfirm}>Cancel</Button>
+					<Button variant="outline" onclick={handleCancelConfirm}>取消</Button>
 				{/if}
 			</div>
 
@@ -292,9 +291,7 @@
 			<div class="flex gap-2">
 				{#if overallStatus === 'confirming'}
 					<Button onclick={handleConfirmDeploy}>
-						<Rocket class="w-4 h-4" />
-						Deploy
-					</Button>
+						<Rocket class="w-4 h-4" />部署</Button>
 				{:else}
 					<Button
 						variant={overallStatus === 'complete' ? 'default' : 'secondary'}

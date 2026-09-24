@@ -17,9 +17,7 @@
 	<Dialog.Content class="max-w-2xl">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2 text-destructive">
-				<AlertTriangle class="h-5 w-5" />
-				Snapshots could not be deleted
-			</Dialog.Title>
+				<AlertTriangle class="h-5 w-5" />快照无法删除</Dialog.Title>
 		</Dialog.Header>
 		{#if deleted > 0}
 			<p class="text-sm text-muted-foreground">
@@ -27,7 +25,7 @@
 				tool reported:
 			</p>
 		{:else}
-			<p class="text-sm text-muted-foreground">The backup tool reported:</p>
+			<p class="text-sm text-muted-foreground">备份工具报告：</p>
 		{/if}
 		<pre class="max-h-[50vh] overflow-auto rounded-md bg-muted p-3 text-xs whitespace-pre-wrap break-words font-mono">{error}</pre>
 		<Dialog.Footer>

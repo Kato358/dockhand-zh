@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Backups - Dockhand</title>
+	<title>备份 - Dockhand</title>
 </svelte:head>
 
 <script lang="ts">
@@ -202,16 +202,16 @@
 			// Only declare it cancelled if the backend actually signalled a running
 			// helper. If it was already past the point of no return (restic done,
 			// applying retention), `stopped` is false — let the real progress stream
-			// finish and report the true 'Completed' status instead of a false 'Cancelled'.
+			// finish and report the true '完全' status instead of a false '取消'.
 			if (body?.stopped) {
 				logModalLogs = [...logModalLogs, '⚠ Backup cancelled by user'];
 				logModalStatus = 'error';
-				logModalError = 'Cancelled';
+				logModalError = '取消';
 			} else {
 				logModalLogs = [...logModalLogs, 'Backup is finishing and can no longer be cancelled.'];
-				toast.info('Backup was already finishing — it will complete.');
+				toast.info('备份已经完成——它即将完成。');
 			}
-		} catch { toast.error('Failed to stop backup'); }
+		} catch { toast.error('停止备份失败'); }
 	}
 	let confirmDeleteSnapshot = $state<string | null>(null);
 	let deletingSnapshot = $state<string | null>(null);
@@ -365,7 +365,7 @@
 			});
 		} catch (error) {
 			console.error('Failed to fetch backup data:', error);
-			toast.error('Failed to load backups');
+			toast.error('备份加载失败');
 		} finally {
 			loading = false;
 		}
@@ -505,7 +505,7 @@
 				newMap.set(key, Array.isArray(snapData) ? snapData : []);
 			} else {
 				newMap.set(key, []);
-				toast.error(cleanErrorMessage(snapError || 'Failed to load snapshots'));
+				toast.error(cleanErrorMessage(snapError || '快照加载失败'));
 			}
 			snapshotsMap = newMap;
 
@@ -528,7 +528,7 @@
 			const newMap = new Map(snapshotsMap);
 			newMap.set(key, []);
 			snapshotsMap = newMap;
-			toast.error('Failed to load snapshots');
+			toast.error('快照加载失败');
 		} finally {
 			const newLoading = new Set(loadingSnapshots);
 			newLoading.delete(key);
@@ -593,8 +593,8 @@
 				const { outcome, message } = classifyJobResult(result);
 				if (outcome === 'error') {
 					logModalStatus = 'error';
-					logModalError = message || 'Backup failed';
-					lastError = { configId: config.id, message: message || 'Backup failed' };
+					logModalError = message || '备份失败';
+					lastError = { configId: config.id, message: message || '备份失败' };
 				} else if (outcome === 'skipped') {
 					// Rejected (already running, or retention would wipe) — not a success.
 					logModalStatus = 'error';
@@ -602,8 +602,8 @@
 					toast.info(message || 'Backup skipped');
 				} else {
 					logModalStatus = 'success';
-					if (outcome === 'warning') toast.warning(message || `Backup completed with warnings for ${config.targetName}`);
-					else toast.success(`Backup completed for ${config.targetName}`);
+					if (outcome === 'warning') toast.warning(message || `备份完成，但存在关于 ${config.targetName} 的警告`);
+					else toast.success(`${config.targetName} 的备份已完成`);
 				}
 				loadSnapshots(config);
 				fetchData();
@@ -646,9 +646,9 @@
 				toast.success(config.enabled ? 'Schedule paused' : 'Schedule resumed');
 				fetchData();
 			} else {
-				toast.error('Failed to update schedule');
+				toast.error('更新日程失败');
 			}
-		} catch { toast.error('Failed to update schedule'); }
+		} catch { toast.error('更新日程失败'); }
 		togglingConfig = null;
 	}
 
@@ -661,7 +661,7 @@
 			if (res.ok) {
 				const data = await res.json().catch(() => ({}));
 				const n = data.snapshots?.deleted ?? 0;
-				toast.success(`Backup config removed for ${config.targetName}${withSnaps ? ` (${n} snapshot${n === 1 ? '' : 's'} deleted)` : ''}`);
+				toast.success(`已移除 ${config.targetName}${withSnaps ?` (${n} snapshot${n === 1 ? '' : 's'} deleted)` : ''}`);
 				fetchData();
 			} else {
 				const data = await res.json().catch(() => ({}));
@@ -684,7 +684,7 @@
 				method: 'DELETE'
 			});
 			if (res.ok) {
-				toast.success('Snapshot deleted');
+				toast.success('快照已删除');
 				await loadSnapshots(config);
 				// Update the async snapshot count (keyed per config, matching the column)
 				const loaded = snapshotsMap.get(config.key);
@@ -693,10 +693,10 @@
 				}
 			} else {
 				const data = await res.json();
-				toast.error(data.error || 'Failed to delete snapshot');
+				toast.error(data.error || '删除快照失败');
 			}
 		} catch {
-			toast.error('Failed to delete snapshot');
+			toast.error('删除快照失败');
 		} finally {
 			deletingSnapshot = null;
 			confirmDeleteSnapshot = null;
@@ -746,18 +746,16 @@
 
 <div class="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
 	<div class="shrink-0 flex flex-wrap justify-between items-center gap-3 min-h-8">
-		<PageHeader title="Backups" icon={Archive} count={filteredConfigs.length}>
+		<PageHeader title="备份" icon={Archive} count={filteredConfigs.length}>
 			{#if loading}
 				<span class="flex items-center gap-1.5 text-xs text-muted-foreground">
-					<Loader2 class="w-3.5 h-3.5 animate-spin" />
-					Loading…
-				</span>
+					<Loader2 class="w-3.5 h-3.5 animate-spin" />加载中…</span>
 			{:else if snapshotCountsLoading}
 				<SnapshotLoadProgress done={snapshotCountsDone} total={snapshotCountsTotal} />
 			{/if}
 		</PageHeader>
 		<div class="flex flex-wrap items-center gap-2">
-			<SearchInput bind:value={searchQuery} placeholder="Filter backups..." class="h-8 w-48 text-sm" />
+			<SearchInput bind:value={searchQuery} placeholder="过滤备份…" class="h-8 w-48 text-sm" />
 			<Select.Root type="single" value={filterType} onValueChange={(v) => { filterType = v === 'all' ? '' : v; }}>
 				<Select.Trigger class="h-8 w-32 text-xs">
 					{#if filterType === 'container'}<Box class="w-3 h-3 mr-1 text-muted-foreground" />Containers
@@ -765,9 +763,9 @@
 					{:else}All types{/if}
 				</Select.Trigger>
 				<Select.Content>
-					<Select.Item value="all">All types</Select.Item>
-					<Select.Item value="container"><Box class="w-3 h-3 mr-1.5 inline text-muted-foreground" />Containers</Select.Item>
-					<Select.Item value="stack"><Layers class="w-3 h-3 mr-1.5 inline text-muted-foreground" />Stacks</Select.Item>
+					<Select.Item value="all">所有类型</Select.Item>
+					<Select.Item value="container"><Box class="w-3 h-3 mr-1.5 inline text-muted-foreground" />容器</Select.Item>
+					<Select.Item value="stack"><Layers class="w-3 h-3 mr-1.5 inline text-muted-foreground" />编排</Select.Item>
 				</Select.Content>
 			</Select.Root>
 			<Select.Root type="single" value={filterEnvId} onValueChange={(v) => { filterEnvId = v === 'all' ? '' : v; }}>
@@ -778,7 +776,7 @@
 					{:else}All envs{/if}
 				</Select.Trigger>
 				<Select.Content>
-					<Select.Item value="all">All environments</Select.Item>
+					<Select.Item value="all">所有环境</Select.Item>
 					{#each environments as env}
 						<Select.Item value={String(env.id)}>
 							<EnvironmentIcon icon={env.icon || 'globe'} envId={env.id} class="w-3 h-3 mr-1.5 inline text-muted-foreground" />{env.name}
@@ -792,7 +790,7 @@
 					{#if dest}{dest.name}{:else}All repos{/if}
 				</Select.Trigger>
 				<Select.Content>
-					<Select.Item value="all">All repositories</Select.Item>
+					<Select.Item value="all">所有仓库</Select.Item>
 					{#each destinations as dest}
 						<Select.Item value={String(dest.id)}>{dest.name}</Select.Item>
 					{/each}
@@ -807,19 +805,18 @@
 					{:else}All status{/if}
 				</Select.Trigger>
 				<Select.Content>
-					<Select.Item value="all">All status</Select.Item>
-					<Select.Item value="success"><CheckCircle class="w-3 h-3 mr-1 inline text-green-500" />Success</Select.Item>
-					<Select.Item value="failed"><XCircle class="w-3 h-3 mr-1 inline text-destructive" />Failed</Select.Item>
-					<Select.Item value="orphan"><AlertCircle class="w-3 h-3 mr-1 inline text-amber-500" />No schedule</Select.Item>
-					<Select.Item value="scheduled"><Clock class="w-3 h-3 mr-1 inline text-muted-foreground" />Scheduled</Select.Item>
+					<Select.Item value="all">所有状态</Select.Item>
+					<Select.Item value="success"><CheckCircle class="w-3 h-3 mr-1 inline text-green-500" />成功</Select.Item>
+					<Select.Item value="failed"><XCircle class="w-3 h-3 mr-1 inline text-destructive" />失败</Select.Item>
+					<Select.Item value="orphan"><AlertCircle class="w-3 h-3 mr-1 inline text-amber-500" />无计划</Select.Item>
+					<Select.Item value="scheduled"><Clock class="w-3 h-3 mr-1 inline text-muted-foreground" />已安排</Select.Item>
 				</Select.Content>
 			</Select.Root>
 			<Button size="sm" variant="outline" onclick={fetchData} disabled={loading}>
 				<RefreshCw class="w-3.5 h-3.5 {loading ? 'animate-spin' : ''}" />
 			</Button>
 			<Button size="sm" onclick={() => showCreateModal = true}>
-				<Package class="w-3.5 h-3.5 mr-1" />Backup
-			</Button>
+				<Package class="w-3.5 h-3.5 mr-1" />备份</Button>
 		</div>
 	</div>
 
@@ -849,8 +846,8 @@
 	{#if configs.length === 0 && orphanTargets.length === 0 && !loading && !snapshotCountsLoading}
 		<div class="flex flex-col items-center justify-center py-16 text-center">
 			<Archive class="w-12 h-12 text-muted-foreground/30 mb-4" />
-			<h3 class="text-lg font-medium mb-1">No backups configured</h3>
-			<p class="text-sm text-muted-foreground">Configure backups on individual containers or stacks via their edit modal.</p>
+			<h3 class="text-lg font-medium mb-1">未配置备份</h3>
+			<p class="text-sm text-muted-foreground">通过编辑模态框配置单个容器或编排的备份。</p>
 		</div>
 	{:else}
 		<!-- virtualScroll is OFF here on purpose: it assumes a fixed rowHeight, but an
@@ -893,9 +890,9 @@
 				{:else if column.id === 'type'}
 					<div class="flex justify-center">
 						{#if config.type === 'container'}
-							<Tooltip.Root><Tooltip.Trigger><Box class="w-3 h-3 text-muted-foreground" /></Tooltip.Trigger><Tooltip.Content>Container backup</Tooltip.Content></Tooltip.Root>
+							<Tooltip.Root><Tooltip.Trigger><Box class="w-3 h-3 text-muted-foreground" /></Tooltip.Trigger><Tooltip.Content>容器备份</Tooltip.Content></Tooltip.Root>
 						{:else}
-							<Tooltip.Root><Tooltip.Trigger><Layers class="w-3 h-3 text-muted-foreground" /></Tooltip.Trigger><Tooltip.Content>Stack backup</Tooltip.Content></Tooltip.Root>
+							<Tooltip.Root><Tooltip.Trigger><Layers class="w-3 h-3 text-muted-foreground" /></Tooltip.Trigger><Tooltip.Content>编排备份</Tooltip.Content></Tooltip.Root>
 						{/if}
 					</div>
 				{:else if column.id === 'environment'}
@@ -937,7 +934,7 @@
 					{#if config.lastBackupAt}
 						<span class="text-xs">{formatDateTime(config.lastBackupAt)} <span class="text-muted-foreground opacity-60">({formatRelativeTime(config.lastBackupAt)})</span></span>
 					{:else}
-						<span class="text-xs text-muted-foreground">Never</span>
+						<span class="text-xs text-muted-foreground">从不</span>
 					{/if}
 				{:else if column.id === 'retention'}
 					{@const summary = retentionSummary(config.retention)}
@@ -957,15 +954,15 @@
 				{:else if column.id === 'status'}
 					<div class="flex items-center justify-center">
 						{#if config.isOrphan}
-							<Tooltip.Root><Tooltip.Trigger><AlertCircle class="w-3 h-3 text-amber-500" /></Tooltip.Trigger><Tooltip.Content>No schedule — snapshots found in repository</Tooltip.Content></Tooltip.Root>
+							<Tooltip.Root><Tooltip.Trigger><AlertCircle class="w-3 h-3 text-amber-500" /></Tooltip.Trigger><Tooltip.Content>没有计划——在仓库中找到快照</Tooltip.Content></Tooltip.Root>
 						{:else if runningBackup === config.id}
-							<Tooltip.Root><Tooltip.Trigger><Loader2 class="w-3 h-3 text-primary animate-spin" /></Tooltip.Trigger><Tooltip.Content>Backup in progress</Tooltip.Content></Tooltip.Root>
+							<Tooltip.Root><Tooltip.Trigger><Loader2 class="w-3 h-3 text-primary animate-spin" /></Tooltip.Trigger><Tooltip.Content>备份进行中</Tooltip.Content></Tooltip.Root>
 						{:else if config.lastBackupStatus === 'success'}
-							<Tooltip.Root><Tooltip.Trigger><CheckCircle class="w-3 h-3 text-green-500" /></Tooltip.Trigger><Tooltip.Content>Last backup succeeded</Tooltip.Content></Tooltip.Root>
+							<Tooltip.Root><Tooltip.Trigger><CheckCircle class="w-3 h-3 text-green-500" /></Tooltip.Trigger><Tooltip.Content>上次备份成功。</Tooltip.Content></Tooltip.Root>
 						{:else if config.lastBackupStatus === 'failed'}
-							<Tooltip.Root><Tooltip.Trigger><XCircle class="w-3 h-3 text-destructive" /></Tooltip.Trigger><Tooltip.Content>Last backup failed</Tooltip.Content></Tooltip.Root>
+							<Tooltip.Root><Tooltip.Trigger><XCircle class="w-3 h-3 text-destructive" /></Tooltip.Trigger><Tooltip.Content>上次备份失败</Tooltip.Content></Tooltip.Root>
 						{:else}
-							<Tooltip.Root><Tooltip.Trigger><AlertCircle class="w-3 h-3 text-muted-foreground" /></Tooltip.Trigger><Tooltip.Content>No backup run yet</Tooltip.Content></Tooltip.Root>
+							<Tooltip.Root><Tooltip.Trigger><AlertCircle class="w-3 h-3 text-muted-foreground" /></Tooltip.Trigger><Tooltip.Content>尚未进行备份运行</Tooltip.Content></Tooltip.Root>
 						{/if}
 					</div>
 				{:else if column.id === 'actions'}
@@ -978,15 +975,15 @@
 									{#if togglingConfig === config.id}<RefreshCw class="w-3 h-3 text-muted-foreground animate-spin" />{:else if config.enabled}<Pause class="w-3 h-3 text-muted-foreground" />{:else}<RotateCwFadingClock class="w-3 h-3 text-muted-foreground" />{/if}
 								</button>
 							{/if}
-							<button type="button" class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100" onclick={() => { editConfig = config; editModalOpen = true; }} title="Edit backup">
+							<button type="button" class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100" onclick={() => { editConfig = config; editModalOpen = true; }} title="编辑备份">
 								<Pencil class="w-3 h-3 text-muted-foreground" />
 							</button>
-							<button type="button" class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100" onclick={() => runBackupNow(config)} disabled={runningBackup === config.id} title="Run backup now">
+							<button type="button" class="p-0.5 rounded hover:bg-muted transition-colors opacity-70 hover:opacity-100" onclick={() => runBackupNow(config)} disabled={runningBackup === config.id} title="立即运行备份">
 								{#if runningBackup === config.id}<RefreshCw class="w-3 h-3 text-muted-foreground animate-spin" />{:else}<Play class="w-3 h-3 text-muted-foreground" />{/if}
 							</button>
 							<ConfirmPopover
 								open={confirmDeleteConfig === config.id}
-								action="Delete"
+								action="删除"
 								itemType="backup config"
 								itemName={config.targetName}
 								title={deleteConfigSnapshots ? 'Snapshots will be deleted too.' : 'Existing snapshots are kept.'}
@@ -1003,9 +1000,7 @@
 								{/snippet}
 								{#snippet extraContent()}
 									<label class="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-										<Checkbox bind:checked={deleteConfigSnapshots} aria-label="Also delete snapshots" />
-										Also delete this config's snapshots
-									</label>
+										<Checkbox bind:checked={deleteConfigSnapshots} aria-label="同时删除快照。" />同时删除此配置的快照。</label>
 								{/snippet}
 							</ConfirmPopover>
 						{/if}
@@ -1028,7 +1023,7 @@
 						</div>
 					{/if}
 					<div class="flex items-center gap-1.5 mb-2">
-						<h4 class="text-xs font-medium text-muted-foreground">Snapshots</h4>
+						<h4 class="text-xs font-medium text-muted-foreground">快照</h4>
 						<!-- Hide the count while refreshing — the number is stale until the reload
 						     finishes; the table rows below stay visible in the meantime. Fades
 						     out on refresh, back in once the fresh count lands. -->
@@ -1048,11 +1043,9 @@
 						     where rows already exist we fall through and keep the real table
 						     visible (the header refresh icon already spins to signal progress). -->
 						<div class="flex items-center gap-2 py-4 text-xs text-muted-foreground">
-							<Loader2 class="w-3.5 h-3.5 animate-spin" />
-							Loading snapshots…
-						</div>
+							<Loader2 class="w-3.5 h-3.5 animate-spin" />正在加载快照…</div>
 					{:else if snapshots.length === 0}
-						<p class="text-xs text-muted-foreground py-4">No snapshots yet. Run a backup to create one.</p>
+						<p class="text-xs text-muted-foreground py-4">尚未创建快照。请运行备份以创建快照。</p>
 					{:else}
 							<div class="max-h-80 overflow-auto rounded border bg-background ml-4 w-fit max-w-full">
 							<table>
@@ -1063,14 +1056,14 @@
 												checked={snapshots.length > 0 && snapshots.every((s) => selectedSnapshots.has(s.id))}
 												indeterminate={snapshots.some((s) => selectedSnapshots.has(s.id)) && !snapshots.every((s) => selectedSnapshots.has(s.id))}
 												onCheckedChange={() => toggleConfigAll(config)}
-												aria-label="Select all snapshots"
+												aria-label="选择所有快照"
 											/>
 										</th>
 										<th class="text-left py-1.5 w-24" style="padding-left:8px">ID</th>
-										<th class="text-left py-1.5 w-40" style="padding-left:8px">Created</th>
-										<th class="text-left py-1.5 w-64" style="padding-left:8px">Stats</th>
-										<th class="text-left py-1.5 w-32" style="padding-left:8px">Repo</th>
-										<th class="text-right px-3 py-1.5 w-28">Actions</th>
+										<th class="text-left py-1.5 w-40" style="padding-left:8px">已创建</th>
+										<th class="text-left py-1.5 w-64" style="padding-left:8px">统计数据</th>
+										<th class="text-left py-1.5 w-32" style="padding-left:8px">仓库</th>
+										<th class="text-right px-3 py-1.5 w-28">操作</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -1105,18 +1098,18 @@
 															<ArrowLeftRight class="w-3 h-3 {isDiffPending ? 'text-primary' : 'text-muted-foreground'}" />
 														</button>
 													{/if}
-													<button type="button" class="p-1 rounded hover:bg-muted transition-colors" onclick={() => openBrowser(config, snapshot)} title="Browse files">
+													<button type="button" class="p-1 rounded hover:bg-muted transition-colors" onclick={() => openBrowser(config, snapshot)} title="浏览文件">
 														<FolderOpen class="w-3 h-3 text-muted-foreground" />
 													</button>
-													<button type="button" class="p-1 rounded hover:bg-muted transition-colors" onclick={() => openRestore(config, snapshot)} title="Restore">
+													<button type="button" class="p-1 rounded hover:bg-muted transition-colors" onclick={() => openRestore(config, snapshot)} title="还原">
 														<RotateCcw class="w-3 h-3 text-muted-foreground" />
 													</button>
 													<ConfirmPopover
 														open={confirmDeleteSnapshot === snapshot.id}
-														action="Delete"
+														action="删除"
 														itemType="snapshot"
 														itemName={snapshot.shortId}
-														title="Delete snapshot"
+														title="删除快照"
 														position="left"
 														onConfirm={() => deleteSnapshot(config, snapshot)}
 														onOpenChange={(open) => confirmDeleteSnapshot = open ? snapshot.id : null}

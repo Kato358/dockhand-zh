@@ -25,19 +25,19 @@
 	<div class="text-xs space-y-1">
 		{#if ipv4Address}
 			<div>
-				<span class="text-muted-foreground">IPv4: </span>
+				<span class="text-muted-foreground">IPv4：</span>
 				<code class="text-foreground">{ipv4Address}</code>
 			</div>
 		{/if}
 		{#if ipv6Address}
 			<div>
-				<span class="text-muted-foreground">IPv6: </span>
+				<span class="text-muted-foreground">IPv6：</span>
 				<code class="text-foreground">{ipv6Address}</code>
 			</div>
 		{/if}
 		{#if macAddress}
 			<div>
-				<span class="text-muted-foreground">MAC: </span>
+				<span class="text-muted-foreground">苹果：</span>
 				<code class="text-foreground">{macAddress}</code>
 			</div>
 		{/if}

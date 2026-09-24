@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Terminal - Dockhand</title>
+	<title>终端 - Dockhand</title>
 </svelte:head>
 
 <script lang="ts">
@@ -111,7 +111,7 @@
 				clearSelection();
 			}
 		} catch (error) {
-			console.error('Failed to fetch containers:', error);
+			console.error('获取容器失败：', error);
 		}
 	}
 
@@ -146,7 +146,7 @@
 				committedUser = 'root';
 			}
 		} catch (error) {
-			console.error('Failed to detect shells:', error);
+			console.error('未能检测到 shell：', error);
 		} finally {
 			detectingShells = false;
 		}
@@ -277,14 +277,14 @@
 
 {#if $environments.length === 0 || !$currentEnvironment}
 	<div class="flex flex-col flex-1 min-h-0 h-full">
-		<PageHeader icon={TerminalIcon} title="Shell" class="h-9 mb-3" />
+		<PageHeader icon={TerminalIcon} title="终端" class="h-9 mb-3" />
 		<NoEnvironment />
 	</div>
 {:else}
 <div class="flex flex-col flex-1 min-h-0 h-full gap-3">
 	<!-- Header with container selector -->
 	<div class="flex items-center gap-4 flex-wrap">
-		<PageHeader icon={TerminalIcon} title="Shell" />
+		<PageHeader icon={TerminalIcon} title="终端" />
 		<div class="relative flex-1 max-w-md min-w-[200px]">
 			<!-- Search input - always visible, shows selected container or placeholder -->
 			<div class="relative">
@@ -306,7 +306,7 @@
 				<div class="absolute top-full left-0 right-0 mt-1 border rounded-md bg-popover shadow-lg z-50 max-h-64 overflow-auto">
 					{#if filteredContainers().length === 0}
 						<div class="px-3 py-2 text-sm text-muted-foreground">
-							{containers.length === 0 ? 'No running containers' : 'No matches found'}
+							{containers.length === 0 ? '没有正在运行的容器' : 'No matches found'}
 						</div>
 					{:else}
 						{#each filteredContainers() as container}
@@ -328,41 +328,35 @@
 			{/if}
 		</div>
 		<div class="flex items-center gap-2">
-			<Label class="text-sm text-muted-foreground">Mode:</Label>
+			<Label class="text-sm text-muted-foreground">模式：</Label>
 			<Select.Root type="single" value={terminalMode} onValueChange={(value) => terminalMode = value as TerminalMode}>
 				<Select.Trigger class="h-9 w-48">
 					{#if terminalMode === 'attach'}
 						<Unplug class="w-4 h-4 mr-2 text-muted-foreground" />
-						<span>Attach to process</span>
+						<span>附加到流程</span>
 					{:else}
 						<Shell class="w-4 h-4 mr-2 text-muted-foreground" />
-						<span>Shell (exec)</span>
+						<span>Shell（执行）</span>
 					{/if}
 				</Select.Trigger>
 				<Select.Content>
-					<Select.Item value="exec" label="Shell (exec)">
-						<Shell class="w-4 h-4 mr-2 text-muted-foreground" />
-						Shell (exec)
-					</Select.Item>
-					<Select.Item value="attach" label="Attach to process">
-						<Unplug class="w-4 h-4 mr-2 text-muted-foreground" />
-						Attach to process
-					</Select.Item>
+					<Select.Item value="exec" label="Shell（执行）">
+						<Shell class="w-4 h-4 mr-2 text-muted-foreground" />Shell（执行）</Select.Item>
+					<Select.Item value="attach" label="附加到流程">
+						<Unplug class="w-4 h-4 mr-2 text-muted-foreground" />附加到流程</Select.Item>
 				</Select.Content>
 			</Select.Root>
 		</div>
 
 		{#if selectedContainer}
 			<Button size="sm" variant="ghost" onclick={clearSelection} class="h-9 px-3 text-sm text-muted-foreground hover:text-foreground">
-				<Unplug class="w-4 h-4 mr-1.5" />
-				Disconnect
-			</Button>
+				<Unplug class="w-4 h-4 mr-1.5" />断开</Button>
 		{/if}
 
 		<!-- Shell selector - only used by exec mode -->
 		{#if terminalMode === 'exec'}
 		<div class="flex items-center gap-2">
-			<Label class="text-sm text-muted-foreground">Shell:</Label>
+			<Label class="text-sm text-muted-foreground">终端：</Label>
 			{#if detectingShells}
 				<div class="h-9 w-36 flex items-center justify-center border rounded-md bg-muted/50">
 					<Loader2 class="w-4 h-4 animate-spin text-muted-foreground" />
@@ -376,7 +370,7 @@
 							 (selectedShell === '/bin/bash' ? 'Bash' :
 							  selectedShell === '/bin/sh' ? 'Shell (sh)' :
 							  selectedShell === '/bin/zsh' ? 'Zsh' :
-							  selectedShell === '/bin/ash' ? 'Ash (Alpine)' : 'Select')}
+							  selectedShell === '/bin/ash' ? '白蜡树（高山）' : '选择')}
 						</span>
 					</Select.Trigger>
 					<Select.Content>
@@ -402,17 +396,13 @@
 								Bash
 							</Select.Item>
 							<Select.Item value="/bin/sh" label="Shell (sh)">
-								<Shell class="w-4 h-4 mr-2 text-muted-foreground" />
-								Shell (sh)
-							</Select.Item>
+								<Shell class="w-4 h-4 mr-2 text-muted-foreground" />Shell (sh)</Select.Item>
 							<Select.Item value="/bin/zsh" label="Zsh">
 								<Shell class="w-4 h-4 mr-2 text-muted-foreground" />
 								Zsh
 							</Select.Item>
-							<Select.Item value="/bin/ash" label="Ash (Alpine)">
-								<Shell class="w-4 h-4 mr-2 text-muted-foreground" />
-								Ash (Alpine)
-							</Select.Item>
+							<Select.Item value="/bin/ash" label="白蜡树（高山）">
+								<Shell class="w-4 h-4 mr-2 text-muted-foreground" />白蜡树（高山）</Select.Item>
 						{/if}
 					</Select.Content>
 				</Select.Root>
@@ -421,11 +411,11 @@
 
 		<!-- User selector - only used by exec mode -->
 		<div class="flex items-center gap-2">
-			<Label class="text-sm text-muted-foreground">User:</Label>
+			<Label class="text-sm text-muted-foreground">用户：</Label>
 			<Select.Root type="single" bind:value={selectedUser} onValueChange={onUserSelectChange}>
 				<Select.Trigger class="h-9 w-48">
 					<User class="w-4 h-4 mr-2 text-muted-foreground" />
-					<span>{USER_OPTIONS.find(o => o.value === selectedUser)?.label || selectedUser || 'Select'}</span>
+					<span>{USER_OPTIONS.find(o => o.value === selectedUser)?.label || selectedUser || '选择'}</span>
 				</Select.Trigger>
 				<Select.Content>
 					{#each USER_OPTIONS as option}
@@ -446,7 +436,7 @@
 									type="button"
 									class="p-1 mr-1 opacity-0 group-hover:opacity-100 hover:text-destructive transition-opacity"
 									onclick={(e) => { e.stopPropagation(); e.preventDefault(); removeCustomUser(cu); customUsers = getCustomUsers(); if (selectedUser === cu) { selectedUser = 'root'; commitUser('root'); } }}
-									title="Remove user"
+									title="移除用户"
 								>
 									<Trash2 class="w-3 h-3" />
 								</button>
@@ -458,7 +448,7 @@
 					<div class="px-2 py-1">
 						<Input
 							class="h-7 text-xs"
-							placeholder="Add user... (Enter)"
+							placeholder="添加用户…（回车）"
 							bind:value={customUserInput}
 							onkeydown={onCustomUserKeydown}
 							onclick={(e) => e.stopPropagation()}
@@ -476,25 +466,23 @@
 			<div class="flex items-center justify-center h-full text-muted-foreground">
 				<div class="text-center">
 					<TerminalIcon class="w-12 h-12 mx-auto mb-3 opacity-50" />
-					<p>Select a container to open shell</p>
+					<p>选择一个容器以打开 shell</p>
 				</div>
 			</div>
 		{:else if terminalMode === 'exec' && detectingShells}
 			<div class="flex items-center justify-center h-full text-muted-foreground">
 				<div class="text-center">
 					<Loader2 class="w-12 h-12 mx-auto mb-3 opacity-50 animate-spin" />
-					<p>Detecting available shells...</p>
+					<p>正在检测可用 shell…</p>
 				</div>
 			</div>
 		{:else if terminalMode === 'exec' && !anyShellAvailable}
 			<div class="flex items-center justify-center h-full text-muted-foreground">
 				<div class="text-center">
 					<AlertCircle class="w-12 h-12 mx-auto mb-3 opacity-50 text-amber-500" />
-					<p class="font-medium text-amber-500">No shell available in this container</p>
-					<p class="text-sm mt-2">This container may not have a shell installed.</p>
-					<p class="text-xs mt-1 text-muted-foreground/70">
-						Containers built from scratch or distroless images often don't include shells.
-					</p>
+					<p class="font-medium text-amber-500">此容器内没有终端。</p>
+					<p class="text-sm mt-2">此容器可能未安装 shell。</p>
+					<p class="text-xs mt-1 text-muted-foreground/70">从零开始构建的容器或无发行版镜像通常不包含 shell。</p>
 				</div>
 			</div>
 		{:else}
@@ -503,11 +491,9 @@
 				<div class="flex items-center gap-2">
 					{#if connected}
 						<span class="inline-flex items-center gap-1 text-xs text-green-500">
-							<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-							Connected
-						</span>
+							<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>已连接</span>
 					{:else}
-						<span class="text-xs text-zinc-500">Disconnected</span>
+						<span class="text-xs text-zinc-500">已断开</span>
 					{/if}
 				</div>
 				<div class="flex items-center gap-3">
@@ -524,21 +510,21 @@
 					<button
 						onclick={() => terminalComponent?.copyOutput()}
 						class="p-1 rounded hover:bg-zinc-800 transition-colors"
-						title="Copy output"
+						title="复制输出"
 					>
 						<Copy class="w-3 h-3 text-zinc-500 hover:text-zinc-300" />
 					</button>
 					<button
 						onclick={() => terminalComponent?.clear()}
 						class="p-1 rounded hover:bg-zinc-800 transition-colors"
-						title="Clear (Cmd+L)"
+						title="清除 (Cmd+L)"
 					>
 						<Trash2 class="w-3 h-3 text-zinc-500 hover:text-zinc-300" />
 					</button>
 					<button
 						onclick={() => terminalComponent?.reconnect()}
 						class="p-1 rounded hover:bg-zinc-800 transition-colors"
-						title="Reconnect"
+						title="重新连接"
 					>
 						<RefreshCw class="w-3 h-3 text-zinc-500 hover:text-zinc-300" />
 					</button>

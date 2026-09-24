@@ -95,7 +95,7 @@
 
 			testResult = await response.json();
 		} catch {
-			testResult = { success: false, message: 'Failed to test connection' };
+			testResult = { success: false, message: '连接测试失败' };
 		} finally {
 			testLoading = false;
 		}
@@ -154,15 +154,15 @@
 <Dialog.Root bind:open onOpenChange={(o) => { if (o) { formError = ''; focusFirstInput(); } }}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>{isEditing ? 'Edit' : 'Add'} registry</Dialog.Title>
+			<Dialog.Title>{isEditing ? '编辑' : '添加'} registry</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4">
 			{#if formError}
 				<div class="text-sm text-red-600 dark:text-red-400">{formError}</div>
 			{/if}
 			<div class="space-y-2">
-				<Label for="reg-name">Name</Label>
-				<Input id="reg-name" bind:value={formName} placeholder="My Private Registry" />
+				<Label for="reg-name">名称</Label>
+				<Input id="reg-name" bind:value={formName} placeholder="我的私人镜像仓库" />
 			</div>
 			<div class="space-y-2">
 				<Label for="reg-url">URL</Label>
@@ -171,11 +171,11 @@
 			<div class="space-y-4 pt-2 border-t">
 				<p class="text-xs text-muted-foreground">Credentials {isEditing ? '(leave password blank to keep existing)' : '(optional)'}</p>
 				<div class="space-y-2">
-					<Label for="reg-username">Username</Label>
+					<Label for="reg-username">用户名</Label>
 					<Input id="reg-username" bind:value={formUsername} placeholder="username" />
 				</div>
 				<div class="space-y-2">
-					<Label for="reg-password">Password / Token</Label>
+					<Label for="reg-password">密码/令牌</Label>
 					<Input id="reg-password" type="password" bind:value={formPassword} placeholder={isEditing ? 'leave blank to keep existing' : 'password or access token'} />
 				</div>
 			</div>
@@ -200,7 +200,7 @@
 				Test
 			</Button>
 			<div class="flex-1"></div>
-			<Button variant="outline" onclick={handleClose}>Cancel</Button>
+			<Button variant="outline" onclick={handleClose}>取消</Button>
 			<Button onclick={save} disabled={formSaving}>
 				{#if formSaving}
 					<RefreshCw class="w-4 h-4 mr-1 animate-spin" />
@@ -209,7 +209,7 @@
 				{:else}
 					<Plus class="w-4 h-4" />
 				{/if}
-				{isEditing ? 'Save' : 'Add'}
+				{isEditing ? '保存' : '添加'}
 			</Button>
 		</Dialog.Footer>
 	</Dialog.Content>

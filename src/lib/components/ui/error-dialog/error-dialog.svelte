@@ -77,14 +77,14 @@
 						<button
 							onclick={copyError}
 							class="absolute top-2 right-2 p-1 rounded text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-opacity"
-							title="Copy error"
+							title="复制错误"
 						>
 							{#if copied === 'error'}
 								<Tooltip.Root open>
 									<Tooltip.Trigger>
 										<XCircle class="w-3.5 h-3.5 text-red-500" />
 									</Tooltip.Trigger>
-									<Tooltip.Content>Copy requires HTTPS</Tooltip.Content>
+									<Tooltip.Content>复制需要 HTTPS</Tooltip.Content>
 								</Tooltip.Root>
 							{:else if copied === 'ok'}
 								<Check class="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@
 					<button
 						onclick={copyError}
 						class="absolute top-1 right-1 p-1 rounded text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity"
-						title="Copy error"
+						title="复制错误"
 					>
 						{#if copied}
 							<Check class="w-3.5 h-3.5" />

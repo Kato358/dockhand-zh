@@ -31,17 +31,17 @@
 
 	async function changePassword() {
 		if (!currentPassword || !newPassword) {
-			error = 'All fields are required';
+			error = '所有字段均为必填项';
 			return;
 		}
 
 		if (newPassword !== newPasswordRepeat) {
-			error = 'Passwords do not match';
+			error = '密码不匹配';
 			return;
 		}
 
 		if (newPassword.length < 8) {
-			error = 'Password must be at least 8 characters';
+			error = '密码长度必须至少为 8 个字符';
 			return;
 		}
 
@@ -63,10 +63,10 @@
 				onClose();
 			} else {
 				const data = await response.json();
-				error = data.error || 'Failed to change password';
+				error = data.error || '更改密码失败';
 			}
 		} catch (e) {
-			error = 'Failed to change password';
+			error = '更改密码失败';
 		} finally {
 			saving = false;
 		}
@@ -78,9 +78,7 @@
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center gap-2">
-				<Key class="w-5 h-5" />
-				Change password
-			</Dialog.Title>
+				<Key class="w-5 h-5" />更改密码</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4">
 			{#if error}
@@ -90,36 +88,36 @@
 				</Alert.Root>
 			{/if}
 			<div class="space-y-2">
-				<Label>Current password</Label>
+				<Label>当前密码</Label>
 				<Input
 					type="password"
 					bind:value={currentPassword}
-					placeholder="Enter current password"
+					placeholder="请输入当前密码"
 					autocomplete="current-password"
 				/>
 			</div>
 			<div class="space-y-2">
-				<Label>New password</Label>
+				<Label>新密码</Label>
 				<Input
 					type="password"
 					bind:value={newPassword}
-					placeholder="Enter new password"
+					placeholder="输入新密码"
 					autocomplete="new-password"
 				/>
 				<PasswordStrengthIndicator password={newPassword} />
 			</div>
 			<div class="space-y-2">
-				<Label>Repeat new password</Label>
+				<Label>重复新密码</Label>
 				<Input
 					type="password"
 					bind:value={newPasswordRepeat}
-					placeholder="Repeat new password"
+					placeholder="重复新密码"
 					autocomplete="new-password"
 				/>
 			</div>
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={onClose}>Cancel</Button>
+			<Button variant="outline" onclick={onClose}>取消</Button>
 			<Button onclick={changePassword} disabled={saving}>
 				{#if saving}
 					<RefreshCw class="w-4 h-4 animate-spin" />

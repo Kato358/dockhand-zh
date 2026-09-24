@@ -32,7 +32,7 @@
 		/** Extra classes merged onto the trigger. */
 		triggerClass?: string;
 		/**
-		 * Initial state of the "Pull images" / "Build images" / "Force recreate"
+		 * Initial state of the "拉取镜像" / "构建镜像" / "强制重建"
 		 * checkboxes each time the popover opens. Re-read on every open (not just once
 		 * at mount) so a caller whose default is derived from live content (e.g. "does
 		 * the compose have a build: section right now") stays correct across repeated
@@ -122,23 +122,23 @@
 		<div class="space-y-3">
 			<p class="flex items-center gap-1.5 text-xs text-muted-foreground">
 				<StackIcon icon={stackIcon} {stackName} {envId} class="w-4 h-4 shrink-0" />
-				<span class="truncate">Redeploy stack <strong class="font-semibold text-foreground">{stackName}</strong></span>
+				<span class="truncate">重新部署编排<strong class="font-semibold text-foreground">{stackName}</strong></span>
 			</p>
 			<div class="space-y-2">
 				<label class="flex items-center gap-2 cursor-pointer">
 					<Checkbox bind:checked={pull} disabled={deploying} />
-					<span class="text-xs">Pull images</span>
+					<span class="text-xs">拉取镜像</span>
 				</label>
 				<label class="flex items-center gap-2 cursor-pointer">
 					<Checkbox bind:checked={build} disabled={deploying} />
-					<span class="text-xs">Build images</span>
+					<span class="text-xs">构建镜像</span>
 				</label>
 				{#if reason}
 					<p class="text-2xs text-muted-foreground pl-6 -mt-1">{reason}</p>
 				{/if}
 				<label class="flex items-center gap-2 cursor-pointer">
 					<Checkbox bind:checked={forceRecreate} disabled={deploying} />
-					<span class="text-xs">Force recreate</span>
+					<span class="text-xs">强制重建</span>
 				</label>
 			</div>
 			<Button

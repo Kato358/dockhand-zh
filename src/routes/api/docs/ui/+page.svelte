@@ -16,7 +16,7 @@
 				const s = document.createElement('script');
 				s.src = src;
 				s.onload = () => resolve();
-				s.onerror = () => reject(new Error(`Failed to load ${src}`));
+				s.onerror = () => reject(new Error(`加载 ${src} 失败`));
 				document.body.appendChild(s);
 			});
 		}
@@ -37,7 +37,7 @@
 </script>
 
 <svelte:head>
-	<title>Dockhand API Docs</title>
+	<title>Dockhand API 文档</title>
 </svelte:head>
 
 <div bind:this={container}></div>

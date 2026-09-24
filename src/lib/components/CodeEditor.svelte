@@ -279,9 +279,9 @@
 			const dot = document.createElement('span');
 			dot.className = `var-marker var-marker-${this.type}`;
 			dot.title = this.type === 'missing' ? 'Missing required variable'
-				: this.type === 'invault' ? 'Present in the bound secret provider'
+				: this.type === 'invault' ? '存在于绑定密钥提供者中'
 				: this.type === 'required' ? 'Required variable (defined)'
-				: 'Optional variable (has default)';
+				: '可选变量（有默认值）';
 			wrapper.appendChild(dot);
 
 			// Checkmark if value is provided
@@ -289,7 +289,7 @@
 				const check = document.createElement('span');
 				check.className = 'var-marker-check';
 				check.innerHTML = '✓';
-				check.title = 'Value provided';
+				check.title = '提供的值';
 				wrapper.appendChild(check);
 			}
 
@@ -318,12 +318,12 @@
 			if (this.variant === 'missing') {
 				// Red MISSING badge with icon
 				span.innerHTML = '⚠ MISSING';
-				span.title = 'Required variable not defined';
+				span.title = '必需变量未定义';
 			} else if (this.variant === 'invault') {
 				// Green IN VAULT badge - the key currently exists in the bound secret
 				// provider (live probe). Inline lucide KeyRound SVG, currentColor.
 				span.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.85em;height:0.85em;display:inline-block;vertical-align:-0.12em;margin-right:3px"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>IN VAULT';
-				span.title = 'Present in the bound secret provider';
+				span.title = '存在于绑定密钥提供者中';
 			} else {
 				span.textContent = this.isSecret ? '••••••' : this.value;
 				span.title = this.isSecret ? 'Secret value' : this.value;

@@ -501,7 +501,7 @@
 				throw new Error(data.error || 'Failed to save file');
 			}
 
-			toast.success('File saved');
+			toast.success('文件已保存');
 			forceCloseEditor(); // saved → close without re-prompting the dirty guard
 		} catch (err: any) {
 			toast.error(err.message || 'Failed to save file');
@@ -528,7 +528,7 @@
 	// Create file or directory
 	async function handleCreate() {
 		if (!createName.trim()) {
-			toast.error('Name is required');
+			toast.error('名称（必填）');
 			return;
 		}
 
@@ -551,7 +551,7 @@
 				throw new Error(data.error || 'Failed to create');
 			}
 
-			toast.success(`${createType === 'file' ? 'File' : 'Directory'} created`);
+			toast.success(`创建了 ${createType === 'file' ? '文件' : '目录'}`);
 			showCreateModal = false;
 			createName = '';
 			createOwner = '';
@@ -580,13 +580,13 @@
 			const data = await res.json();
 
 			if (!res.ok) {
-				throw new Error(data.error || 'Failed to delete');
+				throw new Error(data.error || '删除失败');
 			}
 
-			toast.success(`Deleted ${entry.name}`);
+			toast.success(`已删除 ${entry.name}`);
 			loadDirectory(currentPath);
 		} catch (err: any) {
-			toast.error(err.message || 'Failed to delete');
+			toast.error(err.message || '删除失败');
 		} finally {
 			deleting = null;
 		}
@@ -601,7 +601,7 @@
 
 	async function handleRename() {
 		if (!renameEntry || !renameName.trim()) {
-			toast.error('Name is required');
+			toast.error('名称（必填）');
 			return;
 		}
 
@@ -631,7 +631,7 @@
 				throw new Error(data.error || 'Failed to rename');
 			}
 
-			toast.success('Renamed successfully');
+			toast.success('重命名成功');
 			showRenameModal = false;
 			renameEntry = null;
 			loadDirectory(currentPath);
@@ -674,7 +674,7 @@
 
 	async function handleChmod() {
 		if (!chmodEntry || !chmodMode.trim()) {
-			toast.error('Mode is required');
+			toast.error('需要模式');
 			return;
 		}
 
@@ -697,7 +697,7 @@
 				throw new Error(data.error || 'Failed to change permissions');
 			}
 
-			toast.success('Permissions changed');
+			toast.success('权限已更改');
 			showChmodModal = false;
 			chmodEntry = null;
 			loadDirectory(currentPath);
@@ -718,7 +718,7 @@
 
 	async function handleChown() {
 		if (!chownEntry || !chownOwner.trim()) {
-			toast.error('Owner is required');
+			toast.error('业主');
 			return;
 		}
 
@@ -741,7 +741,7 @@
 				throw new Error(data.error || 'Failed to change owner');
 			}
 
-			toast.success('Owner changed');
+			toast.success('所有者变更');
 			showChownModal = false;
 			chownEntry = null;
 			loadDirectory(currentPath);
@@ -836,7 +836,7 @@
 			}
 
 			if (!res.ok) {
-				throw new Error(data.error || 'Failed to load directory');
+				throw new Error(data.error || '加载目录失败');
 			}
 
 			currentPath = data.path || path;
@@ -946,9 +946,9 @@
 				throw new Error(details || data.error || 'Upload failed');
 			}
 
-			toast.success(`Uploaded ${data.uploaded.length} file(s)`);
+			toast.success(`已上传 ${data.uploaded.length} 个文件`);
 			if (data.errors?.length) {
-				toast.error(`Failed: ${data.errors.join(', ')}`);
+				toast.error(`失败：${data.errors.join(', ')}`);
 			}
 
 			loadDirectory(currentPath);
@@ -1025,7 +1025,7 @@
 				size="icon"
 				class="h-7 w-7"
 				onclick={() => { createType = 'file'; createName = ''; createOwner = ''; showCreateModal = true; }}
-				title="New file"
+				title="新文件"
 			>
 				<FilePlus class="w-3.5 h-3.5" />
 			</Button>
@@ -1034,7 +1034,7 @@
 				size="icon"
 				class="h-7 w-7"
 				onclick={() => { createType = 'directory'; createName = ''; createOwner = ''; showCreateModal = true; }}
-				title="New directory"
+				title="新目录"
 			>
 				<FolderPlus class="w-3.5 h-3.5" />
 			</Button>
@@ -1051,7 +1051,7 @@
 				class="h-7 w-7"
 				onclick={() => fileInput.click()}
 				disabled={uploading || loading}
-				title="Upload files"
+				title="上传文件"
 			>
 				{#if uploading}
 					<Loader2 class="w-3.5 h-3.5 animate-spin" />
@@ -1079,7 +1079,7 @@
 			class="h-7 w-7"
 			onclick={() => loadDirectory(currentPath)}
 			disabled={loading}
-			title="Refresh"
+			title="刷新"
 		>
 			<RefreshCw class="w-3.5 h-3.5 {loading ? 'animate-spin' : ''}" />
 		</Button>
@@ -1088,13 +1088,13 @@
 	<!-- File list -->
 	<div class="flex-1 overflow-auto relative">
 		{#if loading}
-			<LoadingState class="absolute inset-0 z-10 bg-background/80" label="Loading files..." />
+			<LoadingState class="absolute inset-0 z-10 bg-background/80" label="正在加载文件…" />
 		{/if}
 		{#if error}
 			<div class="flex items-center justify-center p-4 h-full">
 				<div class="max-w-md bg-destructive/5 border border-destructive/20 rounded-lg p-4 text-center">
 					<AlertCircle class="w-6 h-6 text-destructive mx-auto" />
-					<p class="text-sm font-medium text-destructive mt-2">Unable to browse files</p>
+					<p class="text-sm font-medium text-destructive mt-2">无法浏览文件</p>
 					<p class="text-xs text-muted-foreground mt-2 break-words font-mono bg-muted/50 rounded px-2 py-1.5">{error}</p>
 					<Button variant="outline" size="sm" class="mt-3" onclick={() => loadDirectory(currentPath)}>
 						Retry
@@ -1114,30 +1114,24 @@
 				<Table.Header class="sticky top-0 z-10 bg-background">
 					<Table.Row>
 						<Table.Head class="w-[35%] py-1.5 text-xs font-medium">
-							<button type="button" class="flex items-center gap-1 hover:text-foreground" onclick={() => toggleSort('name')}>
-								Name
-								<svelte:component this={getSortIcon('name')} class="w-3 h-3 opacity-50" />
+							<button type="button" class="flex items-center gap-1 hover:text-foreground" onclick={() => toggleSort('name')}>名称<svelte:component this={getSortIcon('name')} class="w-3 h-3 opacity-50" />
 							</button>
 						</Table.Head>
 						<Table.Head class="w-[8%] py-1.5 text-xs font-medium">
-							<button type="button" class="flex items-center gap-1 hover:text-foreground" onclick={() => toggleSort('size')}>
-								Size
-								<svelte:component this={getSortIcon('size')} class="w-3 h-3 opacity-50" />
+							<button type="button" class="flex items-center gap-1 hover:text-foreground" onclick={() => toggleSort('size')}>大小<svelte:component this={getSortIcon('size')} class="w-3 h-3 opacity-50" />
 							</button>
 						</Table.Head>
 						<Table.Head class="w-[14%] py-1.5 text-xs font-medium">
-							<span class="text-muted-foreground">Permissions</span>
+							<span class="text-muted-foreground">权限</span>
 						</Table.Head>
 						<Table.Head class="w-[12%] py-1.5 text-xs font-medium">
-							<span class="text-muted-foreground">Owner</span>
+							<span class="text-muted-foreground">所有者</span>
 						</Table.Head>
 						<Table.Head class="w-[14%] py-1.5 text-xs font-medium">
-							<button type="button" class="flex items-center gap-1 hover:text-foreground" onclick={() => toggleSort('modified')}>
-								Modified
-								<svelte:component this={getSortIcon('modified')} class="w-3 h-3 opacity-50" />
+							<button type="button" class="flex items-center gap-1 hover:text-foreground" onclick={() => toggleSort('modified')}>修改<svelte:component this={getSortIcon('modified')} class="w-3 h-3 opacity-50" />
 							</button>
 						</Table.Head>
-						<Table.Head class="w-[21%] py-1.5 text-xs font-medium text-right">Actions</Table.Head>
+						<Table.Head class="w-[21%] py-1.5 text-xs font-medium text-right">操作</Table.Head>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
@@ -1174,7 +1168,7 @@
 									{#if entry.readonly && entry.type === 'file'}
 										<span
 											class="inline-flex items-center gap-0.5 ml-1.5 px-1 py-0.5 text-2xs bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded"
-											title="Read-only file (no write permission)"
+											title="只读文件（无写入权限）"
 										>
 											<Lock class="w-2.5 h-2.5" />
 											RO
@@ -1208,7 +1202,7 @@
 											class="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
 											onclick={(e: MouseEvent) => { e.stopPropagation(); openFileForView(entry); }}
 											disabled={loadingFile}
-											title="View file"
+											title="查看文件"
 										>
 											<Eye class="w-3 h-3" />
 										</Button>
@@ -1237,7 +1231,7 @@
 											size="icon"
 											class="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
 											onclick={(e: MouseEvent) => { e.stopPropagation(); openRenameModal(entry); }}
-											title="Rename"
+											title="重命名"
 										>
 											<TextCursorInput class="w-3 h-3" />
 										</Button>
@@ -1246,7 +1240,7 @@
 											size="icon"
 											class="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
 											onclick={(e: MouseEvent) => { e.stopPropagation(); openChmodModal(entry); }}
-											title="Change permissions"
+											title="更改权限"
 										>
 											<Shield class="w-3 h-3" />
 										</Button>
@@ -1255,16 +1249,16 @@
 											size="icon"
 											class="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
 											onclick={(e: MouseEvent) => { e.stopPropagation(); openChownModal(entry); }}
-											title="Change owner"
+											title="变更所有者"
 										>
 											<UserCog class="w-3 h-3" />
 										</Button>
 										<ConfirmPopover
 											open={confirmDeleteEntry === entry.name}
-											action="Delete"
+											action="删除"
 											itemType={entry.type === 'directory' ? 'directory' : 'file'}
 											itemName={entry.name}
-											confirmText="Delete"
+											confirmText="删除"
 											variant="destructive"
 											onConfirm={() => handleDelete(entry)}
 											onOpenChange={(open) => confirmDeleteEntry = open ? entry.name : null}
@@ -1284,7 +1278,7 @@
 											size="icon"
 											class="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
 											onclick={(e: MouseEvent) => { e.stopPropagation(); downloadFile(entry); }}
-											title="Download"
+											title="下载"
 										>
 											<Download class="w-3 h-3" />
 										</Button>
@@ -1323,7 +1317,7 @@
 						{/if}
 						Save
 					</Button>
-					<Button variant="ghost" size="icon" class="h-7 w-7" onclick={closeEditor} title="Close editor">
+					<Button variant="ghost" size="icon" class="h-7 w-7" onclick={closeEditor} title="关闭编辑器">
 						<X class="w-3.5 h-3.5" />
 					</Button>
 				</div>
@@ -1343,16 +1337,16 @@
 	<Dialog.Root open={showCloseConfirm} onOpenChange={(o) => { if (!o) showCloseConfirm = false; }}>
 		<Dialog.Content class="sm:max-w-md">
 			<Dialog.Header>
-				<Dialog.Title>Unsaved changes</Dialog.Title>
+				<Dialog.Title>未保存的更改</Dialog.Title>
 				<Dialog.Description>
 					{editingFile?.name ?? 'This file'} has unsaved changes. Save them before closing?
 				</Dialog.Description>
 			</Dialog.Header>
 			<Dialog.Footer class="gap-2 sm:justify-between">
-				<Button variant="outline" onclick={() => showCloseConfirm = false}>Cancel</Button>
+				<Button variant="outline" onclick={() => showCloseConfirm = false}>取消</Button>
 				<div class="flex gap-2">
-					<Button variant="destructive" onclick={forceCloseEditor}>Discard</Button>
-					<Button onclick={saveFile} disabled={savingFile}>Save</Button>
+					<Button variant="destructive" onclick={forceCloseEditor}>丢弃</Button>
+					<Button onclick={saveFile} disabled={savingFile}>保存</Button>
 				</div>
 			</Dialog.Footer>
 		</Dialog.Content>
@@ -1378,7 +1372,7 @@
 							<Sun class="w-3.5 h-3.5" />
 						{/if}
 					</Button>
-					<Button variant="ghost" size="icon" class="h-7 w-7" onclick={closeViewer} title="Close viewer">
+					<Button variant="ghost" size="icon" class="h-7 w-7" onclick={closeViewer} title="近距离观察">
 						<X class="w-3.5 h-3.5" />
 					</Button>
 				</div>
@@ -1403,7 +1397,7 @@
 		</Dialog.Header>
 		<div class="space-y-4 py-4">
 			<div class="space-y-2">
-				<Label for="create-name">Name</Label>
+				<Label for="create-name">名称</Label>
 				<Input
 					id="create-name"
 					bind:value={createName}
@@ -1412,23 +1406,21 @@
 				/>
 			</div>
 			<div class="space-y-2">
-				<Label for="create-owner">Owner (optional)</Label>
+				<Label for="create-owner">所有者（可选）</Label>
 				<Input
 					id="create-owner"
 					bind:value={createOwner}
 					placeholder="e.g. 1000:1000 or www-data"
 					onkeydown={(e: KeyboardEvent) => { if (e.key === 'Enter') handleCreate(); }}
 				/>
-				<p class="text-xs text-muted-foreground">
-					Leave blank to use the container's default user (usually root).
-				</p>
+				<p class="text-xs text-muted-foreground">留空则使用容器的默认用户（通常为 root）。</p>
 			</div>
 			<p class="text-xs text-muted-foreground">
 				Will be created in: {currentPath}
 			</p>
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => showCreateModal = false}>Cancel</Button>
+			<Button variant="outline" onclick={() => showCreateModal = false}>取消</Button>
 			<Button onclick={handleCreate} disabled={creating || !createName.trim()}>
 				{#if creating}
 					<Loader2 class="w-4 h-4 mr-2 animate-spin" />
@@ -1443,11 +1435,11 @@
 <Dialog.Root bind:open={showRenameModal}>
 	<Dialog.Content class="max-w-sm">
 		<Dialog.Header>
-			<Dialog.Title>Rename</Dialog.Title>
+			<Dialog.Title>重命名</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4 py-4">
 			<div class="space-y-2">
-				<Label for="rename-name">New name</Label>
+				<Label for="rename-name">新名称</Label>
 				<Input
 					id="rename-name"
 					bind:value={renameName}
@@ -1456,7 +1448,7 @@
 			</div>
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => showRenameModal = false}>Cancel</Button>
+			<Button variant="outline" onclick={() => showRenameModal = false}>取消</Button>
 			<Button onclick={handleRename} disabled={renaming || !renameName.trim()}>
 				{#if renaming}
 					<Loader2 class="w-4 h-4 mr-2 animate-spin" />
@@ -1471,7 +1463,7 @@
 <Dialog.Root bind:open={showChmodModal}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Change permissions</Dialog.Title>
+			<Dialog.Title>更改权限</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4 py-4">
 			{#if chmodEntry}
@@ -1485,26 +1477,26 @@
 					<thead>
 						<tr class="text-muted-foreground text-xs">
 							<th class="text-left font-normal pb-2"></th>
-							<th class="text-center font-normal pb-2 w-16">Read</th>
-							<th class="text-center font-normal pb-2 w-16">Write</th>
-							<th class="text-center font-normal pb-2 w-16">Execute</th>
+							<th class="text-center font-normal pb-2 w-16">读</th>
+							<th class="text-center font-normal pb-2 w-16">写</th>
+							<th class="text-center font-normal pb-2 w-16">执行</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td class="py-1.5 text-muted-foreground">Owner</td>
+							<td class="py-1.5 text-muted-foreground">所有者</td>
 							<td class="text-center"><input type="checkbox" bind:checked={permOwnerR} onchange={checkboxesToOctal} class="rounded" /></td>
 							<td class="text-center"><input type="checkbox" bind:checked={permOwnerW} onchange={checkboxesToOctal} class="rounded" /></td>
 							<td class="text-center"><input type="checkbox" bind:checked={permOwnerX} onchange={checkboxesToOctal} class="rounded" /></td>
 						</tr>
 						<tr>
-							<td class="py-1.5 text-muted-foreground">Group</td>
+							<td class="py-1.5 text-muted-foreground">团体</td>
 							<td class="text-center"><input type="checkbox" bind:checked={permGroupR} onchange={checkboxesToOctal} class="rounded" /></td>
 							<td class="text-center"><input type="checkbox" bind:checked={permGroupW} onchange={checkboxesToOctal} class="rounded" /></td>
 							<td class="text-center"><input type="checkbox" bind:checked={permGroupX} onchange={checkboxesToOctal} class="rounded" /></td>
 						</tr>
 						<tr>
-							<td class="py-1.5 text-muted-foreground">Others</td>
+							<td class="py-1.5 text-muted-foreground">其他</td>
 							<td class="text-center"><input type="checkbox" bind:checked={permOtherR} onchange={checkboxesToOctal} class="rounded" /></td>
 							<td class="text-center"><input type="checkbox" bind:checked={permOtherW} onchange={checkboxesToOctal} class="rounded" /></td>
 							<td class="text-center"><input type="checkbox" bind:checked={permOtherX} onchange={checkboxesToOctal} class="rounded" /></td>
@@ -1516,18 +1508,18 @@
 			<!-- Preview -->
 			<div class="flex items-center gap-4 text-sm bg-muted/50 rounded-lg p-3">
 				<div>
-					<span class="text-muted-foreground text-xs">Octal:</span>
+					<span class="text-muted-foreground text-xs">八进制：</span>
 					<span class="font-mono font-medium ml-1">{chmodMode}</span>
 				</div>
 				<div>
-					<span class="text-muted-foreground text-xs">Symbolic:</span>
+					<span class="text-muted-foreground text-xs">象征性的：</span>
 					<span class="font-mono font-medium ml-1">{checkboxesToSymbolic()}</span>
 				</div>
 			</div>
 
 			<!-- Manual octal input -->
 			<div class="space-y-2">
-				<Label for="chmod-mode">Or enter octal mode directly</Label>
+				<Label for="chmod-mode">或者直接进入八进制模式</Label>
 				<Input
 					id="chmod-mode"
 					bind:value={chmodMode}
@@ -1540,13 +1532,11 @@
 
 			{#if chmodEntry?.type === 'directory'}
 				<label class="flex items-center gap-2 text-sm">
-					<input type="checkbox" bind:checked={chmodRecursive} class="rounded" />
-					Apply recursively
-				</label>
+					<input type="checkbox" bind:checked={chmodRecursive} class="rounded" />递归应用</label>
 			{/if}
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => showChmodModal = false}>Cancel</Button>
+			<Button variant="outline" onclick={() => showChmodModal = false}>取消</Button>
 			<Button onclick={handleChmod} disabled={changingPerms || !chmodMode.trim()}>
 				{#if changingPerms}
 					<Loader2 class="w-4 h-4 mr-2 animate-spin" />
@@ -1560,7 +1550,7 @@
 <Dialog.Root bind:open={showChownModal}>
 	<Dialog.Content class="max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Change owner</Dialog.Title>
+			<Dialog.Title>变更所有者</Dialog.Title>
 		</Dialog.Header>
 		<div class="space-y-4 py-4">
 			{#if chownEntry}
@@ -1571,27 +1561,23 @@
 			{/if}
 
 			<div class="space-y-2">
-				<Label for="chown-owner">Owner</Label>
+				<Label for="chown-owner">所有者</Label>
 				<Input
 					id="chown-owner"
 					bind:value={chownOwner}
 					placeholder="e.g. 1000:1000 or www-data"
 					onkeydown={(e: KeyboardEvent) => { if (e.key === 'Enter') handleChown(); }}
 				/>
-				<p class="text-xs text-muted-foreground">
-					A user or user:group. Numeric ids work even when the name is not in the container.
-				</p>
+				<p class="text-xs text-muted-foreground">用户或用户:组。即使名称不在容器中，数字 ID 也有效。</p>
 			</div>
 
 			{#if chownEntry?.type === 'directory'}
 				<label class="flex items-center gap-2 text-sm">
-					<input type="checkbox" bind:checked={chownRecursive} class="rounded" />
-					Apply recursively
-				</label>
+					<input type="checkbox" bind:checked={chownRecursive} class="rounded" />递归应用</label>
 			{/if}
 		</div>
 		<Dialog.Footer>
-			<Button variant="outline" onclick={() => showChownModal = false}>Cancel</Button>
+			<Button variant="outline" onclick={() => showChownModal = false}>取消</Button>
 			<Button onclick={handleChown} disabled={changingOwner || !chownOwner.trim()}>
 				{#if changingOwner}
 					<Loader2 class="w-4 h-4 mr-2 animate-spin" />

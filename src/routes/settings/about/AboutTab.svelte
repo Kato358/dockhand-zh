@@ -73,10 +73,10 @@
 	async function fetchDependencies() {
 		try {
 			const res = await fetch('/api/dependencies');
-			if (!res.ok) throw new Error('Failed to fetch dependencies');
+			if (!res.ok) throw new Error('获取依赖项失败');
 			dependencies = await res.json();
 		} catch (e) {
-			depsError = e instanceof Error ? e.message : 'Unknown error';
+			depsError = e instanceof Error ? e.message : '未知错误';
 		} finally {
 			loadingDeps = false;
 		}
@@ -85,12 +85,12 @@
 	async function fetchChangelog() {
 		try {
 			const res = await fetch('/api/changelog');
-			if (!res.ok) throw new Error('Failed to fetch changelog');
+			if (!res.ok) throw new Error('获取变更日志失败');
 			// Shipped releases only: an unreleased (coming-soon) entry must not show as
-			// the "Latest" version.
+			// the "最新" version.
 			changelog = releasedEntries(await res.json());
 		} catch (e) {
-			changelogError = e instanceof Error ? e.message : 'Unknown error';
+			changelogError = e instanceof Error ? e.message : '未知错误';
 		} finally {
 			loadingChangelog = false;
 		}
@@ -314,7 +314,7 @@
 			updateCheckDone = true;
 
 			// Mirror into the shared store so the sidebar indicator stays
-			// in sync with the result of a manual "Check now" (#1146).
+			// in sync with the result of a manual "立即查看" (#1146).
 			selfUpdateStore.setFromResponse(data);
 
 			if (data.updateAvailable) {
@@ -420,7 +420,7 @@
 				fetch('/api/system'),
 				fetch('/api/host')
 			]);
-			if (!systemRes.ok) throw new Error('Failed to fetch system info');
+			if (!systemRes.ok) throw new Error('获取系统信息失败');
 			systemInfo = await systemRes.json();
 
 			if (hostRes.ok) {
@@ -428,7 +428,7 @@
 				serverUptime = hostData.uptime;
 			}
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Unknown error';
+			error = e instanceof Error ? e.message : '未知错误';
 		} finally {
 			loading = false;
 		}
@@ -470,7 +470,7 @@
 					<div class="animate-speedy {isJumping ? (clickCount >= 10 ? 'crazy-jumping' : `jumping-${jumpLevel}`) : ''} {hasClicked && !isJumping ? 'clicked' : ''}" onclick={handleLogoClick}>
 						<img
 							src="/logo.svg"
-							alt="Dockhand Logo"
+							alt="Dockhand标志"
 							class="h-36 w-auto object-contain"
 							style="filter: drop-shadow(0 2px 3px rgba(0,0,0,0.22));"
 						/>
@@ -485,9 +485,7 @@
 						<span class="sparkle sparkle-8">✦</span>
 						<!-- Easter Egg Popup -->
 						{#if showEasterEgg}
-							<div class="easter-egg-popup">
-								Stop already, will you? Coming from r/selfhosted?
-							</div>
+							<div class="easter-egg-popup">够了，别说了好吗？你是从 r/selfhosted 版块来？</div>
 						{/if}
 					</div>
 
@@ -496,24 +494,16 @@
 						<Badge variant="secondary" class="text-xs">Version {currentVersion}</Badge>
 						{#if checkingUpdate}
 							<span class="flex items-center gap-1 text-xs text-muted-foreground">
-								<Loader2 class="w-3.5 h-3.5 animate-spin" />
-								Checking for updates...
-							</span>
+								<Loader2 class="w-3.5 h-3.5 animate-spin" />正在检查更新…</span>
 						{:else if updateAvailable && updateInfo}
 							<button class="flex items-center gap-1 text-xs text-amber-500 hover:text-amber-400 transition-colors" onclick={() => showSelfUpdateDialog = true}>
-								<CircleArrowUp class="w-3.5 h-3.5" />
-								Update available — click to see what's new
-							</button>
+								<CircleArrowUp class="w-3.5 h-3.5" />有更新可用——点击查看新增内容</button>
 						{:else if updateCheckDone && !updateAvailable}
 							<button class="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors" onclick={checkForUpdates}>
-								<CheckCircle2 class="w-3.5 h-3.5" />
-								Up to date
-							</button>
+								<CheckCircle2 class="w-3.5 h-3.5" />最新</button>
 						{:else if updateCheckError}
 							<button class="flex items-center gap-1 text-xs text-foreground hover:text-muted-foreground transition-colors" onclick={checkForUpdates} title={updateCheckError}>
-								<TriangleAlert class="w-3.5 h-3.5 shrink-0" />
-								Update check unavailable — click to retry
-							</button>
+								<TriangleAlert class="w-3.5 h-3.5 shrink-0" />更新检查不可用——点击重试</button>
 						{/if}
 					</div>
 
@@ -555,12 +545,12 @@
 		<!-- System Stats Card (Right) -->
 		<Card.Root class="w-full h-full">
 			<Card.Header class="pb-2">
-				<Card.Title class="text-sm font-medium">System information</Card.Title>
+				<Card.Title class="text-sm font-medium">系统信息</Card.Title>
 			</Card.Header>
 			<Card.Content>
 				{#if loading}
 					<div class="flex items-center justify-center py-6">
-						<div class="text-sm text-muted-foreground">Loading...</div>
+						<div class="text-sm text-muted-foreground">加载中…</div>
 					</div>
 				{:else if error}
 					<div class="flex items-center justify-center py-6">
@@ -577,13 +567,13 @@
 							</div>
 							<div class="text-sm pl-5 space-y-0.5">
 								<div class="flex items-center gap-2">
-									<span class="text-muted-foreground">Version</span>
+									<span class="text-muted-foreground">版本</span>
 									<span>{systemInfo.docker.version}</span>
 									<span class="text-muted-foreground/50">|</span>
 									<span class="text-muted-foreground">API</span>
 									<span>{systemInfo.docker.apiVersion}</span>
 									<span class="text-muted-foreground/50">|</span>
-									<span class="text-muted-foreground">OS/Arch</span>
+									<span class="text-muted-foreground">操作系统/架构</span>
 									<span>{systemInfo.docker.os}/{systemInfo.docker.arch}</span>
 								</div>
 							</div>
@@ -592,15 +582,11 @@
 						<!-- Connection Info -->
 						<div class="space-y-1.5">
 							<div class="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<Plug class="w-3.5 h-3.5" />
-								Connection
-							</div>
+								<Plug class="w-3.5 h-3.5" />连接</div>
 							<div class="text-sm pl-5">
 								<div class="flex items-center gap-2 flex-wrap">
 									{#if systemInfo.docker.connection.type === 'socket'}
-										<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-violet-500/15 text-violet-600 dark:text-violet-400 shadow-sm ring-1 ring-violet-500/20">
-											Unix Socket
-										</span>
+										<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-violet-500/15 text-violet-600 dark:text-violet-400 shadow-sm ring-1 ring-violet-500/20">Unix 套接字</span>
 										<span class="text-xs font-mono text-muted-foreground">{systemInfo.docker.connection.socketPath}</span>
 									{:else if systemInfo.docker.connection.type === 'https'}
 										<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/15 text-green-600 dark:text-green-400 shadow-sm ring-1 ring-green-500/20">
@@ -620,18 +606,16 @@
 						<!-- Host Info -->
 						<div class="space-y-1.5">
 							<div class="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<Cpu class="w-3.5 h-3.5" />
-								Host
-							</div>
+								<Cpu class="w-3.5 h-3.5" />主机</div>
 							<div class="text-sm pl-5">
 								<div class="flex items-center gap-2">
-									<span class="text-muted-foreground">Name</span>
+									<span class="text-muted-foreground">名称</span>
 									<span>{systemInfo.host.name}</span>
 									<span class="text-muted-foreground/50">|</span>
-									<span class="text-muted-foreground">CPUs</span>
+									<span class="text-muted-foreground">CPU</span>
 									<span>{systemInfo.host.cpus}</span>
 									<span class="text-muted-foreground/50">|</span>
-									<span class="text-muted-foreground">Memory</span>
+									<span class="text-muted-foreground">内存</span>
 									<span>{formatBytes(systemInfo.host.memory)}</span>
 								</div>
 							</div>
@@ -641,9 +625,7 @@
 						<!-- Runtime Info -->
 						<div class="space-y-1.5">
 							<div class="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<Cpu class="w-3.5 h-3.5" />
-								Runtime
-							</div>
+								<Cpu class="w-3.5 h-3.5" />运行时</div>
 							<div class="text-sm pl-5">
 								<div class="flex items-center gap-2 flex-wrap">
 									{#if systemInfo.runtime.runtimeVersion}
@@ -664,7 +646,7 @@
 								{#if systemInfo.runtime.container.inContainer}
 								<div class="flex items-center gap-2 flex-wrap mt-1">
 									<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/15 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-blue-500/20">
-										{systemInfo.runtime.container.runtime || 'Container'}
+										{systemInfo.runtime.container.runtime || '容器'}
 									</span>
 									{#if systemInfo.runtime.ownContainer}
 										<span class="text-xs font-mono text-muted-foreground">{systemInfo.runtime.ownContainer.image}</span>
@@ -682,28 +664,22 @@
 						<!-- Database Info -->
 						<div class="space-y-1.5">
 							<div class="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<Database class="w-3.5 h-3.5" />
-								Database
-							</div>
+								<Database class="w-3.5 h-3.5" />数据库</div>
 							<div class="text-sm pl-5 space-y-1">
 								<div class="flex items-center gap-2 flex-wrap">
 									{#if systemInfo.database.type === 'PostgreSQL'}
-										<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/15 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-blue-500/20">
-											PostgreSQL
-										</span>
+										<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/15 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-blue-500/20">PostgreSQL</span>
 										{#if systemInfo.database.host}
 											<span class="text-muted-foreground/50">|</span>
 											<span class="text-xs">{systemInfo.database.host}:{systemInfo.database.port}</span>
 										{/if}
 									{:else}
-										<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-sm ring-1 ring-emerald-500/20">
-											SQLite
-										</span>
+										<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-sm ring-1 ring-emerald-500/20">SQLite</span>
 									{/if}
 								</div>
 								{#if systemInfo.database.schemaVersion}
 									<div class="flex items-center gap-2">
-										<span class="text-muted-foreground">Schema</span>
+										<span class="text-muted-foreground">模式</span>
 										<span class="font-mono text-xs">{systemInfo.database.schemaVersion}</span>
 										{#if systemInfo.database.schemaDate}
 											<span class="text-muted-foreground/60 text-xs">({systemInfo.database.schemaDate})</span>
@@ -727,23 +703,21 @@
 							</div>
 							<div class="text-sm pl-5">
 								<div class="flex items-center gap-2 flex-wrap">
-									<span class="text-muted-foreground">Edition</span>
+									<span class="text-muted-foreground">版</span>
 									{#if $licenseStore.licenseType === 'enterprise'}
 										<span class="text-amber-500 font-medium flex items-center gap-1">
-											<Crown class="w-3.5 h-3.5 fill-current" />
-											Enterprise
-										</span>
+											<Crown class="w-3.5 h-3.5 fill-current" />企业</span>
 									{:else if $licenseStore.licenseType === 'smb'}
 										<span class="text-blue-500 font-medium flex items-center gap-1">
 											<Building2 class="w-3.5 h-3.5" />
 											SMB
 										</span>
 									{:else}
-										<span>Community</span>
+										<span>社区</span>
 									{/if}
 									{#if $licenseStore.isLicensed && $licenseStore.licensedTo}
 										<span class="text-muted-foreground/50">|</span>
-										<span class="text-muted-foreground">Licensed to</span>
+										<span class="text-muted-foreground">获得许可</span>
 										<span>{$licenseStore.licensedTo}</span>
 									{/if}
 									<span class="text-muted-foreground/50">|</span>
@@ -753,24 +727,18 @@
 								</div>
 								<div class="flex items-center gap-2 flex-wrap mt-3 pt-2 border-t border-border/50">
 									<a href="https://github.com/Finsys/dockhand/issues" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline inline-flex items-center gap-1.5 font-medium">
-										<MessageSquarePlus class="w-4 h-4" />
-										Submit issue or idea
-									</a>
+										<MessageSquarePlus class="w-4 h-4" />提交问题或想法</a>
 									<span class="text-muted-foreground/50">|</span>
 									<a href="https://discord.gg/rMxW9Y5cQw" target="_blank" rel="noopener noreferrer" class="hover:underline inline-flex items-center gap-1.5 font-medium text-indigo-500 dark:text-indigo-400">
-										<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-										Discord
-									</a>
+										<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>Discord</a>
 									{#if !$licenseStore.isLicensed}
 										<span class="text-muted-foreground/50">|</span>
 										<a href="https://buymeacoffee.com/dockhand" target="_blank" rel="noopener noreferrer" class="hover:underline inline-flex items-center gap-1.5 font-medium text-amber-600 dark:text-yellow-400">
-											<Coffee class="w-4 h-4" />
-											Buy me a coffee
-										</a>
+											<Coffee class="w-4 h-4" />请我喝杯咖啡</a>
 									{/if}
 								</div>
 								{#if !$licenseStore.isLicensed}
-									<p class="text-xs text-muted-foreground mt-2">Dockhand Community Edition is free and always will be. No strings attached. Like it? Fuel the dev with caffeine.</p>
+									<p class="text-xs text-muted-foreground mt-2">Dockhand 社区版完全免费，而且永远免费。无附加条件。喜欢吗？那就给开发者送杯咖啡吧！</p>
 								{/if}
 							</div>
 						</div>
@@ -783,35 +751,35 @@
 									<Box class="w-4 h-4 text-blue-500" />
 								</div>
 								<div class="text-lg font-bold">{systemInfo.stats.containers.total}</div>
-								<div class="text-2xs text-muted-foreground font-medium">Containers</div>
+								<div class="text-2xs text-muted-foreground font-medium">容器</div>
 							</div>
 							<div class="stat-box stat-box-cyan">
 								<div class="stat-icon-wrapper bg-cyan-500/10">
 									<Layers class="w-4 h-4 text-cyan-500" />
 								</div>
 								<div class="text-lg font-bold">{systemInfo.stats.stacks}</div>
-								<div class="text-2xs text-muted-foreground font-medium">Stacks</div>
+								<div class="text-2xs text-muted-foreground font-medium">编排</div>
 							</div>
 							<div class="stat-box stat-box-purple">
 								<div class="stat-icon-wrapper bg-purple-500/10">
 									<Images class="w-4 h-4 text-purple-500" />
 								</div>
 								<div class="text-lg font-bold">{systemInfo.stats.images}</div>
-								<div class="text-2xs text-muted-foreground font-medium">Images</div>
+								<div class="text-2xs text-muted-foreground font-medium">镜像</div>
 							</div>
 							<div class="stat-box stat-box-green">
 								<div class="stat-icon-wrapper bg-green-500/10">
 									<HardDrive class="w-4 h-4 text-green-500" />
 								</div>
 								<div class="text-lg font-bold">{systemInfo.stats.volumes}</div>
-								<div class="text-2xs text-muted-foreground font-medium">Volumes</div>
+								<div class="text-2xs text-muted-foreground font-medium">存储卷</div>
 							</div>
 							<div class="stat-box stat-box-orange">
 								<div class="stat-icon-wrapper bg-orange-500/10">
 									<Network class="w-4 h-4 text-orange-500" />
 								</div>
 								<div class="text-lg font-bold">{systemInfo.stats.networks}</div>
-								<div class="text-2xs text-muted-foreground font-medium">Networks</div>
+								<div class="text-2xs text-muted-foreground font-medium">网络</div>
 							</div>
 						</div>
 						{/if}
@@ -828,12 +796,12 @@
 				<Tabs.List class="w-full grid grid-cols-2">
 					<Tabs.Trigger value="releases" class="flex items-center gap-2">
 						<FileText class="w-4 h-4" />
-						<span>Release notes</span>
+						<span>发布说明</span>
 						<Badge variant="secondary" class="text-2xs">{changelog.length}</Badge>
 					</Tabs.Trigger>
 					<Tabs.Trigger value="dependencies" class="flex items-center gap-2">
 						<Package class="w-4 h-4" />
-						<span>Dependencies</span>
+						<span>依赖关系</span>
 						<Badge variant="secondary" class="text-2xs">{dependencies.length}</Badge>
 					</Tabs.Trigger>
 				</Tabs.List>
@@ -842,7 +810,7 @@
 			<Tabs.Content value="releases" class="px-4 pb-4">
 				{#if loadingChangelog}
 					<div class="flex items-center justify-center py-8">
-						<div class="text-sm text-muted-foreground">Loading releases...</div>
+						<div class="text-sm text-muted-foreground">正在加载版本信息…</div>
 					</div>
 				{:else if changelogError}
 					<div class="flex items-center justify-center py-8">
@@ -868,7 +836,7 @@
 										<Tag class="w-4 h-4 text-primary" />
 										<span class="font-semibold">v{release.version}</span>
 										{#if index === 0}
-											<Badge variant="default" class="text-2xs">Latest</Badge>
+											<Badge variant="default" class="text-2xs">最新</Badge>
 										{/if}
 										<Badge variant="secondary" class="text-2xs">{release.changes.length} changes</Badge>
 									</div>
@@ -881,14 +849,10 @@
 												<li class="flex items-start gap-2">
 													{#if change.type === 'feature'}
 														<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-2xs font-medium bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shrink-0">
-															<Sparkles class="w-3 h-3" />
-															New
-														</span>
+															<Sparkles class="w-3 h-3" />新</span>
 													{:else if change.type === 'fix'}
 														<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-2xs font-medium bg-amber-500/15 text-amber-600 dark:text-amber-400 shrink-0">
-															<Bug class="w-3 h-3" />
-															Fix
-														</span>
+															<Bug class="w-3 h-3" />修复</span>
 													{/if}
 													<ChangelogText text={change.text} />
 												</li>
@@ -907,11 +871,11 @@
 
 			<Tabs.Content value="dependencies" class="px-4 pb-4">
 				<div class="mb-3">
-					<SearchInput bind:value={depsSearch} placeholder="Search packages or licenses..." class="h-7 text-xs" containerClass="w-full max-w-xs" />
+					<SearchInput bind:value={depsSearch} placeholder="搜索软件包或许可证…" class="h-7 text-xs" containerClass="w-full max-w-xs" />
 				</div>
 				{#if loadingDeps}
 					<div class="flex items-center justify-center py-8">
-						<div class="text-sm text-muted-foreground">Loading dependencies...</div>
+						<div class="text-sm text-muted-foreground">正在加载依赖项…</div>
 					</div>
 				{:else if depsError}
 					<div class="flex items-center justify-center py-8">
@@ -920,9 +884,9 @@
 				{:else}
 					<div class="space-y-1">
 						<div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-2xs font-medium text-muted-foreground px-2 py-1 border-b">
-							<div>Package</div>
-							<div class="w-20 text-center">Version</div>
-							<div class="w-24 text-center">License</div>
+							<div>包裹</div>
+							<div class="w-20 text-center">版本</div>
+							<div class="w-24 text-center">许可证</div>
 							<div class="w-8"></div>
 						</div>
 						<div class="max-h-[300px] overflow-y-auto pr-2">
@@ -942,7 +906,7 @@
 												target="_blank"
 												rel="noopener noreferrer"
 												class="text-muted-foreground hover:text-foreground transition-colors"
-												title="View on GitHub"
+												title="在 GitHub 上查看"
 											>
 												<ExternalLink class="w-3.5 h-3.5" />
 											</a>

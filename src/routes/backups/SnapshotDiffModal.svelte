@@ -92,22 +92,22 @@
 			if (sa !== sb) diffs.push({ field, valueA: sa, valueB: sb });
 		}
 
-		compare('Image', a.image, b.image);
+		compare('镜像', a.image, b.image);
 		compare('Cmd', a.config?.Cmd, b.config?.Cmd);
-		compare('Entrypoint', a.config?.Entrypoint, b.config?.Entrypoint);
-		compare('Env', a.config?.Env, b.config?.Env);
-		compare('Labels', a.config?.Labels, b.config?.Labels);
-		compare('Hostname', a.config?.Hostname, b.config?.Hostname);
-		compare('User', a.config?.User, b.config?.User);
+		compare('入口点', a.config?.Entrypoint, b.config?.Entrypoint);
+		compare('环境', a.config?.Env, b.config?.Env);
+		compare('标签', a.config?.Labels, b.config?.Labels);
+		compare('主机名', a.config?.Hostname, b.config?.Hostname);
+		compare('用户', a.config?.User, b.config?.User);
 		compare('WorkingDir', a.config?.WorkingDir, b.config?.WorkingDir);
 		compare('RestartPolicy', a.hostConfig?.RestartPolicy, b.hostConfig?.RestartPolicy);
 		compare('NetworkMode', a.hostConfig?.NetworkMode, b.hostConfig?.NetworkMode);
 		compare('PortBindings', a.hostConfig?.PortBindings, b.hostConfig?.PortBindings);
-		compare('Privileged', a.hostConfig?.Privileged, b.hostConfig?.Privileged);
-		compare('Memory', a.hostConfig?.Memory, b.hostConfig?.Memory);
+		compare('特权', a.hostConfig?.Privileged, b.hostConfig?.Privileged);
+		compare('内存', a.hostConfig?.Memory, b.hostConfig?.Memory);
 		compare('CpuShares', a.hostConfig?.CpuShares, b.hostConfig?.CpuShares);
 		compare('Mounts', a.mounts?.length, b.mounts?.length);
-		compare('Networks', Object.keys(a.networkSettings?.Networks || {}), Object.keys(b.networkSettings?.Networks || {}));
+		compare('网络', Object.keys(a.networkSettings?.Networks || {}), Object.keys(b.networkSettings?.Networks || {}));
 
 		return diffs;
 	});
@@ -116,7 +116,7 @@
 <Dialog.Root bind:open>
 	<Dialog.Content class="max-w-5xl max-h-[85vh] flex flex-col">
 		<Dialog.Header>
-			<Dialog.Title>Snapshot comparison</Dialog.Title>
+			<Dialog.Title>快照对比</Dialog.Title>
 			<Dialog.Description>
 				<span class="font-mono text-xs">{snapshotA.shortId}</span>
 				<span class="text-muted-foreground text-xs mx-1">({formatDateTime(snapshotA.time)})</span>
@@ -129,11 +129,9 @@
 		<!-- Tabs -->
 		<div class="flex gap-1 border-b mb-3">
 			<button class="px-3 py-1.5 text-sm {activeTab === 'files' ? 'border-b-2 border-primary font-medium' : 'text-muted-foreground'}" onclick={() => activeTab = 'files'}>
-				<FolderOpen class="w-3.5 h-3.5 inline mr-1" />Files
-			</button>
+				<FolderOpen class="w-3.5 h-3.5 inline mr-1" />文件</button>
 			<button class="px-3 py-1.5 text-sm {activeTab === 'metadata' ? 'border-b-2 border-primary font-medium' : 'text-muted-foreground'}" onclick={switchToMetadata}>
-				<Container class="w-3.5 h-3.5 inline mr-1" />Metadata
-			</button>
+				<Container class="w-3.5 h-3.5 inline mr-1" />元数据</button>
 		</div>
 
 		<div class="flex-1 min-h-[400px] overflow-y-auto pr-3">
@@ -141,7 +139,7 @@
 			{#if loading}
 				<div class="flex items-center justify-center py-12">
 					<Loader2 class="w-5 h-5 animate-spin text-muted-foreground" />
-					<span class="ml-2 text-sm text-muted-foreground">Comparing snapshots...</span>
+					<span class="ml-2 text-sm text-muted-foreground">对比快照…</span>
 				</div>
 			{:else if error}
 				<div class="text-sm text-destructive py-4">{error}</div>
@@ -160,7 +158,7 @@
 						<Badge variant="outline" class="text-blue-500"><FileCheck class="w-3 h-3 mr-1" />{diff.metadataChanged.length} metadata</Badge>
 					{/if}
 					{#if totalChanges === 0}
-						<span class="text-sm text-muted-foreground">No differences found</span>
+						<span class="text-sm text-muted-foreground">未发现差异</span>
 					{/if}
 				</div>
 
@@ -183,18 +181,18 @@
 			{#if metaLoading}
 				<div class="flex items-center justify-center py-12">
 					<Loader2 class="w-5 h-5 animate-spin text-muted-foreground" />
-					<span class="ml-2 text-sm text-muted-foreground">Loading metadata...</span>
+					<span class="ml-2 text-sm text-muted-foreground">正在加载元数据…</span>
 				</div>
 			{:else if !metaA || !metaB}
-				<p class="text-sm text-muted-foreground py-4">Metadata not available for one or both snapshots.</p>
+				<p class="text-sm text-muted-foreground py-4">一个或两个快照的元数据不可用。</p>
 			{:else if metaDiffs.length === 0}
-				<p class="py-4 text-sm text-muted-foreground">The container configuration is identical (image, command, env, ports, mounts, networks, …).</p>
-				<p class="flex items-start gap-1.5 text-xs text-muted-foreground"><Info class="mt-0.5 h-3.5 w-3.5 flex-shrink-0" /><span>If the Files tab shows <span class="font-mono">metadata.json</span> as modified, that's the capture timestamp / recorded container state inside it changing between backups — not a config change.</span></p>
+				<p class="py-4 text-sm text-muted-foreground">容器配置完全相同（镜像、命令、环境、端口、挂载点、网络等）。</p>
+				<p class="flex items-start gap-1.5 text-xs text-muted-foreground"><Info class="mt-0.5 h-3.5 w-3.5 flex-shrink-0" /><span>如果“文件”选项卡显示<span class="font-mono">metadata.json</span> as modified, that's the capture timestamp / recorded container state inside it changing between backups — not a config change.</span></p>
 			{:else}
 				<table class="w-full text-xs">
 					<thead class="sticky top-0 bg-background">
 						<tr class="border-b text-muted-foreground">
-							<th class="text-left py-1.5 px-2 w-32">Field</th>
+							<th class="text-left py-1.5 px-2 w-32">场地</th>
 							<th class="text-left py-1.5 px-2">{snapshotA.shortId}</th>
 							<th class="text-left py-1.5 px-2">{snapshotB.shortId}</th>
 						</tr>
